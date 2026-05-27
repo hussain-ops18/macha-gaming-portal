@@ -2,71 +2,75 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Macha Gaming Portal 🎮</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Macha Gaming Portal - Authentication Entry 🎮🔐</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; text-align: center; background-color: #1a1a2e; color: #fff; margin: 0; padding: 0; }
-        .navbar { background-color: #162447; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
-        .navbar h2 { margin: 0; color: #e43f5a; }
-        .nav-right { display: flex; align-items: center; gap: 15px; }
-        .nav-btn { background-color: #1f4068; color: #00fff5; border: 1px solid #00fff5; padding: 8px 16px; border-radius: 20px; font-weight: bold; cursor: pointer; font-size: 0.9rem; }
-        .logout-btn { background-color: #e43f5a; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 15px; }
-
-        .container { max-width: 1000px; margin: 40px auto; padding: 20px; }
-        .box { background: #162447; padding: 30px; border-radius: 15px; box-shadow: 0px 8px 20px rgba(0,0,0,0.4); max-width: 450px; margin: 0 auto; }
-        
-        input { padding: 12px; margin: 10px 0; border: 2px solid #1f4068; background: #1f4068; color: #fff; border-radius: 8px; width: 85%; font-size: 1rem; }
-        button.main-btn { background-color: #e43f5a; color: white; border: none; padding: 12px 25px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 1rem; transition: 0.3s; }
-        
-        #dashboard, #profile-section { display: none; }
-        .game-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; margin-top: 20px; }
-        .game-card { background: #1f4068; border-radius: 12px; padding: 20px; text-align: center; }
-
-        .profile-card { background: #162447; border: 2px solid #00fff5; border-radius: 15px; padding: 25px; text-align: left; }
-        .toggle-link { color: #00fff5; cursor: pointer; text-decoration: underline; font-size: 0.9rem; display: inline-block; margin-top: 10px; }
+        body { font-family: 'Poppins', sans-serif; background: radial-gradient(circle, #111e36 0%, #070d1a 100%); color: #fff; text-align: center; margin: 0; padding: 15px; min-height: 100vh; display: flex; align-items: center; justify-content: center; box-sizing: border-box; }
+        .auth-container { max-width: 420px; width: 100%; padding: 30px; background: rgba(22, 36, 71, 0.7); backdrop-filter: blur(12px); border-radius: 20px; border: 2px solid rgba(0, 255, 245, 0.2); box-shadow: 0 15px 35px rgba(0,0,0,0.5); box-sizing: border-box; }
+        h1 { color: #00fff5; margin-top: 0; font-size: 1.8rem; text-shadow: 0 0 10px rgba(0, 255, 245, 0.3); }
+        input.auth-field { padding: 14px; margin: 10px 0; border: 2px solid #1f4068; background: #162447; color: #fff; border-radius: 10px; width: 100%; font-size: 1rem; outline: none; box-sizing: border-box; text-align: center; }
+        input.auth-field:focus { border-color: #00fff5; }
+        button.auth-btn { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); color: black; border: none; padding: 14px; border-radius: 10px; width: 100%; font-weight: bold; font-size: 1.1rem; cursor: pointer; margin-top: 15px; box-shadow: 0 5px 15px rgba(56, 239, 125, 0.3); transition: 0.2s; }
+        button.auth-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(56, 239, 125, 0.5); }
+        .toggle-link { color: #00fff5; cursor: pointer; margin-top: 15px; display: inline-block; font-size: 0.9rem; text-decoration: underline; }
     </style>
 </head>
 <body>
 
-    <div class="navbar">
-        <h2>Macha Gaming Portal 🕹️</h2>
-        <div class="nav-right" id="nav-actions" style="display: none;">
-            <button id="gamesTabBtn" class="nav-btn" style="background-color: #00fff5; color: #1a1a2e;">Games Menu 🕹️</button>
-            <button id="profileTabBtn" class="nav-btn">View Profile 👤</button>
-        </div>
-    </div>
-
-    <div class="container">
+    <div class="auth-container">
+        <h1 id="auth-title">MACHA ARENA LOGIN 🔐</h1>
+        <p id="auth-subtitle" style="color:#94a3b8; font-size:0.9rem; margin-bottom:20px;">Sign in to unlock your virtual gaming hub console.</p>
         
-        <div id="auth-box" class="box">
-            <h3 id="auth-title">Vaa Macha! Login and Play 🚀</h3>
-            <hr style="border: 1px solid #1f4068;"><br>
-            <input type="text" id="login-username" placeholder="Enter Username"><br>
-            <input type="password" id="login-password" placeholder="Enter Password"><br><br>
-            <button id="enterPortalBtn" class="main-btn">Login 🔥</button><br>
-            <span id="authToggleLink" class="toggle-link">New user? Account Create Pannu macha!</span>
-        </div>
-
-        <div id="dashboard">
-            <h2>Welcome, <span id="welcome-user" style="color: #00fff5;">Macha</span>!</h2>
-            <div class="game-grid">
-                <div class="game-card" onclick="launchGame('vaanga-kandu-pidikkalaam')">
-                    <span style="font-size: 3.5rem;">🕵️‍♂️🎨</span>
-                    <h3>Vaanga Kandu Pidikkalaam</h3>
-                    <button class="main-btn">Play Live Now</button>
-                </div>
-            </div>
-        </div>
-
-        <div id="profile-section" class="profile-card">
-            <h3>Player Profile Dashboard 📊</h3>
-            <p>👤 Character Name: <span id="prof-name" style="color: #fff; font-weight: bold;">-</span></p>
-            <p>🏆 Match Wins: <span id="prof-wins" style="color: #2ecc71; font-weight: bold;">0</span></p>
-            <button id="logoutBtn" class="logout-btn">Logout Portal 🚪</button>
-        </div>
-
+        <input type="text" id="usernameField" class="auth-field" placeholder="Enter Username"><br>
+        <input type="password" id="passwordField" class="auth-field" placeholder="Enter Password"><br>
+        
+        <button onclick="handleAuthenticationExecution();" id="submitActionBtn" class="auth-btn">ENTER PORTAL 🚀</button>
+        <br>
+        <span onclick="toggleAuthFormMode();" id="formToggleLabel" class="toggle-link">New user? Create account profile here 🔗</span>
     </div>
 
-    <script src="hub.js"></script>
+    <script>
+        let currentAuthModeIsLogin = true;
+
+        function toggleAuthFormMode() {
+            currentAuthModeIsLogin = !currentAuthModeIsLogin;
+            document.getElementById('auth-title').innerText = currentAuthModeIsLogin ? "MACHA ARENA LOGIN 🔐" : "CREATE NEW PROFILE 🚀";
+            document.getElementById('submitActionBtn').innerText = currentAuthModeIsLogin ? "ENTER PORTAL 🚀" : "SIGNUP PROFILE 👍";
+            document.getElementById('formToggleLabel').innerText = currentAuthModeIsLogin ? "New user? Create account profile here 🔗" : "Already have profiles? Log in here 🔗";
+        }
+
+        async function handleAuthenticationExecution() {
+            const user = document.getElementById('usernameField').value.trim();
+            const pass = document.getElementById('passwordField').value.trim();
+            if (!user || !pass) return alert("Fill username and password fields macha!");
+
+            const endpointUrl = currentAuthModeIsLogin ? '/api/login' : '/api/signup';
+            
+            try {
+                const response = await fetch(endpointUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: user, password: pass })
+                });
+                const data = await response.json();
+                
+                if (data.success) {
+                    localStorage.setItem('machaUsername', data.username);
+                    localStorage.setItem('machaWins', data.wins || "0");
+                    
+                    // CRITICAL PARSING SYNCHRONIZATION FIX: Secure mapping validation tokens on BOTH states loops!
+                    if (data.uid) {
+                        localStorage.setItem('machaUserUID', data.uid);
+                    }
+                    
+                    window.location.replace("./hub.html");
+                } else {
+                    alert(data.error || "Authentication validation block mismatch!");
+                }
+            } catch (err) {
+                alert("Connection pipeline firewall error sync loop!");
+            }
+        }
+    </script>
 </body>
 </html>

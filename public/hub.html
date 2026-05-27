@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Macha Gaming Portal - Cyber Control Center Hub 🎮🟢</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Poppins:wght@400;600&display=swap');
+        
+        body { 
+            font-family: 'Poppins', sans-serif; 
+            background: radial-gradient(circle at center, #01140d 0%, #000403 100%); 
+            color: #fff; margin: 0; padding: 15px; min-height: 100vh; 
+            display: flex; flex-direction: column; align-items: center; overflow-x: hidden;
+        }
+
+        .omnitrix-mainframe-wrapper { max-width: 1000px; width: 100%; margin: 0 auto; text-align: center; }
+        
+        /* 🔋 HUD TOP CORE USER PANEL WIDGET */
+        .omnitrix-hud-pod {
+            background: rgba(4, 20, 12, 0.85); border: 2px solid #00ff66;
+            box-shadow: 0 0 25px rgba(0, 255, 102, 0.3), inset 0 0 15px rgba(0, 255, 102, 0.1);
+            border-radius: 20px; padding: 15px 25px; margin: 15px 0 30px 0;
+            display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;
+        }
+        .hud-left, .hud-right { display: flex; align-items: center; gap: 15px; }
+        .omnitrix-avatar-glow { width: 50px; height: 50px; border-radius: 50%; background: #00ff66; border: 3px solid #fff; box-shadow: 0 0 15px #00ff66; font-family: 'Orbitron', sans-serif; font-weight: 900; color: #000; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+        .profile-metadata { text-align: left; }
+        .profile-username { font-family: 'Orbitron', sans-serif; font-weight: 900; color: #00ff66; font-size: 1.2rem; text-shadow: 0 0 8px rgba(0,255,102,0.5); display: block; }
+        .profile-uid-tag { font-family: monospace; font-size: 0.85rem; color: #8fa89b; display: block; }
+        
+        .stat-badge-glow { background: rgba(0, 255, 102, 0.08); border: 1px solid #00ff66; padding: 8px 14px; border-radius: 8px; font-size: 0.9rem; font-weight: bold; font-family: 'Orbitron', sans-serif; color: #fff; display: flex; align-items: center; gap: 6px; }
+        .streak-burning { border-color: #ffaa00; background: rgba(255,170,0,0.08); color: #ffaa00; box-shadow: 0 0 10px rgba(255,170,0,0.2); }
+
+        .system-eject-btn { background: rgba(255, 51, 102, 0.1); color: #ff3366; border: 1px solid #ff3366; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-family: 'Orbitron', sans-serif; font-weight: bold; font-size: 0.8rem; transition: 0.3s; }
+        .system-eject-btn:hover { background: #ff3366; color: #000; box-shadow: 0 0 15px #ff3366; }
+
+        /* 🟢 INTERACTIVE CAROUSEL WHEEL DIAL VIEWPORT PANEL */
+        .omnitrix-watch-dial-viewport {
+            position: relative; width: 100%; max-width: 520px; height: 380px; margin: 30px auto;
+            border: 8px solid #04381c; border-radius: 40px; background: radial-gradient(circle, #021a10 0%, #000 100%);
+            box-shadow: 0 0 40px rgba(0, 255, 102, 0.25), inset 0 0 30px rgba(0,255,102,0.15);
+            box-sizing: border-box; overflow: hidden; display: flex; align-items: center; justify-content: center;
+        }
+        .omnitrix-watch-dial-viewport::before { content: ""; position: absolute; width: 100%; height: 100%; border-radius: 32px; pointer-events: none; border: 2px solid rgba(0, 255, 102, 0.3); box-shadow: inset 0 0 20px rgba(0, 255, 102, 0.2); z-index: 5; }
+        
+        .dial-arrow { position: absolute; font-size: 1.8rem; color: #00ff66; z-index: 10; cursor: pointer; text-shadow: 0 0 10px #00ff66; animation: blinkGlow 1.5s infinite; transition: 0.2s; user-select: none; }
+        .arrow-up { top: 15px; transform: rotate(90deg); }
+        .arrow-down { bottom: 15px; transform: rotate(90deg); }
+        @keyframes blinkGlow { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
+
+        .watch-carousel-scroller-track {
+            display: flex; flex-direction: column; width: 100%; height: 100%;
+            overflow-y: scroll; scroll-snap-type: y mandatory; box-sizing: border-box;
+            padding: 50px 0; scroll-behavior: smooth;
+        }
+        .watch-carousel-scroller-track::-webkit-scrollbar { display: none; }
+
+        .omnitrix-alien-card {
+            min-height: 260px; height: 260px; margin: 10px auto; width: 88%;
+            background: rgba(3, 15, 8, 0.9); border: 3px solid #00993d; border-radius: 24px;
+            padding: 20px 25px; box-sizing: border-box; scroll-snap-align: center;
+            display: flex; flex-direction: column; justify-content: space-between; text-align: left;
+            position: relative; transition: 0.3s ease; transform: scale(0.95); opacity: 0.6;
+        }
+        .omnitrix-alien-card.focused-dial-element { transform: scale(1); opacity: 1; border-color: #00ff66; box-shadow: 0 0 25px rgba(0, 255, 102, 0.4); }
+
+        h2.alien-title { font-family: 'Orbitron', sans-serif; font-weight: 900; margin: 0; font-size: 1.35rem; color: #fff; letter-spacing: 1px; }
+        .focused-dial-element h2.alien-title { color: #00ff66; text-shadow: 0 0 10px rgba(0,255,102,0.3); }
+        p.alien-desc { color: #8fa89b; font-size: 0.85rem; line-height: 1.5; margin: 10px 0; }
+        
+        .omnitrix-ignition-btn { width: 100%; border: 2px solid #044622; background: #01140a; color: #00ff66; padding: 12px; border-radius: 10px; font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 0.85rem; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: 0.2s; }
+        .focused-dial-element .omnitrix-ignition-btn { background: linear-gradient(135deg, #00ff66 0%, #00993d 100%); color: #000; font-weight: 900; border-color: #fff; box-shadow: 0 0 12px rgba(0, 255, 102, 0.4); }
+
+        /* 📊 SOCIAL REAL-TIME SCORE DOCK GRIDS */
+        .omnitrix-social-dock-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; margin-top: 30px; width: 100%; box-sizing: border-box; }
+        .social-sub-panel { background: rgba(3, 12, 8, 0.7); border: 1px solid rgba(0, 255, 102, 0.15); border-radius: 16px; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); text-align: left; }
+        .social-sub-panel h3 { font-family: 'Orbitron', sans-serif; margin-top: 0; font-size: 1.1rem; color: #00ff66; border-bottom: 1px solid rgba(0,255,102,0.2); padding-bottom: 8px; letter-spacing: 1px; }
+        
+        .social-list-container { max-height: 180px; overflow-y: auto; line-height: 1.6; min-height: 60px; }
+        .social-list-container::-webkit-scrollbar { width: 4px; }
+        .social-list-container::-webkit-scrollbar-thumb { background: #00ff66; border-radius: 2px; }
+        
+        .social-row-node { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.03); font-size: 0.9rem; }
+        .node-uid-label { font-family: monospace; color: #8fa89b; font-size: 0.8rem; margin-left: 5px; }
+        
+        .action-icon-btn { background: #04381c; border: 1px solid #00ff66; color: #00ff66; padding: 5px 10px; border-radius: 6px; font-size: 0.75rem; cursor: pointer; font-family: 'Orbitron', sans-serif; font-weight: bold; }
+        .action-icon-btn:hover { background: #00ff66; color: #000; }
+        
+        .add-friend-form-box { display: flex; gap: 8px; margin-top: 15px; }
+        .add-friend-field { flex-grow: 1; background: #000; border: 1px solid #044622; padding: 10px; color: #00ff66; border-radius: 8px; font-family: monospace; outline: none; }
+        .add-friend-field:focus { border-color: #00ff66; }
+        .empty-log-text { color: #506e5e; font-style: italic; font-size: 0.85rem; padding: 15px 0; text-align: center; width: 100%; }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div class="omnitrix-mainframe-wrapper">
+        
+        <div class="omnitrix-hud-pod">
+            <div class="hud-left">
+                <div class="omnitrix-avatar-glow" id="avatar-initials-label">M</div>
+                <div class="profile-metadata">
+                    <span class="profile-username" id="hud-username-display">LOADING_PILOT</span>
+                    <span class="profile-uid-tag" id="hud-uid-display">UID: UNASSIGNED</span>
+                </div>
+            </div>
+            
+            <div class="hud-right">
+                <div class="stat-badge-glow">
+                    🏆 WINS: <span id="hud-wins-counter" style="color:#00ff66; margin-left:4px;">0</span>
+                </div>
+                <div class="stat-badge-glow streak-burning">
+                    🔥 STREAK: <span id="hud-streak-counter" style="color:#ffaa00; margin-left:4px;">0 RNDS</span>
+                </div>
+                <button onclick="triggerSystemCoreEject();" class="system-eject-btn">LOGOUT 🔌</button>
+            </div>
+        </div>
+
+        <h1 style="font-family:'Orbitron',sans-serif; color:#00ff66; font-size:2.5rem; letter-spacing:2px; margin:10px 0 0 0; font-weight:900; text-shadow: 0 0 15px rgba(0, 255, 102, 0.5);">MACHA GAMING PORTAL 🕹️⚡</h1>
+        <div style="font-family:'Poppins',sans-serif; font-weight:600; font-size:1rem; color:#8fa89b; margin-bottom:25px; text-transform:uppercase; letter-spacing:1px;">Scroll watch wheel dial configuration to access modules</div>
+
+        <div class="omnitrix-watch-dial-viewport">
+            <span class="dial-arrow arrow-up" id="scroll-up-trigger">◀</span>
+            
+            <div class="watch-carousel-scroller-track" id="watch-scroller-track-node">
+                
+                <div class="omnitrix-alien-card focused-dial-element" id="card-alien-g1">
+                    <div>
+                        <h2 class="alien-title">VAANGA KANDU PIDIKKALAAM 🕵️‍♂️</h2>
+                        <p class="alien-desc">Detect hidden user signatures inside multi-agent socket networks. Live canvas matrix coordinate mapping engine with responsive boundaries structures calibration metrics lock loops.</p>
+                    </div>
+                    <button onclick="igniteModuleOneRoute();" class="omnitrix-ignition-btn">Launch Operational Code ⚡</button>
+                </div>
+
+                <div class="omnitrix-alien-card" id="card-alien-g2">
+                    <div>
+                        <h2 class="alien-title">TAKKUNU PAARU USHARA IRU ⚡</h2>
+                        <p class="alien-desc">Fast regional Tamil connection flash-round buzzer battle. Non-repeating randomized data stream categories (Memes, Songs, Movies, Brands) with 15s zero point penalty timeout mechanics and active voice capture translation.</p>
+                    </div>
+                    <button onclick="igniteModuleTwoRoute();" class="omnitrix-ignition-btn">Activate Pulse Buzzer 🔥</button>
+                </div>
+
+            </div>
+
+            <span class="dial-arrow arrow-down" id="scroll-down-trigger">▶</span>
+        </div>
+
+        <div class="omnitrix-social-dock-grid">
+            <div class="social-sub-panel">
+                <h3>RECENTLY PLAYED CREW 👥</h3>
+                <div class="social-list-container" id="recent-players-render-pad"></div>
+            </div>
+
+            <div class="social-sub-panel">
+                <h3>OMNITRIX LINKED FRIENDS 💚</h3>
+                <div class="social-list-container" id="friends-list-render-pad"></div>
+                
+                <div class="add-friend-form-box">
+                    <input type="text" id="friendUidInput" class="add-friend-field" placeholder="Enter Friend UID Key (Eg: UID-4819)">
+                    <button onclick="executeSearchAndLinkUidAction();" class="action-icon-btn" style="padding:12px 18px;">SEARCH & LINK 🔍</button>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+
+        const activeUserSessionName = localStorage.getItem('machaUsername') || "Macha_Pilot";
+        const activeUserSessionWins = localStorage.getItem('machaWins') || "0";
+        
+        // RE-COMPILER PIPELINE: Automatically locks runtime variable checks to intercept undefined blocks
+        let userProfileUniqueIdKey = localStorage.getItem('machaUserUID');
+        if (!userProfileUniqueIdKey || userProfileUniqueIdKey === "undefined" || userProfileUniqueIdKey === "null") {
+            userProfileUniqueIdKey = "UID-" + Math.floor(1000 + Math.random() * 9000);
+            localStorage.setItem('machaUserUID', userProfileUniqueIdKey);
+        }
+        
+        const userProfileActiveStreak = localStorage.getItem('machaActiveStreakValue') || activeUserSessionWins;
+
+        document.getElementById('hud-username-display').innerText = activeUserSessionName.toUpperCase();
+        document.getElementById('hud-uid-display').innerText = userProfileUniqueIdKey;
+        document.getElementById('hud-wins-counter').innerText = activeUserSessionWins;
+        document.getElementById('hud-streak-counter').innerText = `${userProfileActiveStreak} RNDS`;
+        document.getElementById('avatar-initials-label').innerText = activeUserSessionName.charAt(0).toUpperCase();
+
+        function igniteModuleOneRoute() {
+            window.location.href = "./games/vaanga-kandu-pidikkalaam/index.html?user=" + encodeURIComponent(activeUserSessionName);
+        }
+
+        function igniteModuleTwoRoute() {
+            window.location.href = "./games/takkunu-paaru/index.html?user=" + encodeURIComponent(activeUserSessionName);
+        }
+
+        function triggerSystemCoreEject() {
+            localStorage.clear(); window.location.href = "./index.html"; 
+        }
+
+        const scrollerTrack = document.getElementById('watch-scroller-track-node');
+        const alienCardG1 = document.getElementById('card-alien-g1');
+        const alienCardG2 = document.getElementById('card-alien-g2');
+
+        scrollerTrack.addEventListener('scroll', () => {
+            let pos = scrollerTrack.scrollTop;
+            if (pos < 130) {
+                alienCardG1.classList.add('focused-dial-element');
+                alienCardG2.classList.remove('focused-dial-element');
+            } else {
+                alienCardG2.classList.add('focused-dial-element');
+                alienCardG1.classList.remove('focused-dial-element');
+            }
+        });
+
+        document.getElementById('scroll-up-trigger').addEventListener('click', () => { scrollerTrack.scrollTop -= 200; });
+        document.getElementById('scroll-down-trigger').addEventListener('click', () => { scrollerTrack.scrollTop += 200; });
+
+        function renderFriendsPad() {
+            let cache = localStorage.getItem('machaStoredFriendsList');
+            if (!cache) { localStorage.setItem('machaStoredFriendsList', JSON.stringify([])); cache = JSON.stringify([]); }
+            let parsed = JSON.parse(cache);
+            const targetPad = document.getElementById('friends-list-render-pad');
+            
+            if (parsed.length === 0) {
+                targetPad.innerHTML = `<div class="empty-log-text">No friends linked yet. Search real profile UID above! 🔍</div>`;
+                return;
+            }
+            targetPad.innerHTML = parsed.map(f => `
+                <div class="social-row-node">
+                    <div>🟢 <span>${f.name.toUpperCase()}</span><span class="node-uid-label">${f.uid}</span></div>
+                    <span style="color:#00ff66; font-size:0.75rem; font-weight:bold; font-family:'Orbitron';">READY</span>
+                </div>
+            `).join('');
+        }
+
+        function renderRecentPad() {
+            let cache = localStorage.getItem('machaStoredRecentPlayers');
+            if (!cache) { localStorage.setItem('machaStoredRecentPlayers', JSON.stringify([])); cache = JSON.stringify([]); }
+            let parsed = JSON.parse(cache);
+            const targetPad = document.getElementById('recent-players-render-pad');
+
+            if (parsed.length === 0) {
+                targetPad.innerHTML = `<div class="empty-log-text">No match history logged in current session cache. 👥</div>`;
+                return;
+            }
+            targetPad.innerHTML = parsed.map(p => `
+                <div class="social-row-node">
+                    <div>👤 <span>${p.name.toUpperCase()}</span><span class="node-uid-label">${p.uid}</span></div>
+                    <button onclick="quickAddFriendFromRecentAction('${p.name}', '${p.uid}');" class="action-icon-btn">LINK 🔗</button>
+                </div>
+            `).join('');
+        }
+
+        // --- FIXED HIGH RE-ACTIVE SEARCH EMITTER INTERFACE CONTROL ---
+        function executeSearchAndLinkUidAction() {
+            const box = document.getElementById('friendUidInput');
+            const targetUidInput = box.value.trim().toUpperCase();
+            if (!targetUidInput) return alert("Search input empty! Type a valid UID macha!");
+            
+            if (targetUidInput === userProfileUniqueIdKey) return alert("Unnoda sondha UID-aye nee add panna mudiyaadhu thala! 🤯");
+
+            let currentFriendsList = JSON.parse(localStorage.getItem('machaStoredFriendsList')) || [];
+            if (currentFriendsList.some(f => f.uid === targetUidInput)) return alert("Intha player munnadiye linked-la thaan irukaanga! 🟢");
+
+            // Emitters targets directly to backend user persistence arrays matching query loop
+            socket.emit('omnitrix_searchAndVerifyUserUid', targetUidInput);
+            box.value = "";
+        }
+
+        socket.on('omnitrix_searchUidResultSuccess', (matchedUserNode) => {
+            let currentFriendsList = JSON.parse(localStorage.getItem('machaStoredFriendsList')) || [];
+            currentFriendsList.push(matchedUserNode);
+            localStorage.setItem('machaStoredFriendsList', JSON.stringify(currentFriendsList));
+            alert(`🔥 Gethu macha! Real user matched: ${matchedUserNode.name.toUpperCase()} successfully linked to your console!`);
+            renderFriendsPad();
+        });
+
+        socket.on('omnitrix_searchUidResultFailure', (errorMsg) => { alert(errorMsg); });
+
+        function quickAddFriendFromRecentAction(name, uid) {
+            let list = JSON.parse(localStorage.getItem('machaStoredFriendsList')) || [];
+            if (list.some(f => f.uid === uid)) return alert("Munnadiye link aagi dhaan iruku! 🟢");
+            list.push({ name: name, uid: uid });
+            localStorage.setItem('machaStoredFriendsList', JSON.stringify(list));
+            renderFriendsPad();
+        }
+
+        renderFriendsPad(); renderRecentPad();
+    </script>
+</body>
+</html>

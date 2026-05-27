@@ -1,0 +1,14 @@
+{
+  "khadhar": {
+    "rawUsername": "khadhar",
+    "passwordHash": "$2b$10$UBgaEwj.NY0ITJ1RtpRc7u8dF.xW/udPwk/DGWvFBbZNRwPu/3Ol.",
+    "matchWins": 0,
+    "userUID": "UID-3442"
+  },
+  "dino": {
+    "rawUsername": "dino",
+    "passwordHash": "$2b$10$Rnzt2kbotEhTMyUH5Yu.b.KV6y3k4DR.sSZKecsU6JXwxD72kC36e",
+    "matchWins": 0,
+    "userUID": "UID-1493"
+  }
+}
