@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Macha Gaming Portal 🎮</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; text-align: center; background-color: #1a1a2e; color: #fff; margin: 0; padding: 0; }
+        .navbar { background-color: #162447; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .navbar h2 { margin: 0; color: #e43f5a; }
+        .nav-right { display: flex; align-items: center; gap: 15px; }
+        .nav-btn { background-color: #1f4068; color: #00fff5; border: 1px solid #00fff5; padding: 8px 16px; border-radius: 20px; font-weight: bold; cursor: pointer; font-size: 0.9rem; }
+        .logout-btn { background-color: #e43f5a; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 15px; }
+
+        .container { max-width: 1000px; margin: 40px auto; padding: 20px; }
+        .box { background: #162447; padding: 30px; border-radius: 15px; box-shadow: 0px 8px 20px rgba(0,0,0,0.4); max-width: 450px; margin: 0 auto; }
+        
+        input { padding: 12px; margin: 10px 0; border: 2px solid #1f4068; background: #1f4068; color: #fff; border-radius: 8px; width: 85%; font-size: 1rem; }
+        button.main-btn { background-color: #e43f5a; color: white; border: none; padding: 12px 25px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 1rem; transition: 0.3s; }
+        
+        #dashboard, #profile-section { display: none; }
+        .game-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; margin-top: 20px; }
+        .game-card { background: #1f4068; border-radius: 12px; padding: 20px; text-align: center; }
+
+        .profile-card { background: #162447; border: 2px solid #00fff5; border-radius: 15px; padding: 25px; text-align: left; }
+        .toggle-link { color: #00fff5; cursor: pointer; text-decoration: underline; font-size: 0.9rem; display: inline-block; margin-top: 10px; }
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <h2>Macha Gaming Portal 🕹️</h2>
+        <div class="nav-right" id="nav-actions" style="display: none;">
+            <button id="gamesTabBtn" class="nav-btn" style="background-color: #00fff5; color: #1a1a2e;">Games Menu 🕹️</button>
+            <button id="profileTabBtn" class="nav-btn">View Profile 👤</button>
+        </div>
+    </div>
+
+    <div class="container">
+        
+        <div id="auth-box" class="box">
+            <h3 id="auth-title">Vaa Macha! Login and Play 🚀</h3>
+            <hr style="border: 1px solid #1f4068;"><br>
+            <input type="text" id="login-username" placeholder="Enter Username"><br>
+            <input type="password" id="login-password" placeholder="Enter Password"><br><br>
+            <button id="enterPortalBtn" class="main-btn">Login 🔥</button><br>
+            <span id="authToggleLink" class="toggle-link">New user? Account Create Pannu macha!</span>
+        </div>
+
+        <div id="dashboard">
+            <h2>Welcome, <span id="welcome-user" style="color: #00fff5;">Macha</span>!</h2>
+            <div class="game-grid">
+                <div class="game-card" onclick="launchGame('vaanga-kandu-pidikkalaam')">
+                    <span style="font-size: 3.5rem;">🕵️‍♂️🎨</span>
+                    <h3>Vaanga Kandu Pidikkalaam</h3>
+                    <button class="main-btn">Play Live Now</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="profile-section" class="profile-card">
+            <h3>Player Profile Dashboard 📊</h3>
+            <p>👤 Character Name: <span id="prof-name" style="color: #fff; font-weight: bold;">-</span></p>
+            <p>🏆 Match Wins: <span id="prof-wins" style="color: #2ecc71; font-weight: bold;">0</span></p>
+            <button id="logoutBtn" class="logout-btn">Logout Portal 🚪</button>
+        </div>
+
+    </div>
+
+    <script src="hub.js"></script>
+</body>
+</html>

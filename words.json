@@ -1,0 +1,24 @@
+{
+  "categories": [
+    {
+      "name": "Local Sapaadu / Food 🍲",
+      "words": ["Parotta", "Dosai", "Biryani", "Fried Rice", "Idly", "Poori", "Vadacurry", "Salna", "Pongal", "Omelet"]
+    },
+    {
+      "name": "Daily Actions / Habits 🏃‍♂️",
+      "words": ["Sleeping", "Yawning", "Crying", "Laughing", "Running", "Dancing", "Studying", "Cooking", "Bathing", "Brushing"]
+    },
+    {
+      "name": "Veettu Objects / Gadgets 📺",
+      "words": ["Mixie", "Grinder", "Aatukal", "Ammi kal", "Laptop", "Smart Watch", "Fridge", "Fan", "Television", "Sofa"]
+    },
+    {
+      "name": "Local Transport / Vehicles 🚗",
+      "words": ["Cycle", "Auto", "Share Auto", "Bullet Bike", "City Bus", "Lorry", "Train", "Aeroplane", "Bicycle", "Scooty"]
+    },
+    {
+      "name": "Sports & Games 🏏",
+      "words": ["Cricket Bat", "Football", "Chess Board", "Carrom Board", "Ludo King", "Free Fire", "Volleyball", "Badminton Racket"]
+    }
+  ]
+}
