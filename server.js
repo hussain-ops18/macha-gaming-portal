@@ -76,45 +76,48 @@ app.post('/api/login', async (req, res) => {
     } catch (err) { res.status(500).json({ error: "Login error!" }); }
 });
 
-function shuffleArray(arr) {
-    return arr.sort(() => 0.5 - Math.random());
-}
-
-// ================= 🔥 GAME 1: RE-ENGINEERED COMPREHENSIVE ROLE ALLOCATION ENGINE =================
+// ================= 🎯 100% GUARANTEED REAL-TIME ROLE ASSIGNMENT GENERATOR ENGINE =================
 function executeGameLogicEngine(roomCode) {
     const room = rooms[roomCode];
-    if (!room) return;
+    if (!room || !room.players || room.players.length === 0) return;
     
     room.gameStarted = true; 
     room.drawings = {}; 
     room.votes = {};
 
     const randomCategory = wordsData.categories[Math.floor(Math.random() * wordsData.categories.length)];
-    const shuffledWords = shuffleArray([...randomCategory.words]);
+    const shuffledWords = [...randomCategory.words].sort(() => 0.5 - Math.random());
     
-    // Pure Fisher-Yates array randomizer loop for total absolute randomness
-    let playersArray = shuffleArray([...room.players]);
-    
-    // STRICT RATIO DISTRIBUTION MATRIX: 1 Spy, Rest are split correctly based on lobby counts
-    const spyPlayerId = playersArray[0].id;
-    
-    room.players.forEach((player) => {
-        if (player.id === spyPlayerId) {
-            player.role = "Spy 🕵️‍♂️";
-            player.word = shuffledWords[1]; // Spy receives fallback decoy word format
+    // Concrete absolute mathematical position pointer index allocation loop rules
+    const totalActivePlayersInLobby = room.players.length;
+    const computedRandomSpyIndexPointer = Math.floor(Math.random() * totalActivePlayersInLobby);
+
+    console.log(`🎰 Room [${roomCode}] Core Engine Triggered: Total players = ${totalActivePlayersInLobby}. Assigned Spy Index offset position = ${computedRandomSpyIndexPointer}`);
+
+    for (let currentOffset = 0; currentOffset < totalActivePlayersInLobby; currentOffset++) {
+        const targetPlayerObjectRef = room.players[currentOffset];
+        
+        if (currentOffset === computedRandomSpyIndexPointer) {
+            // Static index position explicitly matches condition checks profile variables allocation loop bounds
+            targetPlayerObjectRef.role = "Spy 🕵️‍♂️";
+            targetPlayerObjectRef.word = shuffledWords[1]; // Recovers dynamic decoy keyword text string array metrics
         } else {
-            // All non-spy operational entities inside the crew are dynamically tagged as Detectives!
-            player.role = "Detective 🔍";
-            player.word = "Kandu Pidi Macha! 🧠"; // Real core tracking baseline
+            // Absolute fallback guarantees 100% exact roles segregation without reference mismatch leaks
+            targetPlayerObjectRef.role = "Detective 🔍";
+            targetPlayerObjectRef.word = "Kandu Pidi Macha! 🧠";
         }
-        io.to(player.id).emit('assignRole', { role: player.role, word: player.word });
-    });
+        
+        // Instant hardware signal dispatch pipeline trigger loop properties elements rules configuration
+        io.to(targetPlayerObjectRef.id).emit('assignRole', { 
+            role: targetPlayerObjectRef.role, 
+            word: targetPlayerObjectRef.word 
+        });
+    }
 }
 
 // ================= MULTIPLAYER SOCKET NETWORK LOGIC CONTROL CENTER =================
 io.on('connection', (socket) => {
 
-    // --- HIGH PRECISION PROFILE SEARCH ENGINE ---
     socket.on('omnitrix_searchAndVerifyUserUid', (requestedUidKey) => {
         if (!requestedUidKey) return;
         const cleanTargetUid = requestedUidKey.toString().trim().toUpperCase();
@@ -138,7 +141,7 @@ io.on('connection', (socket) => {
         }
     });
 
-    // --- GAME 1 NETWORDS LOGIC CORE MODIFICATION ---
+    // --- GAME 1 NETWORKS CORE DRIVER PIPELINE ---
     socket.on('createNewRoomAction', ({ roomCode, username }) => {
         if (rooms[roomCode]) return socket.emit('roomAccessError', "Room already exists!");
         rooms[roomCode] = { players: [], gameStarted: false, adminId: socket.id, drawings: {}, votes: {} };
@@ -161,7 +164,8 @@ io.on('connection', (socket) => {
 
     socket.on('triggerPlayAgainAction', (roomCode) => {
         const room = rooms[roomCode]; if (!room || room.adminId !== socket.id) return;
-        room.gameStarted = false; io.to(roomCode).emit('reMatchInitiatedByAdmin');
+        room.gameStarted = false; 
+        io.to(roomCode).emit('reMatchInitiatedByAdmin');
         executeGameLogicEngine(roomCode);
     });
 
@@ -170,21 +174,16 @@ io.on('connection', (socket) => {
         const player = room.players.find(p => p.id === socket.id);
         if (player) room.drawings[player.id] = { name: player.name, data: drawingData, role: player.role };
         
-        // Total drawers check filter logic bounds allocation
         const totalDrawersCount = room.players.filter(p => !p.role.includes("Detective")).length;
         if (Object.keys(room.drawings).length >= totalDrawersCount) {
             io.to(roomCode).emit('startVotingPhase', { drawings: room.drawings });
         }
     });
 
-    // ⚡ FIXED CORE CLOSURE: Dynamic vote limits matching TOTAL active users count to ensure seamless game loop exit!
     socket.on('castVote', ({ roomCode, targetPlayerId }) => {
         const room = rooms[roomCode]; if (!room) return;
-        
-        // Registers incoming socket votes targets
         room.votes[socket.id] = targetPlayerId;
         
-        // GAME END FILTER DISPATCH: Wait until ALL active players in the room lock their targets!
         if (Object.keys(room.votes).length >= room.players.length) {
             let gameResult = "Spy Escaped! Spy Wins! 🕵️‍♂️🔥"; 
             let winningRole = "Spy 🕵️‍♂️";
@@ -194,15 +193,12 @@ io.on('connection', (socket) => {
 
             if (spyObject) {
                 const spyVotesCount = Object.values(room.votes).filter(id => id === spyObject.id).length;
-                
-                // If majority of the total lobby identifies and blocks the rogue spy index
                 if (spyVotesCount >= Math.ceil(totalVotersCount / 2)) {
                     gameResult = "Detectives Found the Spy! Team Wins! 🏆🎉"; 
                     winningRole = "Detective / Team";
                 }
             }
 
-            // Increments persistence records dynamically based on winning metrics loop mapping bounds
             room.players.forEach(p => {
                 const dbUser = localUserDatabase[p.name.toString().trim().toLowerCase()];
                 if (dbUser) {
