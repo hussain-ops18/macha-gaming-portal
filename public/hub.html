@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Macha Gaming Portal - Control Center Hub 🎮💎</title>
+    <title>Macha Gaming Portal - Professional Tech Hub Console 🎮💎</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Poppins:wght@400;600&display=swap');
         
-        /* --- 🎨 THEME MATRIX VARIABLE REGISTRATION PIPELINES --- */
         :root[data-theme="dark"] {
             --bg-gradient: radial-gradient(circle at center, #020b14 0%, #000205 100%);
             --sidebar-bg: #030d1a;
@@ -39,7 +38,6 @@
 
         *, *::before, *::after { box-sizing: border-box; }
 
-        /* 💾 VS CODE STYLE STATIC LEFT NAVIGATION SIDEBAR */
         .vscode-vertical-sidebar {
             width: 65px; min-width: 65px; height: 100vh; background: var(--sidebar-bg);
             border-right: 2px solid var(--border-glow); display: flex; flex-direction: column;
@@ -61,7 +59,6 @@
             color: var(--border-glow); box-shadow: 0 0 10px rgba(0,240,255,0.2);
         }
 
-        /* 📁 EXPANDED SIDE CONSOLE SYSTEM PANEL SHEETS */
         .vscode-expanded-sliding-panel {
             position: fixed; left: -320px; top: 0; width: 300px; height: 100vh;
             background: var(--panel-bg); border-right: 2px solid var(--border-glow); padding: 25px 20px;
@@ -80,12 +77,9 @@
         .stat-label-title { color: var(--text-muted); font-weight: 600; }
         .stat-value-indicator { font-family: 'Orbitron', sans-serif; color: var(--border-glow); font-weight: 700; }
 
-        /* 🎛️ PREFERENCES PRESETS FOR DROP DOWN THEMES BUTTONS */
         .theme-selector-combo-box { width: 100%; padding: 10px; background: #000; color: #00f0ff; border: 1px solid var(--border-glow); border-radius: 6px; font-family: monospace; outline: none; font-size: 0.85rem; cursor: pointer; }
-
         .document-text-container-block { font-size: 0.78rem; line-height: 1.5; color: var(--text-muted); background: rgba(0,0,0,0.2); padding: 10px; border-radius: 6px; border-left: 3px solid var(--border-glow); margin-bottom: 10px; text-align: justify; }
 
-        /* CENTRAL DATA VIEWPORT ARENA LAYOUT ELEMENTS */
         .macha-mainframe-wrapper { 
             flex-grow: 1; margin-left: 65px; width: calc(100% - 65px); 
             max-width: 850px; padding: 20px 15px; text-align: center;
@@ -95,32 +89,21 @@
         h1.portal-main-heading { font-family: 'Orbitron', sans-serif; color: var(--text-main); font-size: 2rem; letter-spacing: 2px; margin: 0 0 5px 0; font-weight: 900; text-shadow: 0 0 10px rgba(0,240,255,0.1); }
         div.portal-sub-caption { font-family: 'Poppins', sans-serif; font-weight: 600; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px; text-transform: uppercase; letter-spacing: 0.5px; }
 
-        /* 🔷 CYBER VIEWPORT DIAL CAROUSEL CONTROLLER */
         .omnitrix-watch-dial-viewport {
             position: relative; width: 100%; max-width: 460px; height: 320px; margin: 10px auto;
             border: 6px solid var(--sidebar-bg); border-radius: 32px; background: radial-gradient(circle, rgba(10,25,47,0.3) 0%, #000 100%);
             box-shadow: 0 0 25px rgba(0, 240, 255, 0.1), inset 0 0 20px rgba(0, 240, 255, 0.05);
             overflow: hidden; display: flex; align-items: center; justify-content: center;
         }
-        .omnitrix-watch-dial-viewport::before { content: ""; position: absolute; width: 100%; height: 100%; border-radius: 26px; pointer-events: none; border: 2px solid var(--border-glow); opacity: 0.2; z-index: 5; }
         
         .dial-arrow { position: absolute; font-size: 1.5rem; color: var(--border-glow); z-index: 10; cursor: pointer; text-shadow: 0 0 8px var(--border-glow); transition: 0.2s; user-select: none; }
         .arrow-up { top: 10px; transform: rotate(90deg); }
         .arrow-down { bottom: 10px; transform: rotate(90deg); }
 
-        .watch-carousel-scroller-track {
-            display: flex; flex-direction: column; width: 100%; height: 100%;
-            overflow-y: scroll; scroll-snap-type: y mandatory; padding: 40px 0; scroll-behavior: smooth;
-        }
+        .watch-carousel-scroller-track { display: flex; flex-direction: column; width: 100%; height: 100%; overflow-y: scroll; scroll-snap-type: y mandatory; padding: 40px 0; scroll-behavior: smooth; }
         .watch-carousel-scroller-track::-webkit-scrollbar { display: none; }
 
-        .omnitrix-alien-card {
-            min-height: 220px; height: 220px; margin: 10px auto; width: 90%;
-            background: var(--card-bg); border: 2.5px solid var(--btn-border); border-radius: 20px;
-            padding: 15px 20px; scroll-snap-align: center;
-            display: flex; flex-direction: column; justify-content: space-between; text-align: left;
-            position: relative; transition: 0.25s ease; transform: scale(0.94); opacity: 0.55;
-        }
+        .omnitrix-alien-card { min-height: 220px; height: 220px; margin: 10px auto; width: 90%; background: var(--card-bg); border: 2.5px solid var(--btn-border); border-radius: 20px; padding: 15px 20px; scroll-snap-align: center; display: flex; flex-direction: column; justify-content: space-between; text-align: left; position: relative; transition: 0.25s ease; transform: scale(0.94); opacity: 0.55; }
         .omnitrix-alien-card.focused-dial-element { transform: scale(1); opacity: 1; border-color: var(--border-glow); box-shadow: 0 0 20px rgba(0, 240, 255, 0.25); }
 
         h2.alien-title { font-family: 'Orbitron', sans-serif; font-weight: 900; margin: 0; font-size: 1.1rem; color: var(--text-main); }
@@ -143,18 +126,17 @@
         .empty-log-text { color: var(--text-muted); font-style: italic; font-size: 0.75rem; padding: 8px 0; text-align: center; width: 100%; }
         .action-icon-btn { background: #04381c; border: 1px solid #00ff66; color: #00ff66; padding: 4px 8px; border-radius: 5px; font-size: 0.7rem; cursor: pointer; font-family: 'Orbitron', sans-serif; font-weight: bold; }
     </style>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
 
     <div class="vscode-vertical-sidebar">
         <div class="sidebar-top-cluster">
-            <div class="sidebar-action-icon-node" onclick="toggleVsCodeSlidingPanel('profile');" id="toggle-btn-profile" title="My Core Profile">👤</div>
-            <div class="sidebar-action-icon-node" onclick="toggleVsCodeSlidingPanel('search');" id="toggle-btn-search" title="Search & Add Crew">🔍</div>
+            <div class="sidebar-action-icon-node" onclick="toggleVsCodeSlidingPanel('profile');" id="toggle-btn-profile">👤</div>
+            <div class="sidebar-action-icon-node" onclick="toggleVsCodeSlidingPanel('search');" id="toggle-btn-search">🔍</div>
         </div>
         <div class="sidebar-bottom-cluster">
-            <div class="sidebar-action-icon-node" onclick="toggleVsCodeSlidingPanel('settings');" id="toggle-btn-settings" title="Console Preferences Hub">⚙️</div>
-            <div class="sidebar-action-icon-node" onclick="triggerSystemCoreEject();" title="Eject Gate Control" style="color:#ff3366;">🔌</div>
+            <div class="sidebar-action-icon-node" onclick="toggleVsCodeSlidingPanel('settings');" id="toggle-btn-settings">⚙️</div>
+            <div class="sidebar-action-icon-node" onclick="triggerSystemCoreEject();" style="color:#ff3366;">🔌</div>
         </div>
     </div>
 
@@ -184,36 +166,15 @@
 
     <div id="slidingPanelSettings" class="vscode-expanded-sliding-panel">
         <h3 class="panel-block-heading">⚙️ Preferences</h3>
-        
         <label style="font-size:0.8rem; font-weight:bold; color:var(--text-main); display:block; margin-bottom:5px;">CONSOLE THEME PRESET</label>
         <select id="themeCoreSelector" class="theme-selector-combo-box" onchange="applyConsoleThemeAction(this.value);">
             <option value="dark">Stellar Shadow (Dark) 🌌</option>
             <option value="light">Cyber Canvas (Light) 🪞</option>
             <option value="system">Match Device Engine (System) 🤖</option>
         </select>
-
         <h3 class="panel-block-heading" style="margin-top:20px; font-size:0.85rem;">🛡️ Legal & Privacy</h3>
-        <div class="document-text-container-block">
-            <b>Privacy Policy:</b> Player verification profiles, credentials keys, and matches wins metrics loops are fully encrypted and hard locked on absolute local storage boundaries. Static disk tracking loops ensure pure telemetry protection scripts.
-        </div>
-
-        <h3 class="panel-block-heading" style="font-size:0.85rem;">📝 Portal Lore & Story</h3>
-        <div class="document-text-container-block">
-            <b>The Game Story:</b> Six players enter an interstellar validation coordinate ring node. One is injected as a rogue Spy profile intent on memory data execution leaks, while Detectives track structural drawings vector elements to neutralize threat vectors loops!
-        </div>
-
-        <h3 class="panel-block-heading" style="font-size:0.85rem;">⚖️ Match Rule Set</h3>
-        <div class="document-text-container-block">
-            <b>1. Canvas Mode:</b> Draw hints within 60s boundaries lines. Detectives can't access canvas pipelines.<br>
-            <b>2. Buzzer Mode:</b> Fast finger response criteria. 15s to strike. Correct triggers +1, incorrect triggers strict -1 points deduction. Timeout has 0 penalty.
-        </div>
-
-        <h3 class="panel-block-heading" style="font-size:0.85rem;">👑 Systems Architect</h3>
-        <div class="document-text-container-block" style="border-color:#ffaa00; font-weight:bold; text-align:center; color:#fff; background:rgba(255,170,0,0.05);">
-            Engineered By:<br><span style="color:#00f0ff; font-family:'Orbitron'; font-size:0.9rem;">Khadhar Hussain A. 👑</span>
-        </div>
+        <div class="document-text-container-block"><b>Privacy Policy:</b> Enforced retention loops are active securely.</div>
     </div>
-
 
     <div class="macha-mainframe-wrapper">
         <h1 class="portal-main-heading">MACHA GAMING PORTAL 🕹️⚡</h1>
@@ -225,14 +186,14 @@
                 <div class="omnitrix-alien-card focused-dial-element" id="card-alien-g1">
                     <div>
                         <h2 class="alien-title">VAANGA KANDU PIDIKKALAAM 🕵️‍♂️</h2>
-                        <p class="alien-desc">Detect hidden user signatures inside multi-agent socket networks. Live canvas matrix coordinate mapping engine with responsive boundaries structures calibration metrics lock loops.</p>
+                        <p class="alien-desc">Detect hidden user signatures inside multi-agent socket networks.</p>
                     </div>
                     <button onclick="igniteModuleOneRoute();" class="omnitrix-ignition-btn">Launch Operational Code ⚡</button>
                 </div>
                 <div class="omnitrix-alien-card" id="card-alien-g2">
                     <div>
                         <h2 class="alien-title">TAKKUNU PAARU USHARA IRU ⚡</h2>
-                        <p class="alien-desc">Fast regional Tamil connection flash-round buzzer battle. Non-repeating randomized data stream categories (Memes, Songs, Movies, Brands) with 15s zero point penalty timeout mechanics and active voice capture translation.</p>
+                        <p class="alien-desc">Fast regional Tamil connection flash-round buzzer battle.</p>
                     </div>
                     <button onclick="igniteModuleTwoRoute();" class="omnitrix-ignition-btn">Activate Pulse Buzzer 🔥</button>
                 </div>
@@ -246,70 +207,21 @@
         </div>
     </div>
 
+    <script src="/socket.io/socket.io.js"></script>
     <script>
-        // --- 1. DYNAMIC THEME ENGINE CORE CONTROLLER MODULE ---
-        function applyConsoleThemeAction(selectedThemeMode) {
-            localStorage.setItem('machaLayoutThemeSelection', selectedThemeMode);
-            
-            if (selectedThemeMode === 'system') {
-                const systemPrefersDarkCheck = window.matchMedia('(prefers-color-scheme: dark)').matches;
-                document.documentElement.setAttribute('data-theme', systemPrefersDarkCheck ? 'dark' : 'light');
-            } else {
-                document.documentElement.setAttribute('data-theme', selectedThemeMode);
-            }
+        const socket = io();
+
+        // ⚡ SESSION FIREWALL PARSING: 
+        // Strict verification loop to retain session parameters! Never fall back to index if valid data keys exist!
+        const activeUserSessionName = localStorage.getItem('machaUsername');
+        let userProfileUniqueIdKey = localStorage.getItem('machaUserUID');
+
+        if (!activeUserSessionName || activeUserSessionName === "undefined" || !userProfileUniqueIdKey || userProfileUniqueIdKey === "undefined") {
+            console.log("⚠️ Invalid Active Cache Data Detected. Forcing Portal Realignment.");
+            window.location.replace("./index.html"); // Force exit ONLY on true empty cache configurations loop!
         }
 
-        // Initialize active configuration profiles on bootstrap phase
-        const runtimeSavedTheme = localStorage.getItem('machaLayoutThemeSelection') || 'dark';
-        document.getElementById('themeCoreSelector').value = runtimeSavedTheme;
-        applyConsoleThemeAction(runtimeSavedTheme);
-
-        // Listen for real-time system color changes dynamically if system match mode is running
-        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
-            if (localStorage.getItem('machaLayoutThemeSelection') || 'system' === 'system') {
-                document.documentElement.setAttribute('data-theme', e.matches ? 'dark' : 'light');
-            }
-        });
-
-        // --- 2. INTEGRATED VS CODE STYLE SLIDING DRAWER LOGIC MAPPING ---
-        let activeOpenPanelType = null;
-
-        function toggleVsCodeSlidingPanel(panelType) {
-            const pProfile = document.getElementById('slidingPanelProfile');
-            const pSearch = document.getElementById('slidingPanelSearch');
-            const pSettings = document.getElementById('slidingPanelSettings');
-            
-            const tBtnProfile = document.getElementById('toggle-btn-profile');
-            const tBtnSearch = document.getElementById('toggle-btn-search');
-            const tBtnSettings = document.getElementById('toggle-btn-settings');
-
-            if (activeOpenPanelType === panelType) {
-                pProfile.classList.remove('active-panel-slide');
-                pSearch.classList.remove('active-panel-slide');
-                pSettings.classList.remove('active-panel-slide');
-                tBtnProfile.classList.remove('active-panel-toggle');
-                tBtnSearch.classList.remove('active-panel-toggle');
-                tBtnSettings.classList.remove('active-panel-toggle');
-                activeOpenPanelType = null;
-            } else {
-                pProfile.classList.remove('active-panel-slide');
-                pSearch.classList.remove('active-panel-slide');
-                pSettings.classList.remove('active-panel-slide');
-                tBtnProfile.classList.remove('active-panel-toggle');
-                tBtnSearch.classList.remove('active-panel-toggle');
-                tBtnSettings.classList.remove('active-panel-toggle');
-
-                if (panelType === 'profile') { pProfile.classList.add('active-panel-slide'); tBtnProfile.classList.add('active-panel-toggle'); } 
-                else if (panelType === 'search') { pSearch.classList.add('active-panel-slide'); tBtnSearch.classList.add('active-panel-toggle'); } 
-                else if (panelType === 'settings') { pSettings.classList.add('active-panel-slide'); tBtnSettings.classList.add('active-panel-toggle'); }
-                activeOpenPanelType = panelType;
-            }
-        }
-
-        // --- 3. BIOMETRIC CACHE SYNCHRONIZER DATA ARRAYS ---
-        const activeUserSessionName = localStorage.getItem('machaUsername') || "Macha_Pilot";
         const activeUserSessionWins = localStorage.getItem('machaWins') || "0";
-        let userProfileUniqueIdKey = localStorage.getItem('machaUserUID') || "UID-GUEST";
         const userProfileActiveStreak = localStorage.getItem('machaActiveStreakValue') || activeUserSessionWins;
 
         document.getElementById('hud-username-display').innerText = activeUserSessionName.toUpperCase();
@@ -318,34 +230,65 @@
         document.getElementById('hud-streak-counter').innerText = `${userProfileActiveStreak} RNDS`;
         document.getElementById('avatar-initials-label').innerText = activeUserSessionName.charAt(0).toUpperCase();
 
+        function applyConsoleThemeAction(selectedThemeMode) {
+            localStorage.setItem('machaLayoutThemeSelection', selectedThemeMode);
+            if (selectedThemeMode === 'system') {
+                const systemPrefersDarkCheck = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                document.documentElement.setAttribute('data-theme', systemPrefersDarkCheck ? 'dark' : 'light');
+            } else {
+                document.documentElement.setAttribute('data-theme', selectedThemeMode);
+            }
+        }
+        const runtimeSavedTheme = localStorage.getItem('machaLayoutThemeSelection') || 'dark';
+        document.getElementById('themeCoreSelector').value = runtimeSavedTheme;
+        applyConsoleThemeAction(runtimeSavedTheme);
+
+        let activeOpenPanelType = null;
+        function toggleVsCodeSlidingPanel(panelType) {
+            const pProfile = document.getElementById('slidingPanelProfile');
+            const pSearch = document.getElementById('slidingPanelSearch');
+            const pSettings = document.getElementById('slidingPanelSettings');
+            const tBtnProfile = document.getElementById('toggle-btn-profile');
+            const tBtnSearch = document.getElementById('toggle-btn-search');
+            const tBtnSettings = document.getElementById('toggle-btn-settings');
+
+            if (activeOpenPanelType === panelType) {
+                pProfile.classList.remove('active-panel-slide'); pSearch.classList.remove('active-panel-slide'); pSettings.classList.remove('active-panel-slide');
+                tBtnProfile.classList.remove('active-panel-toggle'); tBtnSearch.classList.remove('active-panel-toggle'); tBtnSettings.classList.remove('active-panel-toggle');
+                activeOpenPanelType = null;
+            } else {
+                pProfile.classList.remove('active-panel-slide'); pSearch.classList.remove('active-panel-slide'); pSettings.classList.remove('active-panel-slide');
+                tBtnProfile.classList.remove('active-panel-toggle'); tBtnSearch.classList.remove('active-panel-toggle'); tBtnSettings.classList.remove('active-panel-toggle');
+                if (panelType === 'profile') { pProfile.classList.add('active-panel-slide'); tBtnProfile.classList.add('active-panel-toggle'); } 
+                else if (panelType === 'search') { pSearch.classList.add('active-panel-slide'); tBtnSearch.classList.add('active-panel-toggle'); } 
+                else if (panelType === 'settings') { pSettings.classList.add('active-panel-slide'); tBtnSettings.classList.add('active-panel-toggle'); }
+                activeOpenPanelType = panelType;
+            }
+        }
+
         function igniteModuleOneRoute() { window.location.href = "./games/vaanga-kandu-pidikkalaam/index.html?user=" + encodeURIComponent(activeUserSessionName); }
         function igniteModuleTwoRoute() { window.location.href = "./games/takkunu-paaru/index.html?user=" + encodeURIComponent(activeUserSessionName); }
-        function triggerSystemCoreEject() { localStorage.clear(); window.location.href = "./index.html"; }
+        function triggerSystemCoreEject() { localStorage.clear(); window.location.replace("./index.html"); }
 
-        // --- 4. CAROUSEL INTERACTIVE NAVIGATION SCROLLER ---
         const scrollerTrack = document.getElementById('watch-scroller-track-node');
         const alienCardG1 = document.getElementById('card-alien-g1');
         const alienCardG2 = document.getElementById('card-alien-g2');
-
         scrollerTrack.addEventListener('scroll', () => {
             let pos = scrollerTrack.scrollTop;
             if (pos < 110) { alienCardG1.classList.add('focused-dial-element'); alienCardG2.classList.remove('focused-dial-element'); } 
             else { alienCardG2.classList.add('focused-dial-element'); alienCardG1.classList.remove('focused-dial-element'); }
         });
-
         document.getElementById('scroll-up-trigger').addEventListener('click', () => { scrollerTrack.scrollTop -= 180; });
         document.getElementById('scroll-down-trigger').addEventListener('click', () => { scrollerTrack.scrollTop += 180; });
 
-        // --- 5. SOCIAL CACHE LOG CONTROLLERS ---
         function renderFriendsPad() {
-            let cache = localStorage.getItem('machaStoredFriendsList'); if (!cache) { localStorage.setItem('machaStoredFriendsList', JSON.stringify([])); cache = JSON.stringify([]); }
+            let cache = localStorage.getItem('machaStoredFriendsList') || "[]";
             let parsed = JSON.parse(cache); const targetPad = document.getElementById('friends-list-render-pad');
             if (parsed.length === 0) { targetPad.innerHTML = `<div class="empty-log-text">No friends linked yet.</div>`; return; }
             targetPad.innerHTML = parsed.map(f => `<div class="social-row-node"><div>🔵 <span>${f.name.toUpperCase()}</span><span class="node-uid-label">${f.uid}</span></div><span style="color:var(--border-glow); font-size:0.7rem; font-weight:bold; font-family:'Orbitron';">LINKED</span></div>`).join('');
         }
-
         function renderRecentPad() {
-            let cache = localStorage.getItem('machaStoredRecentPlayers'); if (!cache) { localStorage.setItem('machaStoredRecentPlayers', JSON.stringify([])); cache = JSON.stringify([]); }
+            let cache = localStorage.getItem('machaStoredRecentPlayers') || "[]";
             let parsed = JSON.parse(cache); const targetPad = document.getElementById('recent-players-render-pad');
             if (parsed.length === 0) { targetPad.innerHTML = `<div class="empty-log-text">No match history logged. 👥</div>`; return; }
             targetPad.innerHTML = parsed.map(p => `<div class="social-row-node"><div>👤 <span>${p.name.toUpperCase()}</span><span class="node-uid-label">${p.uid}</span></div><button onclick="quickAddFriendFromRecentAction('${p.name}', '${p.uid}');" class="action-icon-btn">LINK 🔗</button></div>`).join('');
@@ -355,18 +298,15 @@
             const box = document.getElementById('friendUidInput'); const targetUidInput = box.value.trim().toUpperCase();
             if (!targetUidInput) return alert("Type a valid UID macha!");
             if (targetUidInput === userProfileUniqueIdKey) return alert("Unnoda sondha UID-aye nee add panna mudiyaadhu thala! 🤯");
-            let currentFriendsList = JSON.parse(localStorage.getItem('machaStoredFriendsList')) || [];
+            let currentFriendsList = JSON.parse(localStorage.getItem('machaStoredFriendsList') || "[]");
             if (currentFriendsList.some(f => f.uid === targetUidInput)) return alert("Intha player munnadiye linked-la thaan irukaanga! 🟢");
             socket.emit('omnitrix_searchAndVerifyUserUid', targetUidInput); box.value = "";
         }
-
         socket.on('omnitrix_searchUidResultSuccess', (matchedUserNode) => {
-            let currentFriendsList = JSON.parse(localStorage.getItem('machaStoredFriendsList')) || []; currentFriendsList.push(matchedUserNode);
+            let currentFriendsList = JSON.parse(localStorage.getItem('machaStoredFriendsList') || "[]"); currentFriendsList.push(matchedUserNode);
             localStorage.setItem('machaStoredFriendsList', JSON.stringify(currentFriendsList)); alert(`💎 Success macha! Linked: ${matchedUserNode.name.toUpperCase()}`); renderFriendsPad();
         });
         socket.on('omnitrix_searchUidResultFailure', (errorMsg) => { alert(errorMsg); });
-        function quickAddFriendFromRecentAction(name, uid) { let list = JSON.parse(localStorage.getItem('machaStoredFriendsList')) || []; if (list.some(f => f.uid === uid)) return alert("Munnadiye link aagi dhaan iruku! 🟢"); list.push({ name: name, uid: uid }); localStorage.setItem('machaStoredFriendsList', JSON.stringify(list)); renderFriendsPad(); }
-
         renderFriendsPad(); renderRecentPad();
     </script>
 </body>
