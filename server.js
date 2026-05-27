@@ -12,18 +12,20 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
-let localUserDatabase = {}; // Standard bulletproof in-memory simulation account layer
+let localUserDatabase = {}; // Persistent simulation array
 const wordsData = JSON.parse(fs.readFileSync('words.json', 'utf8'));
 let rooms = {}; 
 
-// ================= AUTHENTICATION APIS (SIGNUP & LOGIN) =================
+// ================= AUTHENTICATION APIS =================
 app.post('/api/signup', async (req, res) => {
     try {
         const { username, password } = req.body;
         const normalizedUser = username.trim().toLowerCase();
         if (localUserDatabase[normalizedUser]) return res.status(400).json({ error: "Intha peerla aal irukaanga macha!" });
         const hashedPassword = await bcrypt.hash(password, 10);
-        localUserDatabase[normalizedUser] = { rawUsername: username.trim(), passwordHash: hashedPassword, matchWins: 14 };
+        
+        // Match wins accurately starts at exactly 0 for fresh new profiles matrix!
+        localUserDatabase[normalizedUser] = { rawUsername: username.trim(), passwordHash: hashedPassword, matchWins: 0 };
         res.json({ success: true, username: localUserDatabase[normalizedUser].rawUsername, wins: localUserDatabase[normalizedUser].matchWins });
     } catch (err) { res.status(500).json({ error: "Signup error!" }); }
 });
@@ -43,36 +45,29 @@ app.post('/api/login', async (req, res) => {
 // ================= MULTIPLAYER CORE ROOM MATRIX SOCKET ENGINE =================
 io.on('connection', (socket) => {
 
-    // Scenario 1: Admin creating a brand new dynamic room code track
     socket.on('createNewRoomAction', ({ roomCode, username }) => {
         if (rooms[roomCode]) {
             socket.emit('roomAccessError', "Intha room code munnadiye yaaro create pannitaanga macha, vera code podu! ❌");
             return;
         }
-
-        // Initialize fresh empty room parameters data blocks
         rooms[roomCode] = { players: [], gameStarted: false, adminId: socket.id, drawings: {}, votes: {} };
-        rooms[roomCode].players.push({ id: socket.id, name: username, role: '', word: '' });
-        
+        rooms[roomCode].players.push({ id: socket.id, name: username, role: '', word: '', currentWins: 0 });
         socket.join(roomCode);
         socket.emit('roomAccessSuccess');
         io.to(roomCode).emit('roomData', { players: rooms[roomCode].players, adminId: rooms[roomCode].adminId });
     });
 
-    // Scenario 2: Regular friends joining existing predefined blocks checks
     socket.on('joinExistingRoomAction', ({ roomCode, username }) => {
         const room = rooms[roomCode];
-        
         if (!room) {
-            socket.emit('roomAccessError', "Apdi oru room-e illa macha! Correct code-ah enter pannu, illa pudhu room create pannu! 🤯");
+            socket.emit('roomAccessError', "Apdi oru room-e illa macha! Correct code-ah enter pannu! 🤯");
             return;
         }
         if (room.gameStarted) {
             socket.emit('roomAccessError', "Match munnadiye start aayiduchu macha, adutha round-la vaa! ⏱️");
             return;
         }
-
-        room.players.push({ id: socket.id, name: username, role: '', word: '' });
+        room.players.push({ id: socket.id, name: username, role: '', word: '', currentWins: 0 });
         socket.join(roomCode);
         socket.emit('roomAccessSuccess');
         io.to(roomCode).emit('roomData', { players: room.players, adminId: room.adminId });
@@ -110,14 +105,44 @@ io.on('connection', (socket) => {
         const room = rooms[roomCode]; if (!room) return;
         room.votes[socket.id] = targetPlayerId;
         const totalDetectives = room.players.filter(p => p.role.includes("Detective")).length;
+        
         if (Object.keys(room.votes).length >= totalDetectives) {
             let gameResult = "Spy Escaped! Spy Wins! 🕵️‍♂️🔥";
+            let winningRole = "Spy 🕵️‍♂️";
+            
             const spyObject = room.players.find(p => p.role.includes("Spy"));
             if(spyObject) {
                 const spyVotesCount = Object.values(room.votes).filter(id => id === spyObject.id).length;
-                if (spyVotesCount >= Math.ceil(totalDetectives / 2)) gameResult = "Detectives Found the Spy! Team Wins! 🏆🎉";
+                if (spyVotesCount >= Math.ceil(totalDetectives / 2)) {
+                    gameResult = "Detectives Found the Spy! Team Wins! 🏆🎉";
+                    winningRole = "Detective / Team";
+                }
             }
-            io.to(roomCode).emit('gameOver', { result: gameResult, spyName: spyObject ? spyObject.name : "Unknown" });
+
+            // Real-time Win Metrics Updates Calculator Sync Loop
+            room.players.forEach(player => {
+                const normalizedPlayerName = player.name.trim().toLowerCase();
+                const userInDb = localUserDatabase[normalizedPlayerName];
+                
+                if (userInDb) {
+                    if (winningRole === "Spy 🕵️‍♂️" && player.role.includes("Spy")) {
+                        userInDb.matchWins += 1;
+                    } else if (winningRole === "Detective / Team" && !player.role.includes("Spy")) {
+                        userInDb.matchWins += 1;
+                    }
+                    player.currentWins = userInDb.matchWins;
+                }
+            });
+
+            const updatedScoresList = room.players.map(p => ({ name: p.name, totalWins: p.currentWins || 0 }));
+
+            io.to(roomCode).emit('gameOver', { 
+                result: gameResult, 
+                spyName: spyObject ? spyObject.name : "Unknown",
+                scores: updatedScoresList
+            });
+            
+            delete rooms[roomCode]; // Flush room layout safely for next matches
         }
     });
 
