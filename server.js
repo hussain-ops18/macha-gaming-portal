@@ -21,10 +21,10 @@ if (fs.existsSync(BACKUP_DB_FILE_PATH)) {
         const rawJsonStringData = fs.readFileSync(BACKUP_DB_FILE_PATH, 'utf8');
         if (rawJsonStringData && rawJsonStringData.trim() !== "") {
             localUserDatabase = JSON.parse(rawJsonStringData);
-            console.log("💾 Permanent active records database successfully loaded on boot.");
+            console.log("💾 Permanent active records memory loop loaded safely.");
         }
     } catch (dbErr) {
-        console.log("⚠️ Fresh persistent database initialization triggered.");
+        console.log("⚠️ Backup storage clean initialize bootstrap fallback.");
         localUserDatabase = {};
     }
 }
@@ -33,7 +33,7 @@ function commitActiveMemoryChangesToDiskStorage() {
     try {
         fs.writeFileSync(BACKUP_DB_FILE_PATH, JSON.stringify(localUserDatabase, null, 2), 'utf8');
     } catch (saveErr) {
-        console.error("❌ Persistent storage writer module synchronization failure!");
+        console.error("❌ Core system database disk sync failure mapping!");
     }
 }
 
@@ -73,6 +73,7 @@ function shuffleArray(arr) {
     return arr.sort(() => 0.5 - Math.random());
 }
 
+// ================= 🎯 ANTI-PREDICTION PRECISE MULTI-RANDOM CORE ALGORITHM ENGINE =================
 function executeGameLogicEngine(roomCode) {
     const room = rooms[roomCode];
     if (!room || !room.players || room.players.length === 0) return;
@@ -81,10 +82,34 @@ function executeGameLogicEngine(roomCode) {
     room.drawings = {}; 
     room.votes = {};
 
-    const randomCategory = wordsData.categories[Math.floor(Math.random() * wordsData.categories.length)];
-    const baseTeamWordString = randomCategory.words[0]; 
-    const decoySpyWordString = randomCategory.words[1] || randomCategory.words[0]; 
+    // Tracking active list session bounds history arrays configurations loops settings
+    if (!room.usedWordsHistoryList) {
+        room.usedWordsHistoryList = [];
+    }
+
+    const thingsCategoryPackageNode = wordsData.categories[0]; // Strict forces item array 0 index selector (Pure Tamil Things Only)
     
+    // Filters remaining dynamic non-repeating parameters items pool checks limits
+    let availableFreshWordsPool = thingsCategoryPackageNode.items.filter(word => !room.usedWordsHistoryList.includes(word));
+    
+    // Automatic cycle cleanup fallback threshold loop if all data values get exhausted in extensive play runs
+    if (availableFreshWordsPool.length < 2) {
+        room.usedWordsHistoryList = [];
+        availableFreshWordsPool = [...thingsCategoryPackageNode.items];
+    }
+
+    // Shuffles pool extraction matrices values indicators settings
+    let fullyShuffledWordTokens = shuffleArray([...availableFreshWordsPool]);
+    
+    // 💥 UNPREDICTABLE ISOLATED SPLIT SELECTION: 
+    // Pulls completely separate random word values! Zero linked properties static indexing loops!
+    const ultimateTeamTargetMainWord = fullyShuffledWordTokens[0];
+    const ultimateSpyContextDecoyWord = fullyShuffledWordTokens[1];
+
+    // Logs dynamic elements to session index lists structures parameters rules
+    room.usedWordsHistoryList.push(ultimateTeamTargetMainWord);
+    room.usedWordsHistoryList.push(ultimateSpyContextDecoyWord);
+
     let masterPoolOfPlayers = shuffleArray([...room.players]);
     const totalLobbySizeCount = masterPoolOfPlayers.length;
 
@@ -97,22 +122,27 @@ function executeGameLogicEngine(roomCode) {
     }
     const globalSpyImpostorPlayerId = masterPoolOfPlayers[assignedDetectivesCount].id;
 
+    console.log(`🎰 Anti-Prediction Active Logic [Room:${roomCode}]: Category = ${thingsCategoryPackageNode.category}. Team Word = ${ultimateTeamTargetMainWord}. Spy Word = ${ultimateSpyContextDecoyWord}`);
+
     room.players.forEach((player) => {
         if (globalDetectivesIdsArray.includes(player.id)) {
             player.role = "Detective 🔍";
-            player.word = "Word details hidden state tracker. Monitor cards sheets drawings vectors! 🧠";
+            player.word = "வார்த்தைகள் மறைக்கப்பட்டுள்ளது. வரைபட பலகையை கவனித்து துப்பு துலக்குங்கள்! 🧠";
         } else if (player.id === globalSpyImpostorPlayerId) {
+            // SPY TARGET RULES: Receives 100% separate random Tamil item string token with absolute dynamic non-repeating parameters!
             player.role = "Spy 🕵️‍♂️";
-            player.word = decoySpyWordString; 
+            player.word = ultimateSpyContextDecoyWord; 
         } else {
+            // TEAM MEMBERS MAJORITY: Receives standard core primary target string baseline
             player.role = "Team Member 🎨";
-            player.word = baseTeamWordString; 
+            player.word = ultimateTeamTargetMainWord; 
         }
+        
         io.to(player.id).emit('assignRole', { role: player.role, word: player.word });
     });
 }
 
-// ================= MULTIPLAYER SOCKET PORTS MIDDLEWARE ACTIONS CONTROL =================
+// ================= MULTIPLAYER SOCKET PORTS INTERACTION NETWORKS MIDDLEWARE =================
 io.on('connection', (socket) => {
 
     socket.on('omnitrix_searchAndVerifyUserUid', (requestedUidKey) => {
@@ -128,7 +158,7 @@ io.on('connection', (socket) => {
             }
         }
         if (foundRealUserMatch && foundRealUserMatch.name) { socket.emit('omnitrix_searchUidResultSuccess', foundRealUserMatch); } 
-        else { socket.emit('omnitrix_searchUidResultFailure', `Apdi oru active player validation tag code (${cleanTargetUid}) database collections layout-le illai macha! 🔍❌`); }
+        else { socket.emit('omnitrix_searchUidResultFailure', `Apdi oru real player validation tag code (${cleanTargetUid}) database collections layout-le illai macha! 🔍❌`); }
     });
 
     socket.on('createNewRoomAction', ({ roomCode, username }) => {
@@ -169,10 +199,8 @@ io.on('connection', (socket) => {
         }
     });
 
-    // ⚡ VOTE SUBMISSION LOOP CLOSURE PROTOCOL RE-CONFIGURED
     socket.on('castVote', ({ roomCode, targetPlayerId }) => {
         const room = rooms[roomCode]; if (!room) return;
-        
         room.votes[socket.id] = targetPlayerId;
         const detectivesActiveVotersArray = room.players.filter(p => p.role.includes("Detective"));
         
@@ -213,8 +241,6 @@ io.on('connection', (socket) => {
             
             commitActiveMemoryChangesToDiskStorage();
             
-            // 🛑 EXPLICIT SAFETY DELAY INTERVAL LOCK OUT
-            // Forces network room profiles array objects to retain connection states before final result channel closes down!
             io.to(roomCode).emit('gameOver', { 
                 result: finalMatchVerdictText, 
                 spyName: spyObjectTargetProfileNode ? spyObjectTargetProfileNode.name : "Unknown", 
@@ -224,7 +250,7 @@ io.on('connection', (socket) => {
         }
     });
 
-    // --- GAME 2 SYSTEM LOGS ---
+    // --- GAME 2 DRIVER INTERACTION MODULE STACK ---
     socket.on('tp_createNewRoom', ({ roomCode, username }) => { if (takkunuRooms[roomCode]) return socket.emit('tp_roomError', "Intha code-la munnadiye room iruku macha! ❌"); let pureFreshPool = [...connectWordsData.categories].sort(() => 0.5 - Math.random()); takkunuRooms[roomCode] = { players: [], currentRound: 0, maxRounds: 10, adminId: socket.id, buzzerLockedBy: null, currentWordPair: null, wordsPool: pureFreshPool.slice(0, 10), roundTimeout: null }; takkunuRooms[roomCode].players.push({ id: socket.id, name: username, score: 0 }); socket.join(roomCode); socket.emit('tp_roomSuccess'); io.to(roomCode).emit('tp_roomData', { players: takkunuRooms[roomCode].players, adminId: takkunuRooms[roomCode].adminId }); });
     socket.on('tp_joinExistingRoom', ({ roomCode, username }) => { const room = takkunuRooms[roomCode]; if (!room) return socket.emit('tp_roomError', "Apdi oru room-e illa macha! 🤯"); room.players.push({ id: socket.id, name: username, score: 0 }); socket.join(roomCode); socket.emit('tp_roomSuccess'); io.to(roomCode).emit('tp_roomData', { players: room.players, adminId: room.adminId }); });
     function tp_startNextRoundEngine(roomCode) { const room = takkunuRooms[roomCode]; if (!room) return; room.buzzerLockedBy = null; room.currentRound += 1; if (room.roundTimeout) clearTimeout(room.roundTimeout); if (room.currentRound > room.maxRounds) { io.to(roomCode).emit('tp_gameFinished', { leaderboard: [...room.players].sort((a,b) => b.score - a.score) }); return; } room.currentWordPair = room.wordsPool[room.currentRound - 1]; io.to(roomCode).emit('tp_nextRoundStarted', { round: room.currentRound, clues: room.currentWordPair.clues, type: room.currentWordPair.type }); room.roundTimeout = setTimeout(() => { if (!room.buzzerLockedBy) { io.to(roomCode).emit('tp_roundTimeoutExpired', { actualAnswer: room.currentWordPair.answer, players: room.players }); setTimeout(() => { tp_startNextRoundEngine(roomCode); }, 4000); } }, 15000); }
