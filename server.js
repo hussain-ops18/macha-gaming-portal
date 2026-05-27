@@ -40,7 +40,37 @@ app.post('/api/login', async (req, res) => {
     } catch (err) { res.status(500).json({ error: "Login error!" }); }
 });
 
-// ================= MULTIPLAYER CORE ROOM MATRIX SOCKET ENGINE =================
+// Helper function to dynamically shuffle array elements safely
+function shuffleArray(arr) {
+    return arr.sort(() => 0.5 - Math.random());
+}
+
+// ================= MATCH ENGINE CORE GENERATOR =================
+function executeGameLogicEngine(roomCode) {
+    const room = rooms[roomCode];
+    if (!room) return;
+    
+    room.gameStarted = true; 
+    room.drawings = {}; 
+    room.votes = {};
+
+    const randomCategory = wordsData.categories[Math.floor(Math.random() * wordsData.categories.length)];
+    const shuffledWords = shuffleArray([...randomCategory.words]);
+    
+    let playersArray = shuffleArray([...room.players]);
+    const spyPlayer = playersArray[0];
+    const detective1 = playersArray[1] || playersArray[0];
+    const detective2 = playersArray[2] || playersArray[0];
+
+    room.players.forEach(player => {
+        if (player.id === spyPlayer.id) { player.role = "Spy 🕵️‍♂️"; player.word = shuffledWords[1]; }
+        else if (player.id === detective1.id || player.id === detective2.id) { player.role = "Detective 🔍"; player.word = "Kandu Pidi Macha!"; }
+        else { player.role = "Team Member 🎨"; player.word = shuffledWords[0]; }
+        io.to(player.id).emit('assignRole', { role: player.role, word: player.word });
+    });
+}
+
+// ================= MULTIPLAYER SOCKET NETWORK =================
 io.on('connection', (socket) => {
 
     socket.on('createNewRoomAction', ({ roomCode, username }) => {
@@ -74,21 +104,21 @@ io.on('connection', (socket) => {
     socket.on('startGame', (roomCode) => {
         const room = rooms[roomCode];
         if (!room || room.adminId !== socket.id) return;
-        room.gameStarted = true; room.drawings = {}; room.votes = {};
-        const randomCategory = wordsData.categories[Math.floor(Math.random() * wordsData.categories.length)];
-        const shuffledWords = randomCategory.words.sort(() => 0.5 - Math.random());
-        
-        let playersArray = [...room.players].sort(() => 0.5 - Math.random());
-        const spyPlayer = playersArray[0];
-        const detective1 = playersArray[1] || playersArray[0];
-        const detective2 = playersArray[2] || playersArray[0];
+        executeGameLogicEngine(roomCode);
+    });
 
-        room.players.forEach(player => {
-            if (player.id === spyPlayer.id) { player.role = "Spy 🕵️‍♂️"; player.word = shuffledWords[1]; }
-            else if (player.id === detective1.id || player.id === detective2.id) { player.role = "Detective 🔍"; player.word = "Kandu Pidi Macha!"; }
-            else { player.role = "Team Member 🎨"; player.word = shuffledWords[0]; }
-            io.to(player.id).emit('assignRole', { role: player.role, word: player.word });
-        });
+    // ================= NEW: PLAY AGAIN RE-MATCH ROOM EVENT =================
+    socket.on('triggerPlayAgainAction', (roomCode) => {
+        const room = rooms[roomCode];
+        if (!room || room.adminId !== socket.id) return;
+        
+        // Reset flags safely while keeping the players intact inside the room session
+        room.gameStarted = false;
+        room.drawings = {};
+        room.votes = {};
+        
+        io.to(roomCode).emit('reMatchInitiatedByAdmin');
+        executeGameLogicEngine(roomCode);
     });
 
     socket.on('submitDrawing', ({ roomCode, drawingData }) => {
@@ -117,9 +147,11 @@ io.on('connection', (socket) => {
                 }
             }
 
+            // CRITICAL FIX: Explicit absolute string normalization parsing loop for zero name mismatch bugs!
             room.players.forEach(player => {
-                const normalizedPlayerName = player.name.trim().toLowerCase();
+                const normalizedPlayerName = player.name.toString().trim().toLowerCase();
                 const userInDb = localUserDatabase[normalizedPlayerName];
+                
                 if (userInDb) {
                     if (winningRole === "Spy 🕵️‍♂️" && player.role.includes("Spy")) {
                         userInDb.matchWins += 1;
@@ -131,12 +163,16 @@ io.on('connection', (socket) => {
             });
 
             const updatedScoresList = room.players.map(p => ({ name: p.name, totalWins: p.currentWins || 0 }));
-            io.to(roomCode).emit('gameOver', { result: gameResult, spyName: spyObject ? spyObject.name : "Unknown", scores: updatedScoresList });
-            delete rooms[roomCode]; 
+            
+            io.to(roomCode).emit('gameOver', { 
+                result: gameResult, 
+                spyName: spyObject ? spyObject.name : "Unknown", 
+                scores: updatedScoresList,
+                adminId: room.adminId // Passes adminId to enable Play Again button dynamically
+            });
         }
     });
 
-    // ================= UPGRADED DISCONNECT FLUSH AUTOMATION LOOP =================
     socket.on('disconnect', () => {
         Object.keys(rooms).forEach(roomCode => {
             const room = rooms[roomCode];
@@ -144,15 +180,12 @@ io.on('connection', (socket) => {
             room.players = room.players.filter(player => player.id !== socket.id);
             
             if (room.players.length !== initialCount) {
-                // If admin left the room, assign a new admin instantly from remaining crew
                 if (room.adminId === socket.id && room.players.length > 0) {
                     room.adminId = room.players[0].id;
                 }
-                
-                // CRITICAL FIX: If room gets empty (Everyone leaves / Admin leaves alone), delete the room instance memory entirely
                 if (room.players.length === 0) {
                     delete rooms[roomCode];
-                    console.log(`🧹 Room memory ${roomCode} successfully flushed from cloud network.`);
+                    console.log(`🧹 Room memory ${roomCode} successfully flushed.`);
                 } else {
                     io.to(roomCode).emit('roomData', { players: room.players, adminId: room.adminId });
                 }

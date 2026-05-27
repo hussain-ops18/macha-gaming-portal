@@ -12,6 +12,7 @@ const roomCodeInput = document.getElementById('roomCode');
 const createBtn = document.getElementById('createBtn');
 const joinBtn = document.getElementById('joinBtn');
 const startBtn = document.getElementById('startBtn');
+const playAgainBtn = document.getElementById('playAgainBtn');
 const playerListDisplay = document.getElementById('player-list');
 const drawingsGrid = document.getElementById('drawings-grid');
 
@@ -49,6 +50,9 @@ socket.on('roomAccessError', (msg) => { alert(msg); });
 socket.on('roomAccessSuccess', () => { lobbyBox.style.display = "none"; gameArea.style.display = "block"; });
 
 startBtn.addEventListener('click', () => { socket.emit('startGame', currentRoom); });
+
+// Trigger rematch event to server when admin hits Play Again
+playAgainBtn.addEventListener('click', () => { socket.emit('triggerPlayAgainAction', currentRoom); });
 
 socket.on('roomData', ({ players, adminId }) => {
     playerListDisplay.innerText = players.map(p => p.name).join(', ');
@@ -104,7 +108,7 @@ socket.on('startVotingPhase', ({ drawings }) => {
     });
 });
 
-socket.on('gameOver', ({ result, spyName, scores }) => {
+socket.on('gameOver', ({ result, spyName, scores, adminId }) => {
     votingArea.style.display = "none"; resultArea.style.display = "block";
     document.getElementById('game-outcome').innerText = result;
     document.getElementById('reveal-spy-name').innerText = spyName;
@@ -112,21 +116,30 @@ socket.on('gameOver', ({ result, spyName, scores }) => {
         const myRecord = scores.find(s => s.name === dashboardLoggedUser);
         if(myRecord) localStorage.setItem('machaWins', myRecord.totalWins);
     }
+    
+    // Shows Play Again button only if the current player is the room admin
+    if (socket.id === adminId) {
+        playAgainBtn.style.display = "inline-block";
+    } else {
+        playAgainBtn.style.display = "none";
+    }
+});
+
+// Resets screen parameters flawlessly when admin initiates a rematch round
+socket.on('reMatchInitiatedByAdmin', () => {
+    resultArea.style.display = "none";
+    votingArea.style.display = "none";
+    gameArea.style.display = "block";
 });
 
 // ================= HARMONIZED RESPONSIVE TOUCH COORDINATE TRANSLATOR ENGINE =================
 function getPreciseEventPos(clientX, clientY) {
     const rect = canvas.getBoundingClientRect();
-    // Maps bounding client values ratio mathematically directly into canvas real coordinate limits (500x400)!
     const scaleX = canvas.width / rect.width;
     const scaleY = canvas.height / rect.height;
-    return {
-        x: (clientX - rect.left) * scaleX,
-        y: (clientY - rect.top) * scaleY
-    };
+    return { x: (clientX - rect.left) * scaleX, y: (clientY - rect.top) * scaleY };
 }
 
-// LAPTOP MOUSE LISTENERS
 canvas.addEventListener('mousedown', (e) => {
     if (globalTimeOver || myPersonalRole.includes("Detective")) return;
     isDrawing = true; const pos = getPreciseEventPos(e.clientX, e.clientY);
@@ -138,7 +151,6 @@ canvas.addEventListener('mousemove', (e) => {
 });
 canvas.addEventListener('mouseup', () => isDrawing = false);
 
-// MOBILE SMARTPHONES TOUCH LISTENERS (High precision track mapping!)
 canvas.addEventListener('touchstart', (e) => {
     if (globalTimeOver || myPersonalRole.includes("Detective")) return;
     isDrawing = true; const touch = e.touches[0];
