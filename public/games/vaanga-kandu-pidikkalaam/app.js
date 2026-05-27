@@ -17,7 +17,6 @@ const drawingsGrid = document.getElementById('drawings-grid');
 
 document.querySelector('#lobby-box p').innerHTML = `Welcome <b>${dashboardLoggedUser}</b>! Enter choices options details below:`;
 
-// Canvas Mobile Optimization Parameters Setup
 const canvas = document.getElementById('sketchPad');
 const ctx = canvas.getContext('2d');
 const clearBtn = document.getElementById('clearBtn');
@@ -109,46 +108,48 @@ socket.on('gameOver', ({ result, spyName, scores }) => {
     votingArea.style.display = "none"; resultArea.style.display = "block";
     document.getElementById('game-outcome').innerText = result;
     document.getElementById('reveal-spy-name').innerText = spyName;
-
-    // Dynamically store the new high score updates to client session caches
     if(scores) {
         const myRecord = scores.find(s => s.name === dashboardLoggedUser);
         if(myRecord) localStorage.setItem('machaWins', myRecord.totalWins);
     }
 });
 
-// ================= COOPERATIVE MOBILE TOUCH EVENT HANDLING ENGINE =================
-function getCanvasMousePos(evt) {
+// ================= HARMONIZED RESPONSIVE TOUCH COORDINATE TRANSLATOR ENGINE =================
+function getPreciseEventPos(clientX, clientY) {
     const rect = canvas.getBoundingClientRect();
-    return { x: evt.clientX - rect.left, y: evt.clientY - rect.top };
-}
-function getCanvasTouchPos(evt) {
-    const rect = canvas.getBoundingClientRect();
-    return { x: evt.touches[0].clientX - rect.left, y: evt.touches[0].clientY - rect.top };
+    // Maps bounding client values ratio mathematically directly into canvas real coordinate limits (500x400)!
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    return {
+        x: (clientX - rect.left) * scaleX,
+        y: (clientY - rect.top) * scaleY
+    };
 }
 
 // LAPTOP MOUSE LISTENERS
 canvas.addEventListener('mousedown', (e) => {
     if (globalTimeOver || myPersonalRole.includes("Detective")) return;
-    isDrawing = true; const pos = getCanvasMousePos(e);
+    isDrawing = true; const pos = getPreciseEventPos(e.clientX, e.clientY);
     ctx.beginPath(); ctx.moveTo(pos.x, pos.y);
 });
 canvas.addEventListener('mousemove', (e) => {
     if (!isDrawing || globalTimeOver || myPersonalRole.includes("Detective")) return;
-    const pos = getCanvasMousePos(e); ctx.lineTo(pos.x, pos.y); ctx.stroke();
+    const pos = getPreciseEventPos(e.clientX, e.clientY); ctx.lineTo(pos.x, pos.y); ctx.stroke();
 });
 canvas.addEventListener('mouseup', () => isDrawing = false);
 
-// MOBILE SMARTPHONES TOUCH EVENT LISTENERS (No more frozen touch inputs!)
+// MOBILE SMARTPHONES TOUCH LISTENERS (High precision track mapping!)
 canvas.addEventListener('touchstart', (e) => {
     if (globalTimeOver || myPersonalRole.includes("Detective")) return;
-    isDrawing = true; const pos = getCanvasTouchPos(e); e.preventDefault();
-    ctx.getLayer = true; ctx.beginPath(); ctx.moveTo(pos.x, pos.y);
+    isDrawing = true; const touch = e.touches[0];
+    const pos = getPreciseEventPos(touch.clientX, touch.clientY); e.preventDefault();
+    ctx.beginPath(); ctx.moveTo(pos.x, pos.y);
 }, { passive: false });
 
 canvas.addEventListener('touchmove', (e) => {
     if (!isDrawing || globalTimeOver || myPersonalRole.includes("Detective")) return;
-    const pos = getCanvasTouchPos(e); e.preventDefault();
+    const touch = e.touches[0];
+    const pos = getPreciseEventPos(touch.clientX, touch.clientY); e.preventDefault();
     ctx.lineTo(pos.x, pos.y); ctx.stroke();
 }, { passive: false });
 

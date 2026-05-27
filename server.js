@@ -12,7 +12,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
-let localUserDatabase = {}; // Persistent simulation array
+let localUserDatabase = {}; 
 const wordsData = JSON.parse(fs.readFileSync('words.json', 'utf8'));
 let rooms = {}; 
 
@@ -23,8 +23,6 @@ app.post('/api/signup', async (req, res) => {
         const normalizedUser = username.trim().toLowerCase();
         if (localUserDatabase[normalizedUser]) return res.status(400).json({ error: "Intha peerla aal irukaanga macha!" });
         const hashedPassword = await bcrypt.hash(password, 10);
-        
-        // Match wins accurately starts at exactly 0 for fresh new profiles matrix!
         localUserDatabase[normalizedUser] = { rawUsername: username.trim(), passwordHash: hashedPassword, matchWins: 0 };
         res.json({ success: true, username: localUserDatabase[normalizedUser].rawUsername, wins: localUserDatabase[normalizedUser].matchWins });
     } catch (err) { res.status(500).json({ error: "Signup error!" }); }
@@ -119,11 +117,9 @@ io.on('connection', (socket) => {
                 }
             }
 
-            // Real-time Win Metrics Updates Calculator Sync Loop
             room.players.forEach(player => {
                 const normalizedPlayerName = player.name.trim().toLowerCase();
                 const userInDb = localUserDatabase[normalizedPlayerName];
-                
                 if (userInDb) {
                     if (winningRole === "Spy 🕵️‍♂️" && player.role.includes("Spy")) {
                         userInDb.matchWins += 1;
@@ -135,18 +131,34 @@ io.on('connection', (socket) => {
             });
 
             const updatedScoresList = room.players.map(p => ({ name: p.name, totalWins: p.currentWins || 0 }));
-
-            io.to(roomCode).emit('gameOver', { 
-                result: gameResult, 
-                spyName: spyObject ? spyObject.name : "Unknown",
-                scores: updatedScoresList
-            });
-            
-            delete rooms[roomCode]; // Flush room layout safely for next matches
+            io.to(roomCode).emit('gameOver', { result: gameResult, spyName: spyObject ? spyObject.name : "Unknown", scores: updatedScoresList });
+            delete rooms[roomCode]; 
         }
     });
 
-    socket.on('disconnect', () => {});
+    // ================= UPGRADED DISCONNECT FLUSH AUTOMATION LOOP =================
+    socket.on('disconnect', () => {
+        Object.keys(rooms).forEach(roomCode => {
+            const room = rooms[roomCode];
+            const initialCount = room.players.length;
+            room.players = room.players.filter(player => player.id !== socket.id);
+            
+            if (room.players.length !== initialCount) {
+                // If admin left the room, assign a new admin instantly from remaining crew
+                if (room.adminId === socket.id && room.players.length > 0) {
+                    room.adminId = room.players[0].id;
+                }
+                
+                // CRITICAL FIX: If room gets empty (Everyone leaves / Admin leaves alone), delete the room instance memory entirely
+                if (room.players.length === 0) {
+                    delete rooms[roomCode];
+                    console.log(`🧹 Room memory ${roomCode} successfully flushed from cloud network.`);
+                } else {
+                    io.to(roomCode).emit('roomData', { players: room.players, adminId: room.adminId });
+                }
+            }
+        });
+    });
 });
 
 server.listen(3000, () => console.log('Secure Standalone Portal running on port 3000! 🚀'));
