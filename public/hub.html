@@ -3,55 +3,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Macha Gaming Portal - Mobile Responsive Hub 🎮🟢</title>
+    <title>Macha Gaming Portal - Control Center Hub 🎮💎</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Poppins:wght@400;600&display=swap');
         
+        /* --- 🎨 THEME MATRIX VARIABLE REGISTRATION PIPELINES --- */
+        :root[data-theme="dark"] {
+            --bg-gradient: radial-gradient(circle at center, #020b14 0%, #000205 100%);
+            --sidebar-bg: #030d1a;
+            --panel-bg: #051326;
+            --card-bg: rgba(2, 12, 24, 0.95);
+            --text-main: #ffffff;
+            --text-muted: #708fa8;
+            --border-glow: #00f0ff;
+            --btn-border: #0055b3;
+        }
+        :root[data-theme="light"] {
+            --bg-gradient: radial-gradient(circle at center, #f4f7fa 0%, #e2e8f0 100%);
+            --sidebar-bg: #e2e8f0;
+            --panel-bg: #ffffff;
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --text-main: #0f172a;
+            --text-muted: #475569;
+            --border-glow: #3b82f6;
+            --btn-border: #93c5fd;
+        }
+
         body { 
             font-family: 'Poppins', sans-serif; 
-            background: radial-gradient(circle at center, #01140d 0%, #000403 100%); 
-            color: #fff; margin: 0; padding: 10px; min-height: 100vh; 
-            display: flex; flex-direction: column; align-items: center; overflow-x: hidden;
-            box-sizing: border-box;
+            background: var(--bg-gradient); 
+            color: var(--text-main); margin: 0; padding: 0; min-height: 100vh; 
+            display: flex; flex-direction: row; overflow-x: hidden;
+            box-sizing: border-box; transition: background 0.3s, color 0.3s;
         }
 
         *, *::before, *::after { box-sizing: border-box; }
 
-        .omnitrix-mainframe-wrapper { max-width: 900px; width: 100%; margin: 0 auto; text-align: center; padding: 0 5px; }
-        
-        /* 🔋 HUD TOP PROFILE RE-SCALED MODULAR CONTAINER */
-        .omnitrix-hud-pod {
-            background: rgba(4, 20, 12, 0.85); border: 2px solid #00ff66;
-            box-shadow: 0 0 15px rgba(0, 255, 102, 0.2), inset 0 0 10px rgba(0, 255, 102, 0.1);
-            border-radius: 16px; padding: 12px 15px; margin: 10px 0 20px 0;
-            display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;
+        /* 💾 VS CODE STYLE STATIC LEFT NAVIGATION SIDEBAR */
+        .vscode-vertical-sidebar {
+            width: 65px; min-width: 65px; height: 100vh; background: var(--sidebar-bg);
+            border-right: 2px solid var(--border-glow); display: flex; flex-direction: column;
+            justify-content: space-between; align-items: center; padding: 20px 0; z-index: 100;
+            box-shadow: 5px 0 15px rgba(0,0,0,0.3); position: fixed; left: 0; top: 0;
+            transition: background 0.3s, border-color 0.3s;
         }
-        .hud-left, .hud-right { display: flex; align-items: center; gap: 10px; }
-        .omnitrix-avatar-glow { width: 42px; height: 42px; border-radius: 50%; background: #00ff66; border: 2px solid #fff; box-shadow: 0 0 10px #00ff66; font-family: 'Orbitron', sans-serif; font-weight: 900; color: #000; display: flex; align-items: center; justify-content: center; font-size: 1rem; }
-        .profile-metadata { text-align: left; }
-        .profile-username { font-family: 'Orbitron', sans-serif; font-weight: 900; color: #00ff66; font-size: 1rem; text-shadow: 0 0 6px rgba(0,255,102,0.4); display: block; }
-        .profile-uid-tag { font-family: monospace; font-size: 0.75rem; color: #8fa89b; display: block; }
+
+        .sidebar-top-cluster, .sidebar-bottom-cluster { display: flex; flex-direction: column; gap: 20px; width: 100%; align-items: center; }
+
+        .sidebar-action-icon-node {
+            width: 45px; height: 45px; border-radius: 10px; display: flex;
+            align-items: center; justify-content: center; font-size: 1.3rem;
+            cursor: pointer; transition: 0.2s ease; border: 1px solid transparent;
+            color: var(--text-main); -webkit-tap-highlight-color: transparent;
+        }
+        .sidebar-action-icon-node:hover, .sidebar-action-icon-node.active-panel-toggle {
+            background: rgba(0, 240, 255, 0.1); border-color: var(--border-glow);
+            color: var(--border-glow); box-shadow: 0 0 10px rgba(0,240,255,0.2);
+        }
+
+        /* 📁 EXPANDED SIDE CONSOLE SYSTEM PANEL SHEETS */
+        .vscode-expanded-sliding-panel {
+            position: fixed; left: -320px; top: 0; width: 300px; height: 100vh;
+            background: var(--panel-bg); border-right: 2px solid var(--border-glow); padding: 25px 20px;
+            z-index: 90; display: flex; flex-direction: column; gap: 18px;
+            box-shadow: 10px 0 25px rgba(0,0,0,0.4); transition: 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+            text-align: left; overflow-y: auto; padding-top: 35px;
+        }
+        .vscode-expanded-sliding-panel.active-panel-slide { left: 65px; }
+
+        .panel-block-heading { font-family: 'Orbitron', sans-serif; font-size: 1rem; color: var(--border-glow); border-bottom: 2px solid rgba(0,240,255,0.15); padding-bottom: 8px; font-weight: 700; letter-spacing: 1px; margin-top: 0; text-transform: uppercase; }
         
-        .stat-badge-glow { background: rgba(0, 255, 102, 0.08); border: 1px solid #00ff66; padding: 6px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; font-family: 'Orbitron', sans-serif; color: #fff; display: flex; align-items: center; gap: 4px; }
-        .streak-burning { border-color: #ffaa00; background: rgba(255,170,0,0.08); color: #ffaa00; box-shadow: 0 0 8px rgba(255,170,0,0.15); }
+        .profile-avatar-row { display: flex; align-items: center; gap: 15px; margin-bottom: 5px; }
+        .profile-avatar-circle { width: 45px; height: 45px; border-radius: 50%; background: var(--border-glow); color: #000; font-family: 'Orbitron', sans-serif; font-weight: 900; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; box-shadow: 0 0 8px var(--border-glow); }
+        
+        .stat-grid-row { display: flex; justify-content: space-between; padding: 8px 0; font-size: 0.82rem; border-bottom: 1px solid rgba(255,255,255,0.03); }
+        .stat-label-title { color: var(--text-muted); font-weight: 600; }
+        .stat-value-indicator { font-family: 'Orbitron', sans-serif; color: var(--border-glow); font-weight: 700; }
 
-        .system-eject-btn { background: rgba(255, 51, 102, 0.1); color: #ff3366; border: 1px solid #ff3366; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-family: 'Orbitron', sans-serif; font-weight: bold; font-size: 0.75rem; transition: 0.2s; }
-        .system-eject-btn:hover { background: #ff3366; color: #000; }
+        /* 🎛️ PREFERENCES PRESETS FOR DROP DOWN THEMES BUTTONS */
+        .theme-selector-combo-box { width: 100%; padding: 10px; background: #000; color: #00f0ff; border: 1px solid var(--border-glow); border-radius: 6px; font-family: monospace; outline: none; font-size: 0.85rem; cursor: pointer; }
 
-        /* FIXED CORE BRAND IDENTITY TITLES */
-        h1.portal-main-heading { font-family: 'Orbitron', sans-serif; color: #00ff66; font-size: 1.8rem; letter-spacing: 1px; margin: 5px 0; font-weight: 900; text-shadow: 0 0 10px rgba(0, 255, 102, 0.4); }
-        div.portal-sub-caption { font-family: 'Poppins', sans-serif; font-weight: 600; font-size: 0.8rem; color: #8fa89b; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .document-text-container-block { font-size: 0.78rem; line-height: 1.5; color: var(--text-muted); background: rgba(0,0,0,0.2); padding: 10px; border-radius: 6px; border-left: 3px solid var(--border-glow); margin-bottom: 10px; text-align: justify; }
 
-        /* 🟢 MOBILE PRECISE AUTO-FIT SCROLLER CAROUSEL CONTROLLER */
+        /* CENTRAL DATA VIEWPORT ARENA LAYOUT ELEMENTS */
+        .macha-mainframe-wrapper { 
+            flex-grow: 1; margin-left: 65px; width: calc(100% - 65px); 
+            max-width: 850px; padding: 20px 15px; text-align: center;
+            display: flex; flex-direction: column; justify-content: center; min-height: 100vh;
+        }
+
+        h1.portal-main-heading { font-family: 'Orbitron', sans-serif; color: var(--text-main); font-size: 2rem; letter-spacing: 2px; margin: 0 0 5px 0; font-weight: 900; text-shadow: 0 0 10px rgba(0,240,255,0.1); }
+        div.portal-sub-caption { font-family: 'Poppins', sans-serif; font-weight: 600; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+        /* 🔷 CYBER VIEWPORT DIAL CAROUSEL CONTROLLER */
         .omnitrix-watch-dial-viewport {
-            position: relative; width: 100%; max-width: 440px; height: 320px; margin: 15px auto;
-            border: 6px solid #04381c; border-radius: 32px; background: radial-gradient(circle, #021a10 0%, #000 100%);
-            box-shadow: 0 0 25px rgba(0, 255, 102, 0.2), inset 0 0 20px rgba(0, 255, 102, 0.15);
+            position: relative; width: 100%; max-width: 460px; height: 320px; margin: 10px auto;
+            border: 6px solid var(--sidebar-bg); border-radius: 32px; background: radial-gradient(circle, rgba(10,25,47,0.3) 0%, #000 100%);
+            box-shadow: 0 0 25px rgba(0, 240, 255, 0.1), inset 0 0 20px rgba(0, 240, 255, 0.05);
             overflow: hidden; display: flex; align-items: center; justify-content: center;
         }
-        .omnitrix-watch-dial-viewport::before { content: ""; position: absolute; width: 100%; height: 100%; border-radius: 26px; pointer-events: none; border: 2px solid rgba(0, 255, 102, 0.2); z-index: 5; }
+        .omnitrix-watch-dial-viewport::before { content: ""; position: absolute; width: 100%; height: 100%; border-radius: 26px; pointer-events: none; border: 2px solid var(--border-glow); opacity: 0.2; z-index: 5; }
         
-        .dial-arrow { position: absolute; font-size: 1.5rem; color: #00ff66; z-index: 10; cursor: pointer; text-shadow: 0 0 8px #00ff66; transition: 0.2s; user-select: none; }
+        .dial-arrow { position: absolute; font-size: 1.5rem; color: var(--border-glow); z-index: 10; cursor: pointer; text-shadow: 0 0 8px var(--border-glow); transition: 0.2s; user-select: none; }
         .arrow-up { top: 10px; transform: rotate(90deg); }
         .arrow-down { bottom: 10px; transform: rotate(90deg); }
 
@@ -63,83 +116,112 @@
 
         .omnitrix-alien-card {
             min-height: 220px; height: 220px; margin: 10px auto; width: 90%;
-            background: rgba(3, 15, 8, 0.95); border: 2.5px solid #00993d; border-radius: 20px;
+            background: var(--card-bg); border: 2.5px solid var(--btn-border); border-radius: 20px;
             padding: 15px 20px; scroll-snap-align: center;
             display: flex; flex-direction: column; justify-content: space-between; text-align: left;
             position: relative; transition: 0.25s ease; transform: scale(0.94); opacity: 0.55;
         }
-        .omnitrix-alien-card.focused-dial-element { transform: scale(1); opacity: 1; border-color: #00ff66; box-shadow: 0 0 20px rgba(0, 255, 102, 0.35); }
+        .omnitrix-alien-card.focused-dial-element { transform: scale(1); opacity: 1; border-color: var(--border-glow); box-shadow: 0 0 20px rgba(0, 240, 255, 0.25); }
 
-        h2.alien-title { font-family: 'Orbitron', sans-serif; font-weight: 900; margin: 0; font-size: 1.1rem; color: #fff; }
-        .focused-dial-element h2.alien-title { color: #00ff66; text-shadow: 0 0 8px rgba(0,255,102,0.3); }
-        p.alien-desc { color: #8fa89b; font-size: 0.78rem; line-height: 1.4; margin: 5px 0; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+        h2.alien-title { font-family: 'Orbitron', sans-serif; font-weight: 900; margin: 0; font-size: 1.1rem; color: var(--text-main); }
+        .focused-dial-element h2.alien-title { color: var(--border-glow); text-shadow: 0 0 8px rgba(0,240,255,0.2); }
+        p.alien-desc { color: var(--text-muted); font-size: 0.78rem; line-height: 1.4; margin: 5px 0; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
         
-        .omnitrix-ignition-btn { width: 100%; border: 2px solid #044622; background: #01140a; color: #00ff66; padding: 10px; border-radius: 8px; font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 0.8rem; cursor: pointer; text-transform: uppercase; transition: 0.2s; -webkit-tap-highlight-color: transparent; }
-        .focused-dial-element .omnitrix-ignition-btn { background: linear-gradient(135deg, #00ff66 0%, #00993d 100%); color: #000; font-weight: 900; border-color: #fff; box-shadow: 0 0 10px rgba(0, 255, 102, 0.3); }
+        .omnitrix-ignition-btn { width: 100%; border: 2px solid var(--btn-border); background: rgba(0,0,0,0.4); color: var(--border-glow); padding: 10px; border-radius: 8px; font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 0.8rem; cursor: pointer; text-transform: uppercase; transition: 0.2s; }
+        .focused-dial-element .omnitrix-ignition-btn { background: linear-gradient(135deg, #00f0ff 0%, #0072ff 100%); color: #000; font-weight: 900; border-color: #fff; box-shadow: 0 0 10px rgba(0, 240, 255, 0.2); }
 
-        /* 📊 MOBILE AUTO-STACK SOCIAL SECTIONS GRID */
-        .omnitrix-social-dock-grid { display: grid; grid-template-columns: 1fr; gap: 15px; margin-top: 20px; width: 100%; }
-        @media(min-width: 640px) { .omnitrix-social-dock-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; } }
+        .recent-crew-sub-panel { background: var(--card-bg); border: 1px solid var(--btn-border); border-radius: 14px; padding: 12px 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.3); text-align: left; max-width: 460px; width: 100%; margin: 20px auto 0 auto; }
+        .recent-crew-sub-panel h3 { font-family: 'Orbitron', sans-serif; margin: 0 0 8px 0; font-size: 0.85rem; color: var(--border-glow); border-bottom: 1px solid var(--btn-border); padding-bottom: 4px; letter-spacing: 0.5px; }
         
-        .social-sub-panel { background: rgba(3, 12, 8, 0.7); border: 1px solid rgba(0, 255, 102, 0.15); border-radius: 14px; padding: 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.5); text-align: left; }
-        .social-sub-panel h3 { font-family: 'Orbitron', sans-serif; margin-top: 0; font-size: 0.95rem; color: #00ff66; border-bottom: 1px solid rgba(0,255,102,0.15); padding-bottom: 6px; letter-spacing: 0.5px; }
-        
-        .social-list-container { max-height: 140px; overflow-y: auto; line-height: 1.5; min-height: 50px; }
+        .social-list-container { max-height: 110px; overflow-y: auto; line-height: 1.5; min-height: 40px; }
         .social-list-container::-webkit-scrollbar { width: 3px; }
-        .social-list-container::-webkit-scrollbar-thumb { background: #00ff66; border-radius: 2px; }
+        .social-list-container::-webkit-scrollbar-thumb { background: var(--border-glow); border-radius: 2px; }
         
-        .social-row-node { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.03); font-size: 0.82rem; }
-        .node-uid-label { font-family: monospace; color: #8fa89b; font-size: 0.75rem; margin-left: 4px; }
-        
-        .action-icon-btn { background: #04381c; border: 1px solid #00ff66; color: #00ff66; padding: 4px 8px; border-radius: 5px; font-size: 0.7rem; cursor: pointer; font-family: 'Orbitron', sans-serif; font-weight: bold; -webkit-tap-highlight-color: transparent; }
-        .action-icon-btn:hover { background: #00ff66; color: #000; }
-        
-        .add-friend-form-box { display: flex; gap: 6px; margin-top: 10px; }
-        .add-friend-field { flex-grow: 1; background: #000; border: 1px solid #044622; padding: 8px; color: #00ff66; border-radius: 6px; font-family: monospace; font-size: 0.85rem; outline: none; min-width: 0; }
-        .add-friend-field:focus { border-color: #00ff66; }
-        .empty-log-text { color: #506e5e; font-style: italic; font-size: 0.78rem; padding: 10px 0; text-align: center; width: 100%; }
-        
-        /* Fixed specific scaling properties for smaller legacy screens */
-        @media(max-width: 360px) {
-            h1.portal-main-heading { font-size: 1.5rem; }
-            .omnitrix-watch-dial-viewport { height: 290px; }
-            .omnitrix-alien-card { min-height: 200px; height: 200px; padding: 12px 15px; }
-        }
+        .social-row-node { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.03); font-size: 0.8rem; }
+        .search-trigger-badge-btn { background: linear-gradient(135deg, #0072ff 0%, #00c6ff 100%); color: white; border: none; padding: 8px 14px; border-radius: 6px; font-size: 0.75rem; cursor: pointer; font-family: 'Orbitron', sans-serif; font-weight: bold; width: 100%; margin-top: 8px; transition: 0.2s; }
+        .add-friend-field { width: 100%; background: #000; border: 1px solid var(--btn-border); padding: 10px; color: #00f0ff; border-radius: 6px; font-family: monospace; font-size: 0.85rem; outline: none; text-align: center; }
+        .empty-log-text { color: var(--text-muted); font-style: italic; font-size: 0.75rem; padding: 8px 0; text-align: center; width: 100%; }
+        .action-icon-btn { background: #04381c; border: 1px solid #00ff66; color: #00ff66; padding: 4px 8px; border-radius: 5px; font-size: 0.7rem; cursor: pointer; font-family: 'Orbitron', sans-serif; font-weight: bold; }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <div class="omnitrix-mainframe-wrapper">
-        
-        <div class="omnitrix-hud-pod">
-            <div class="hud-left">
-                <div class="omnitrix-avatar-glow" id="avatar-initials-label">M</div>
-                <div class="profile-metadata">
-                    <span class="profile-username" id="hud-username-display">LOADING_PILOT</span>
-                    <span class="profile-uid-tag" id="hud-uid-display">UID: UNASSIGNED</span>
-                </div>
-            </div>
-            
-            <div class="hud-right">
-                <div class="stat-badge-glow">
-                    🏆 WINS: <span id="hud-wins-counter" style="color:#00ff66; margin-left:2px;">0</span>
-                </div>
-                <div class="stat-badge-glow streak-burning">
-                    🔥 STREAK: <span id="hud-streak-counter" style="color:#ffaa00; margin-left:2px;">0 RNDS</span>
-                </div>
-                <button onclick="triggerSystemCoreEject();" class="system-eject-btn">LOGOUT 🔌</button>
+    <div class="vscode-vertical-sidebar">
+        <div class="sidebar-top-cluster">
+            <div class="sidebar-action-icon-node" onclick="toggleVsCodeSlidingPanel('profile');" id="toggle-btn-profile" title="My Core Profile">👤</div>
+            <div class="sidebar-action-icon-node" onclick="toggleVsCodeSlidingPanel('search');" id="toggle-btn-search" title="Search & Add Crew">🔍</div>
+        </div>
+        <div class="sidebar-bottom-cluster">
+            <div class="sidebar-action-icon-node" onclick="toggleVsCodeSlidingPanel('settings');" id="toggle-btn-settings" title="Console Preferences Hub">⚙️</div>
+            <div class="sidebar-action-icon-node" onclick="triggerSystemCoreEject();" title="Eject Gate Control" style="color:#ff3366;">🔌</div>
+        </div>
+    </div>
+
+    <div id="slidingPanelProfile" class="vscode-expanded-sliding-panel">
+        <h3 class="panel-block-heading">👤 Core Biometrics</h3>
+        <div class="profile-avatar-row">
+            <div class="profile-avatar-circle" id="avatar-initials-label">M</div>
+            <div>
+                <span style="font-family:'Orbitron'; font-weight:900; font-size:1.05rem;" id="hud-username-display">LOADING...</span>
+                <div style="font-size:0.75rem; color:var(--border-glow); font-weight:bold; font-family:monospace;" id="hud-uid-display">UID: FETCHING</div>
             </div>
         </div>
+        <hr style="border-color:rgba(0, 240, 255, 0.1); margin:5px 0;">
+        <div class="stat-grid-row"><span class="stat-label-title">🏆 TOTAL MATCH WINS</span><span class="stat-value-indicator" id="hud-wins-counter">0</span></div>
+        <div class="stat-grid-row"><span class="stat-label-title">🔥 WINNING STREAK</span><span class="stat-value-indicator" id="hud-streak-counter" style="color:#ffaa00;">0 RNDS</span></div>
+    </div>
 
+    <div id="slidingPanelSearch" class="vscode-expanded-sliding-panel">
+        <h3 class="panel-block-heading">📡 Terminal Search</h3>
+        <div style="width: 100%;">
+            <input type="text" id="friendUidInput" class="add-friend-field" placeholder="Enter Friend UID Key">
+            <button onclick="executeSearchAndLinkUidAction();" class="search-trigger-badge-btn">SEARCH & LINK CREW 🔍</button>
+        </div>
+        <h3 class="panel-block-heading" style="margin-top: 25px; font-size:0.85rem;">💚 Connected Network</h3>
+        <div class="social-list-container" id="friends-list-render-pad"></div>
+    </div>
+
+    <div id="slidingPanelSettings" class="vscode-expanded-sliding-panel">
+        <h3 class="panel-block-heading">⚙️ Preferences</h3>
+        
+        <label style="font-size:0.8rem; font-weight:bold; color:var(--text-main); display:block; margin-bottom:5px;">CONSOLE THEME PRESET</label>
+        <select id="themeCoreSelector" class="theme-selector-combo-box" onchange="applyConsoleThemeAction(this.value);">
+            <option value="dark">Stellar Shadow (Dark) 🌌</option>
+            <option value="light">Cyber Canvas (Light) 🪞</option>
+            <option value="system">Match Device Engine (System) 🤖</option>
+        </select>
+
+        <h3 class="panel-block-heading" style="margin-top:20px; font-size:0.85rem;">🛡️ Legal & Privacy</h3>
+        <div class="document-text-container-block">
+            <b>Privacy Policy:</b> Player verification profiles, credentials keys, and matches wins metrics loops are fully encrypted and hard locked on absolute local storage boundaries. Static disk tracking loops ensure pure telemetry protection scripts.
+        </div>
+
+        <h3 class="panel-block-heading" style="font-size:0.85rem;">📝 Portal Lore & Story</h3>
+        <div class="document-text-container-block">
+            <b>The Game Story:</b> Six players enter an interstellar validation coordinate ring node. One is injected as a rogue Spy profile intent on memory data execution leaks, while Detectives track structural drawings vector elements to neutralize threat vectors loops!
+        </div>
+
+        <h3 class="panel-block-heading" style="font-size:0.85rem;">⚖️ Match Rule Set</h3>
+        <div class="document-text-container-block">
+            <b>1. Canvas Mode:</b> Draw hints within 60s boundaries lines. Detectives can't access canvas pipelines.<br>
+            <b>2. Buzzer Mode:</b> Fast finger response criteria. 15s to strike. Correct triggers +1, incorrect triggers strict -1 points deduction. Timeout has 0 penalty.
+        </div>
+
+        <h3 class="panel-block-heading" style="font-size:0.85rem;">👑 Systems Architect</h3>
+        <div class="document-text-container-block" style="border-color:#ffaa00; font-weight:bold; text-align:center; color:#fff; background:rgba(255,170,0,0.05);">
+            Engineered By:<br><span style="color:#00f0ff; font-family:'Orbitron'; font-size:0.9rem;">Khadhar Hussain A. 👑</span>
+        </div>
+    </div>
+
+
+    <div class="macha-mainframe-wrapper">
         <h1 class="portal-main-heading">MACHA GAMING PORTAL 🕹️⚡</h1>
         <div class="portal-sub-caption">Scroll watch wheel dial configuration to access modules</div>
 
         <div class="omnitrix-watch-dial-viewport">
             <span class="dial-arrow arrow-up" id="scroll-up-trigger">◀</span>
-            
             <div class="watch-carousel-scroller-track" id="watch-scroller-track-node">
-                
                 <div class="omnitrix-alien-card focused-dial-element" id="card-alien-g1">
                     <div>
                         <h2 class="alien-title">VAANGA KANDU PIDIKKALAAM 🕵️‍♂️</h2>
@@ -147,7 +229,6 @@
                     </div>
                     <button onclick="igniteModuleOneRoute();" class="omnitrix-ignition-btn">Launch Operational Code ⚡</button>
                 </div>
-
                 <div class="omnitrix-alien-card" id="card-alien-g2">
                     <div>
                         <h2 class="alien-title">TAKKUNU PAARU USHARA IRU ⚡</h2>
@@ -155,44 +236,80 @@
                     </div>
                     <button onclick="igniteModuleTwoRoute();" class="omnitrix-ignition-btn">Activate Pulse Buzzer 🔥</button>
                 </div>
-
             </div>
-
             <span class="dial-arrow arrow-down" id="scroll-down-trigger">▶</span>
         </div>
 
-        <div class="omnitrix-social-dock-grid">
-            <div class="social-sub-panel">
-                <h3>RECENTLY PLAYED CREW 👥</h3>
-                <div class="social-list-container" id="recent-players-render-pad"></div>
-            </div>
-
-            <div class="social-sub-panel">
-                <h3>OMNITRIX LINKED FRIENDS 💚</h3>
-                <div class="social-list-container" id="friends-list-render-pad"></div>
-                
-                <div class="add-friend-form-box">
-                    <input type="text" id="friendUidInput" class="add-friend-field" placeholder="Friend UID Key (Eg: UID-4819)">
-                    <button onclick="executeSearchAndLinkUidAction();" class="action-icon-btn">SEARCH & LINK 🔍</button>
-                </div>
-            </div>
+        <div class="recent-crew-sub-panel">
+            <h3>RECENTLY PLAYED CREW 👥</h3>
+            <div class="social-list-container" id="recent-players-render-pad"></div>
         </div>
-        
     </div>
 
-    <script src="/socket.io/socket.io.js"></script>
     <script>
-        const socket = io();
+        // --- 1. DYNAMIC THEME ENGINE CORE CONTROLLER MODULE ---
+        function applyConsoleThemeAction(selectedThemeMode) {
+            localStorage.setItem('machaLayoutThemeSelection', selectedThemeMode);
+            
+            if (selectedThemeMode === 'system') {
+                const systemPrefersDarkCheck = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                document.documentElement.setAttribute('data-theme', systemPrefersDarkCheck ? 'dark' : 'light');
+            } else {
+                document.documentElement.setAttribute('data-theme', selectedThemeMode);
+            }
+        }
 
+        // Initialize active configuration profiles on bootstrap phase
+        const runtimeSavedTheme = localStorage.getItem('machaLayoutThemeSelection') || 'dark';
+        document.getElementById('themeCoreSelector').value = runtimeSavedTheme;
+        applyConsoleThemeAction(runtimeSavedTheme);
+
+        // Listen for real-time system color changes dynamically if system match mode is running
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+            if (localStorage.getItem('machaLayoutThemeSelection') || 'system' === 'system') {
+                document.documentElement.setAttribute('data-theme', e.matches ? 'dark' : 'light');
+            }
+        });
+
+        // --- 2. INTEGRATED VS CODE STYLE SLIDING DRAWER LOGIC MAPPING ---
+        let activeOpenPanelType = null;
+
+        function toggleVsCodeSlidingPanel(panelType) {
+            const pProfile = document.getElementById('slidingPanelProfile');
+            const pSearch = document.getElementById('slidingPanelSearch');
+            const pSettings = document.getElementById('slidingPanelSettings');
+            
+            const tBtnProfile = document.getElementById('toggle-btn-profile');
+            const tBtnSearch = document.getElementById('toggle-btn-search');
+            const tBtnSettings = document.getElementById('toggle-btn-settings');
+
+            if (activeOpenPanelType === panelType) {
+                pProfile.classList.remove('active-panel-slide');
+                pSearch.classList.remove('active-panel-slide');
+                pSettings.classList.remove('active-panel-slide');
+                tBtnProfile.classList.remove('active-panel-toggle');
+                tBtnSearch.classList.remove('active-panel-toggle');
+                tBtnSettings.classList.remove('active-panel-toggle');
+                activeOpenPanelType = null;
+            } else {
+                pProfile.classList.remove('active-panel-slide');
+                pSearch.classList.remove('active-panel-slide');
+                pSettings.classList.remove('active-panel-slide');
+                tBtnProfile.classList.remove('active-panel-toggle');
+                tBtnSearch.classList.remove('active-panel-toggle');
+                tBtnSettings.classList.remove('active-panel-toggle');
+
+                if (panelType === 'profile') { pProfile.classList.add('active-panel-slide'); tBtnProfile.classList.add('active-panel-toggle'); } 
+                else if (panelType === 'search') { pSearch.classList.add('active-panel-slide'); tBtnSearch.classList.add('active-panel-toggle'); } 
+                else if (panelType === 'settings') { pSettings.classList.add('active-panel-slide'); tBtnSettings.classList.add('active-panel-toggle'); }
+                activeOpenPanelType = panelType;
+            }
+        }
+
+        // --- 3. BIOMETRIC CACHE SYNCHRONIZER DATA ARRAYS ---
         const activeUserSessionName = localStorage.getItem('machaUsername') || "Macha_Pilot";
         const activeUserSessionWins = localStorage.getItem('machaWins') || "0";
-        
-        let userProfileUniqueIdKey = localStorage.getItem('machaUserUID');
-        if (!userProfileUniqueIdKey || userProfileUniqueIdKey === "undefined" || userProfileUniqueIdKey === "null") {
-            userProfileUniqueIdKey = "UID-" + Math.floor(1000 + Math.random() * 9000);
-            localStorage.setItem('machaUserUID', userProfileUniqueIdKey);
-        }
-        
+        let userProfileUniqueIdKey = localStorage.getItem('machaUserUID') || "UID-GUEST";
         const userProfileActiveStreak = localStorage.getItem('machaActiveStreakValue') || activeUserSessionWins;
 
         document.getElementById('hud-username-display').innerText = activeUserSessionName.toUpperCase();
@@ -201,103 +318,54 @@
         document.getElementById('hud-streak-counter').innerText = `${userProfileActiveStreak} RNDS`;
         document.getElementById('avatar-initials-label').innerText = activeUserSessionName.charAt(0).toUpperCase();
 
-        function igniteModuleOneRoute() {
-            window.location.href = "./games/vaanga-kandu-pidikkalaam/index.html?user=" + encodeURIComponent(activeUserSessionName);
-        }
+        function igniteModuleOneRoute() { window.location.href = "./games/vaanga-kandu-pidikkalaam/index.html?user=" + encodeURIComponent(activeUserSessionName); }
+        function igniteModuleTwoRoute() { window.location.href = "./games/takkunu-paaru/index.html?user=" + encodeURIComponent(activeUserSessionName); }
+        function triggerSystemCoreEject() { localStorage.clear(); window.location.href = "./index.html"; }
 
-        function igniteModuleTwoRoute() {
-            window.location.href = "./games/takkunu-paaru/index.html?user=" + encodeURIComponent(activeUserSessionName);
-        }
-
-        function triggerSystemCoreEject() {
-            localStorage.clear(); window.location.href = "./index.html"; 
-        }
-
+        // --- 4. CAROUSEL INTERACTIVE NAVIGATION SCROLLER ---
         const scrollerTrack = document.getElementById('watch-scroller-track-node');
         const alienCardG1 = document.getElementById('card-alien-g1');
         const alienCardG2 = document.getElementById('card-alien-g2');
 
         scrollerTrack.addEventListener('scroll', () => {
             let pos = scrollerTrack.scrollTop;
-            if (pos < 110) {
-                alienCardG1.classList.add('focused-dial-element');
-                alienCardG2.classList.remove('focused-dial-element');
-            } else {
-                alienCardG2.classList.add('focused-dial-element');
-                alienCardG1.classList.remove('focused-dial-element');
-            }
+            if (pos < 110) { alienCardG1.classList.add('focused-dial-element'); alienCardG2.classList.remove('focused-dial-element'); } 
+            else { alienCardG2.classList.add('focused-dial-element'); alienCardG1.classList.remove('focused-dial-element'); }
         });
 
         document.getElementById('scroll-up-trigger').addEventListener('click', () => { scrollerTrack.scrollTop -= 180; });
         document.getElementById('scroll-down-trigger').addEventListener('click', () => { scrollerTrack.scrollTop += 180; });
 
+        // --- 5. SOCIAL CACHE LOG CONTROLLERS ---
         function renderFriendsPad() {
-            let cache = localStorage.getItem('machaStoredFriendsList');
-            if (!cache) { localStorage.setItem('machaStoredFriendsList', JSON.stringify([])); cache = JSON.stringify([]); }
-            let parsed = JSON.parse(cache);
-            const targetPad = document.getElementById('friends-list-render-pad');
-            
-            if (parsed.length === 0) {
-                targetPad.innerHTML = `<div class="empty-log-text">No friends linked yet. Search real profile UID above! 🔍</div>`;
-                return;
-            }
-            targetPad.innerHTML = parsed.map(f => `
-                <div class="social-row-node">
-                    <div>🟢 <span>${f.name.toUpperCase()}</span><span class="node-uid-label">${f.uid}</span></div>
-                    <span style="color:#00ff66; font-size:0.7rem; font-weight:bold; font-family:'Orbitron';">READY</span>
-                </div>
-            `).join('');
+            let cache = localStorage.getItem('machaStoredFriendsList'); if (!cache) { localStorage.setItem('machaStoredFriendsList', JSON.stringify([])); cache = JSON.stringify([]); }
+            let parsed = JSON.parse(cache); const targetPad = document.getElementById('friends-list-render-pad');
+            if (parsed.length === 0) { targetPad.innerHTML = `<div class="empty-log-text">No friends linked yet.</div>`; return; }
+            targetPad.innerHTML = parsed.map(f => `<div class="social-row-node"><div>🔵 <span>${f.name.toUpperCase()}</span><span class="node-uid-label">${f.uid}</span></div><span style="color:var(--border-glow); font-size:0.7rem; font-weight:bold; font-family:'Orbitron';">LINKED</span></div>`).join('');
         }
 
         function renderRecentPad() {
-            let cache = localStorage.getItem('machaStoredRecentPlayers');
-            if (!cache) { localStorage.setItem('machaStoredRecentPlayers', JSON.stringify([])); cache = JSON.stringify([]); }
-            let parsed = JSON.parse(cache);
-            const targetPad = document.getElementById('recent-players-render-pad');
-
-            if (parsed.length === 0) {
-                targetPad.innerHTML = `<div class="empty-log-text">No match history logged in current session cache. 👥</div>`;
-                return;
-            }
-            targetPad.innerHTML = parsed.map(p => `
-                <div class="social-row-node">
-                    <div>👤 <span>${p.name.toUpperCase()}</span><span class="node-uid-label">${p.uid}</span></div>
-                    <button onclick="quickAddFriendFromRecentAction('${p.name}', '${p.uid}');" class="action-icon-btn">LINK 🔗</button>
-                </div>
-            `).join('');
+            let cache = localStorage.getItem('machaStoredRecentPlayers'); if (!cache) { localStorage.setItem('machaStoredRecentPlayers', JSON.stringify([])); cache = JSON.stringify([]); }
+            let parsed = JSON.parse(cache); const targetPad = document.getElementById('recent-players-render-pad');
+            if (parsed.length === 0) { targetPad.innerHTML = `<div class="empty-log-text">No match history logged. 👥</div>`; return; }
+            targetPad.innerHTML = parsed.map(p => `<div class="social-row-node"><div>👤 <span>${p.name.toUpperCase()}</span><span class="node-uid-label">${p.uid}</span></div><button onclick="quickAddFriendFromRecentAction('${p.name}', '${p.uid}');" class="action-icon-btn">LINK 🔗</button></div>`).join('');
         }
 
         function executeSearchAndLinkUidAction() {
-            const box = document.getElementById('friendUidInput');
-            const targetUidInput = box.value.trim().toUpperCase();
-            if (!targetUidInput) return alert("Search input empty! Type a valid UID macha!");
-            
+            const box = document.getElementById('friendUidInput'); const targetUidInput = box.value.trim().toUpperCase();
+            if (!targetUidInput) return alert("Type a valid UID macha!");
             if (targetUidInput === userProfileUniqueIdKey) return alert("Unnoda sondha UID-aye nee add panna mudiyaadhu thala! 🤯");
-
             let currentFriendsList = JSON.parse(localStorage.getItem('machaStoredFriendsList')) || [];
             if (currentFriendsList.some(f => f.uid === targetUidInput)) return alert("Intha player munnadiye linked-la thaan irukaanga! 🟢");
-
-            socket.emit('omnitrix_searchAndVerifyUserUid', targetUidInput);
-            box.value = "";
+            socket.emit('omnitrix_searchAndVerifyUserUid', targetUidInput); box.value = "";
         }
 
         socket.on('omnitrix_searchUidResultSuccess', (matchedUserNode) => {
-            let currentFriendsList = JSON.parse(localStorage.getItem('machaStoredFriendsList')) || [];
-            currentFriendsList.push(matchedUserNode);
-            localStorage.setItem('machaStoredFriendsList', JSON.stringify(currentFriendsList));
-            alert(`🔥 Gethu macha! Real user matched: ${matchedUserNode.name.toUpperCase()} successfully linked to your console!`);
-            renderFriendsPad();
+            let currentFriendsList = JSON.parse(localStorage.getItem('machaStoredFriendsList')) || []; currentFriendsList.push(matchedUserNode);
+            localStorage.setItem('machaStoredFriendsList', JSON.stringify(currentFriendsList)); alert(`💎 Success macha! Linked: ${matchedUserNode.name.toUpperCase()}`); renderFriendsPad();
         });
-
         socket.on('omnitrix_searchUidResultFailure', (errorMsg) => { alert(errorMsg); });
-
-        function quickAddFriendFromRecentAction(name, uid) {
-            let list = JSON.parse(localStorage.getItem('machaStoredFriendsList')) || [];
-            if (list.some(f => f.uid === uid)) return alert("Munnadiye link aagi dhaan iruku! 🟢");
-            list.push({ name: name, uid: uid });
-            localStorage.setItem('machaStoredFriendsList', JSON.stringify(list));
-            renderFriendsPad();
-        }
+        function quickAddFriendFromRecentAction(name, uid) { let list = JSON.parse(localStorage.getItem('machaStoredFriendsList')) || []; if (list.some(f => f.uid === uid)) return alert("Munnadiye link aagi dhaan iruku! 🟢"); list.push({ name: name, uid: uid }); localStorage.setItem('machaStoredFriendsList', JSON.stringify(list)); renderFriendsPad(); }
 
         renderFriendsPad(); renderRecentPad();
     </script>
