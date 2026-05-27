@@ -2,26 +2,30 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Vaanga Kandu Pidikkalaam! 🕵️‍♂️🎨</title>
     <style>
-        body { font-family: 'Poppins', sans-serif; text-align: center; background: radial-gradient(circle, #1a1a3a 0%, #0d0d22 100%); color: #fff; margin: 0; padding: 20px; min-height: 100vh; }
-        .game-card-box { max-width: 650px; margin: 20px auto; padding: 30px; background: rgba(22, 36, 71, 0.7); backdrop-filter: blur(10px); border-radius: 24px; border: 2px solid rgba(0, 255, 245, 0.2); box-shadow: 0px 15px 35px rgba(0, 0, 0, 0.6); }
-        h1, h2 { color: #00fff5; text-shadow: 0 0 10px rgba(0, 255, 245, 0.4); margin-top: 0; }
-        .timer-badge { background: rgba(228, 63, 90, 0.2); border: 2px solid #e43f5a; color: #ff4a68; padding: 10px 20px; border-radius: 50px; display: inline-block; font-size: 1.4rem; font-weight: bold; margin: 15px 0; }
-        .status-pill { background: #1f4068; padding: 8px 16px; border-radius: 12px; font-size: 1rem; font-weight: 600; display: inline-block; margin: 8px; border: 1px solid rgba(255,255,255,0.1); }
-        input.room-field { padding: 14px; margin: 15px 0; border: 2px solid #1f4068; background: #162447; color: #fff; border-radius: 12px; width: 80%; font-size: 1.1rem; text-align: center; outline: none; }
+        body { font-family: 'Poppins', sans-serif; text-align: center; background: radial-gradient(circle, #1a1a3a 0%, #0d0d22 100%); color: #fff; margin: 0; padding: 10px; min-height: 100vh; overflow-x: hidden; }
+        .game-card-box { max-width: 650px; margin: 10px auto; padding: 20px; background: rgba(22, 36, 71, 0.7); backdrop-filter: blur(10px); border-radius: 24px; border: 2px solid rgba(0, 255, 245, 0.2); box-shadow: 0px 15px 35px rgba(0, 0, 0, 0.6); box-sizing: border-box; width: 100%; }
+        h1, h2 { color: #00fff5; text-shadow: 0 0 10px rgba(0, 255, 245, 0.4); margin-top: 0; font-size: 1.8rem; }
+        .timer-badge { background: rgba(228, 63, 90, 0.2); border: 2px solid #e43f5a; color: #ff4a68; padding: 10px 20px; border-radius: 50px; display: inline-block; font-size: 1.2rem; font-weight: bold; margin: 10px 0; }
+        .status-pill { background: #1f4068; padding: 8px 16px; border-radius: 12px; font-size: 0.9rem; font-weight: 600; display: inline-block; margin: 5px; border: 1px solid rgba(255,255,255,0.1); }
+        input.room-field { padding: 14px; margin: 15px 0; border: 2px solid #1f4068; background: #162447; color: #fff; border-radius: 12px; width: 85%; font-size: 1.1rem; text-align: center; outline: none; box-sizing: border-box; }
         input.room-field:focus { border-color: #00fff5; }
-        button { background: linear-gradient(135deg, #e43f5a 0%, #ff4a68 100%); color: white; border: none; padding: 14px 28px; border-radius: 12px; cursor: pointer; font-weight: bold; font-size: 1rem; margin: 8px; transition: 0.3s; }
+        button { background: linear-gradient(135deg, #e43f5a 0%, #ff4a68 100%); color: white; border: none; padding: 14px 24px; border-radius: 12px; cursor: pointer; font-weight: bold; font-size: 1rem; margin: 8px; transition: 0.3s; touch-action: manipulation; }
         button:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(228, 63, 90, 0.6); }
         .btn-success { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); box-shadow: 0 5px 15px rgba(56, 239, 125, 0.4); }
         .btn-danger { background: linear-gradient(135deg, #cb2d3e 0%, #ef473a 100%); }
         .btn-blue { background: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%); box-shadow: 0 5px 15px rgba(0, 114, 255, 0.4); }
-        canvas { border: 4px solid #1f4068; background: #ffffff; border-radius: 18px; cursor: crosshair; margin-top: 20px; box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.5); }
-        .grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-top: 25px; }
-        .grid-item { border: 2px solid rgba(0, 255, 245, 0.1); padding: 15px; background: #162447; border-radius: 16px; }
-        .grid-item img { width: 100%; border-radius: 10px; background: white; margin-bottom: 10px; }
-        #game-area, #voting-area, #result-area { display: none; }
+        
+        /* 📱 RESPONSIVE AUTO-SCALING CANVAS CONTAINER ENGINE */
+        #canvas-container { position: relative; width: 100%; max-width: 500px; margin: 20px auto; box-sizing: border-box; }
+        canvas { display: block; border: 4px solid #1f4068; background: #ffffff; border-radius: 18px; cursor: crosshair; box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.5); width: 100%; height: auto; aspect-ratio: 5 / 4; box-sizing: border-box; touch-action: none; }
+        
+        .grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-top: 25px; }
+        .grid-item { border: 2px solid rgba(0, 255, 245, 0.1); padding: 12px; background: #162447; border-radius: 16px; box-sizing: border-box; }
+        .grid-item img { width: 100%; border-radius: 10px; background: white; margin-bottom: 10px; height: auto; }
+        #game-area, #voting-area, #result-area { display: none; width: 100%; }
         #startBtn { display: none; } 
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
@@ -30,45 +34,41 @@
 
     <div id="lobby-box" class="game-card-box">
         <h1>Vaanga Kandu Pidikkalaam! 🕵️‍♂️🎨</h1>
-        <p style="color: #b5b5b5; font-size: 1rem;">Welcome to the arena macha!</p>
+        <p style="color: #b5b5b5; font-size: 0.9rem;">Welcome to the arena macha!</p>
         <hr style="border: 1px solid rgba(0, 255, 245, 0.2); margin: 20px 0;">
-        
         <input type="text" id="roomCode" class="room-field" placeholder="Enter Secret Room Code (Eg: rcb123)"><br>
-        
         <button id="createBtn" class="btn-blue">Create New Room 🛠️</button>
         <button id="joinBtn" class="btn-success">Join Existing Room 🚀</button>
     </div>
 
     <div id="game-area" class="game-card-box">
         <h2>Game Room Dashboard 🎮</h2>
-        <div class="status-pill">👥 Room Crew: <span id="player-list" style="color:#00fff5;">None</span></div>
+        <div class="status-pill">👥 Crew: <span id="player-list" style="color:#00fff5;">None</span></div>
         <br>
-        <button id="startBtn" class="btn-success">Start Match 🔥 (Host Only)</button>
+        <button id="startBtn" class="btn-success">Start Match 🔥</button>
         <hr style="border: 1px solid rgba(0, 255, 245, 0.1); margin: 15px 0;">
-        
-        <div class="timer-badge">⏱️ Time Left: <span id="timer-display">60</span>s</div><br>
-        
-        <div class="status-pill">Your Identity: <span id="my-role" style="color:#e67e22;">Waiting...</span></div>
-        <div class="status-pill">Secret Parameter: <span id="my-word" style="color:#38ef7d;">???</span></div>
+        <div class="timer-badge">⏱️ Time: <span id="timer-display">60</span>s</div><br>
+        <div class="status-pill">Role: <span id="my-role" style="color:#e67e22;">Waiting...</span></div>
+        <div class="status-pill">Secret: <span id="my-word" style="color:#38ef7d;">???</span></div>
         
         <div id="canvas-container">
             <canvas id="sketchPad" width="500" height="400"></canvas>
-            <br><br>
+            <br>
             <button id="clearBtn" class="btn-danger">Reset Canvas 🧹</button>
         </div>
     </div>
 
     <div id="voting-area" class="game-card-box" style="max-width: 850px;">
-        <h2>Showdown Phase: Detective Voting 🔍</h2>
-        <p id="voting-instruction" style="color: #b5b5b5;">Inspect the structural design boards below carefully.</p>
-        <hr style="border: 1px solid rgba(0, 255, 245, 0.2); animate: fade 1s;">
+        <h2>Showdown Phase 🔍</h2>
+        <p id="voting-instruction" style="color: #b5b5b5;">Inspect the structural design boards carefully.</p>
+        <hr style="border: 1px solid rgba(0, 255, 245, 0.2);">
         <div id="drawings-grid" class="grid-container"></div>
     </div>
 
     <div id="result-area" class="game-card-box">
         <h2>Match Verdict Summary 🏁</h2>
-        <h1 id="game-outcome" style="color: #38ef7d; font-size: 2.2rem;">Result Loading...</h1>
-        <div class="status-pill" style="font-size: 1.2rem; padding: 12px 24px; border-color: #e43f5a;">
+        <h1 id="game-outcome" style="color: #38ef7d; font-size: 1.8rem;">Result Loading...</h1>
+        <div class="status-pill" style="font-size: 1rem; padding: 12px 24px; border-color: #e43f5a;">
             🕵️‍♂️ The Hidden Spy was: <span id="reveal-spy-name" style="color:#ff4a68;">???</span>
         </div>
         <br><br>
