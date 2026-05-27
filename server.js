@@ -21,10 +21,10 @@ if (fs.existsSync(BACKUP_DB_FILE_PATH)) {
         const rawJsonStringData = fs.readFileSync(BACKUP_DB_FILE_PATH, 'utf8');
         if (rawJsonStringData && rawJsonStringData.trim() !== "") {
             localUserDatabase = JSON.parse(rawJsonStringData);
-            console.log("💾 Permanent active records database successfully loaded on boot.");
+            console.log("💾 Permanent active database memory loops successfully synchronized.");
         }
     } catch (dbErr) {
-        console.log("⚠️ Fresh persistent database initialization triggered.");
+        console.log("⚠️ Permanent file verification checking failed initialization.");
         localUserDatabase = {};
     }
 }
@@ -33,7 +33,7 @@ function commitActiveMemoryChangesToDiskStorage() {
     try {
         fs.writeFileSync(BACKUP_DB_FILE_PATH, JSON.stringify(localUserDatabase, null, 2), 'utf8');
     } catch (saveErr) {
-        console.error("❌ Persistent storage writer module synchronization failure!");
+        console.error("❌ Database synchronization filesystem error loop tracker!");
     }
 }
 
@@ -50,10 +50,9 @@ app.post('/api/signup', async (req, res) => {
         const normalizedUser = username.trim().toLowerCase();
         if (localUserDatabase[normalizedUser]) return res.status(400).json({ error: "Intha peerla aal irukaanga macha!" });
         const hashedPassword = await bcrypt.hash(password, 10);
-        
         const generatedUid = "UID-" + Math.floor(1000 + Math.random() * 9000);
-        localUserDatabase[normalizedUser] = { rawUsername: username.trim(), passwordHash: hashedPassword, matchWins: 0, userUID: generatedUid };
         
+        localUserDatabase[normalizedUser] = { rawUsername: username.trim(), passwordHash: hashedPassword, matchWins: 0, userUID: generatedUid };
         commitActiveMemoryChangesToDiskStorage();
         res.json({ success: true, username: localUserDatabase[normalizedUser].rawUsername, wins: 0, uid: generatedUid });
     } catch (err) { res.status(500).json({ error: "Signup error!" }); }
@@ -67,16 +66,15 @@ app.post('/api/login', async (req, res) => {
         if (!userRecord) return res.status(400).json({ error: "Intha user-e illaye macha!" });
         const isMatch = await bcrypt.compare(password, userRecord.passwordHash);
         if (!isMatch) return res.status(400).json({ error: "Password thappu! ❌" });
-        
-        if (!userRecord.userUID) {
-            userRecord.userUID = "UID-" + Math.floor(1000 + Math.random() * 9000);
-            commitActiveMemoryChangesToDiskStorage();
-        }
         res.json({ success: true, username: userRecord.rawUsername, wins: userRecord.matchWins, uid: userRecord.userUID });
     } catch (err) { res.status(500).json({ error: "Login error!" }); }
 });
 
-// ================= 🎯 100% GUARANTEED REAL-TIME ROLE ASSIGNMENT GENERATOR ENGINE =================
+function shuffleArray(arr) {
+    return arr.sort(() => 0.5 - Math.random());
+}
+
+// ================= 🎯 DYNAMIC RE-ENGINEERED TRUE CONCEPT RATIO SEPARATION LOGIC ENGINE =================
 function executeGameLogicEngine(roomCode) {
     const room = rooms[roomCode];
     if (!room || !room.players || room.players.length === 0) return;
@@ -86,62 +84,69 @@ function executeGameLogicEngine(roomCode) {
     room.votes = {};
 
     const randomCategory = wordsData.categories[Math.floor(Math.random() * wordsData.categories.length)];
-    const shuffledWords = [...randomCategory.words].sort(() => 0.5 - Math.random());
+    // Multi words extractor check elements array sets lines mapping
+    const baseTeamWordString = randomCategory.words[0]; // Standard Mainstream Key (Eg: Car)
+    const decoySpyWordString = randomCategory.words[1] || randomCategory.words[0]; // Segmented Related Key (Eg: Bike)
     
-    // Concrete absolute mathematical position pointer index allocation loop rules
-    const totalActivePlayersInLobby = room.players.length;
-    const computedRandomSpyIndexPointer = Math.floor(Math.random() * totalActivePlayersInLobby);
+    let masterPoolOfPlayers = shuffleArray([...room.players]);
+    const totalLobbySizeCount = masterPoolOfPlayers.length;
 
-    console.log(`🎰 Room [${roomCode}] Core Engine Triggered: Total players = ${totalActivePlayersInLobby}. Assigned Spy Index offset position = ${computedRandomSpyIndexPointer}`);
+    // STRICT MATHEMATICAL DYNAMIC RATIO ALLOCATION ALGORITHMS:
+    // Target constraints definitions: 2 Detectives always. 1 Spy / Impostor always. Remaining are structural Team Members!
+    let assignedDetectivesCount = 2;
+    if (totalLobbySizeCount <= 4) assignedDetectivesCount = 1; // Safeguard scales validation limits maps for mini lobby test runs
 
-    for (let currentOffset = 0; currentOffset < totalActivePlayersInLobby; currentOffset++) {
-        const targetPlayerObjectRef = room.players[currentOffset];
-        
-        if (currentOffset === computedRandomSpyIndexPointer) {
-            // Static index position explicitly matches condition checks profile variables allocation loop bounds
-            targetPlayerObjectRef.role = "Spy 🕵️‍♂️";
-            targetPlayerObjectRef.word = shuffledWords[1]; // Recovers dynamic decoy keyword text string array metrics
-        } else {
-            // Absolute fallback guarantees 100% exact roles segregation without reference mismatch leaks
-            targetPlayerObjectRef.role = "Detective 🔍";
-            targetPlayerObjectRef.word = "Kandu Pidi Macha! 🧠";
-        }
-        
-        // Instant hardware signal dispatch pipeline trigger loop properties elements rules configuration
-        io.to(targetPlayerObjectRef.id).emit('assignRole', { 
-            role: targetPlayerObjectRef.role, 
-            word: targetPlayerObjectRef.word 
-        });
+    const globalDetectivesIdsArray = [];
+    for (let d = 0; d < assignedDetectivesCount; d++) {
+        globalDetectivesIdsArray.push(masterPoolOfPlayers[d].id);
     }
+    const globalSpyImpostorPlayerId = masterPoolOfPlayers[assignedDetectivesCount].id;
+
+    console.log(`🎰 Real Concept Active Bootstrap [Room:${roomCode}]: Total = ${totalLobbySizeCount}. Detectives Assigned = ${globalDetectivesIdsArray.length}. Spy Target ID = ${globalSpyImpostorPlayerId}`);
+
+    room.players.forEach((player) => {
+        if (globalDetectivesIdsArray.includes(player.id)) {
+            // ROLE TYPE 3: THE DETECTIVES / GUESSERS
+            player.role = "Detective 🔍";
+            player.word = "Word details hidden state tracker. Monitor cards sheets drawings vectors! 🧠";
+        } else if (player.id === globalSpyImpostorPlayerId) {
+            // ROLE TYPE 2: THE SPY / IMPOSTOR (ONE UNIQUE PERSON RECEIVES RELATED WORD)
+            player.role = "Spy 🕵️‍♂️";
+            player.word = decoySpyWordString; // Eg: Bike
+        } else {
+            // ROLE TYPE 1: THE TEAM MEMBERS (MAJORITY CRITERIA RECEIVES CORE SHARED WORD)
+            player.role = "Team Member 🎨";
+            player.word = baseTeamWordString; // Eg: Car
+        }
+
+        // Broadcaster channels updates pipeline lock
+        io.to(player.id).emit('assignRole', { 
+            role: player.role, 
+            word: player.word 
+        });
+    });
 }
 
-// ================= MULTIPLAYER SOCKET NETWORK LOGIC CONTROL CENTER =================
+// ================= MULTIPLAYER SOCKET SYSTEM GATEWAY EVENTS LOOP =================
 io.on('connection', (socket) => {
 
     socket.on('omnitrix_searchAndVerifyUserUid', (requestedUidKey) => {
         if (!requestedUidKey) return;
         const cleanTargetUid = requestedUidKey.toString().trim().toUpperCase();
         let foundRealUserMatch = null;
-
         const dbUserKeysCollection = Object.keys(localUserDatabase);
         for (let i = 0; i < dbUserKeysCollection.length; i++) {
             const structuralProfileRecordNode = localUserDatabase[dbUserKeysCollection[i]];
             if (structuralProfileRecordNode && structuralProfileRecordNode.userUID) {
                 const checkedRecordUidString = structuralProfileRecordNode.userUID.toString().trim().toUpperCase();
-                if (checkedRecordUidString === cleanTargetUid) {
-                    foundRealUserMatch = { name: structuralProfileRecordNode.rawUsername.toString().trim(), uid: checkedRecordUidString };
-                    break;
-                }
+                if (checkedRecordUidString === cleanTargetUid) { foundRealUserMatch = { name: structuralProfileRecordNode.rawUsername.toString().trim(), uid: checkedRecordUidString }; break; }
             }
         }
-        if (foundRealUserMatch && foundRealUserMatch.name) {
-            socket.emit('omnitrix_searchUidResultSuccess', foundRealUserMatch);
-        } else {
-            socket.emit('omnitrix_searchUidResultFailure', `Apdi oru real player validation tag code (${cleanTargetUid}) database collections layout-le illai macha! 🔍❌`);
-        }
+        if (foundRealUserMatch && foundRealUserMatch.name) { socket.emit('omnitrix_searchUidResultSuccess', foundRealUserMatch); } 
+        else { socket.emit('omnitrix_searchUidResultFailure', `Apdi oru active player UID list-le illai macha! 🔍❌`); }
     });
 
-    // --- GAME 1 NETWORKS CORE DRIVER PIPELINE ---
+    // --- GAME 1 CORE SOCKET PORTS ACTIONS ---
     socket.on('createNewRoomAction', ({ roomCode, username }) => {
         if (rooms[roomCode]) return socket.emit('roomAccessError', "Room already exists!");
         rooms[roomCode] = { players: [], gameStarted: false, adminId: socket.id, drawings: {}, votes: {} };
@@ -164,8 +169,7 @@ io.on('connection', (socket) => {
 
     socket.on('triggerPlayAgainAction', (roomCode) => {
         const room = rooms[roomCode]; if (!room || room.adminId !== socket.id) return;
-        room.gameStarted = false; 
-        io.to(roomCode).emit('reMatchInitiatedByAdmin');
+        room.gameStarted = false; io.to(roomCode).emit('reMatchInitiatedByAdmin');
         executeGameLogicEngine(roomCode);
     });
 
@@ -174,37 +178,60 @@ io.on('connection', (socket) => {
         const player = room.players.find(p => p.id === socket.id);
         if (player) room.drawings[player.id] = { name: player.name, data: drawingData, role: player.role };
         
-        const totalDrawersCount = room.players.filter(p => !p.role.includes("Detective")).length;
-        if (Object.keys(room.drawings).length >= totalDrawersCount) {
+        // ⚡ EXACT FLOW TRIGGER CAPTURE: Total required canvas sheets matches total drawers count (Team Members + 1 Spy)!
+        const requiredDrawersLobbyLimit = room.players.filter(p => p.role.includes("Team Member") || p.role.includes("Spy")).length;
+        
+        if (Object.keys(room.drawings).length >= requiredDrawersLobbyLimit) {
             io.to(roomCode).emit('startVotingPhase', { drawings: room.drawings });
         }
     });
 
+    // ⚡ FIXED CORE RULE WIN CONDITION: ONLY DETECTIVES VOTE TO SPOT THE SPY!
     socket.on('castVote', ({ roomCode, targetPlayerId }) => {
         const room = rooms[roomCode]; if (!room) return;
+        
+        // Register incoming detective votes targets codes mapping variables lines
         room.votes[socket.id] = targetPlayerId;
         
-        if (Object.keys(room.votes).length >= room.players.length) {
-            let gameResult = "Spy Escaped! Spy Wins! 🕵️‍♂️🔥"; 
-            let winningRole = "Spy 🕵️‍♂️";
+        const detectivesActiveVotersArray = room.players.filter(p => p.role.includes("Detective"));
+        
+        // CHECK EXITS GATES CLOSURE CLOSURES: Triggers instantly once ALL assigned Detectives lock their targets selectors badges!
+        if (Object.keys(room.votes).length >= detectivesActiveVotersArray.length) {
             
-            const spyObject = room.players.find(p => p.role.includes("Spy"));
-            const totalVotersCount = room.players.length;
+            const spyObjectTargetProfileNode = room.players.find(p => p.role.includes("Spy"));
+            let isSpyIdentifiedAndBlocked = true;
 
-            if (spyObject) {
-                const spyVotesCount = Object.values(room.votes).filter(id => id === spyObject.id).length;
-                if (spyVotesCount >= Math.ceil(totalVotersCount / 2)) {
-                    gameResult = "Detectives Found the Spy! Team Wins! 🏆🎉"; 
-                    winningRole = "Detective / Team";
+            // SCANS INDIVIDUAL DETECTIVES TARGET LABELS VOTES ENTRIES:
+            // Every voting detective entity input MUST accurately match the single rogue spy identifier socket string!
+            const detectiveVotesValuesCollection = Object.values(room.votes);
+            for (let v = 0; v < detectiveVotesValuesCollection.length; v++) {
+                if (spyObjectTargetProfileNode && detectiveVotesValuesCollection[v] !== spyObjectTargetProfileNode.id) {
+                    // Even if a single detective targets an innocent team member profile layout, spy escapes validation!
+                    isSpyIdentifiedAndBlocked = false;
+                    break;
                 }
             }
 
+            let finalMatchVerdictText = "";
+            let winningGroupIdentifier = "";
+
+            if (isSpyIdentifiedAndBlocked) {
+                // WINNING CONDITION A: Detectives guess correctly -> TEAM WINS (All detectives and team members score!)
+                finalMatchVerdictText = "Detectives Guess is Correct! Team Wins! 🏆🎉";
+                winningGroupIdentifier = "Team_Group";
+            } else {
+                // WINNING CONDITION B: Detectives guess wrong or fail -> SPY WINS SOLO!
+                finalMatchVerdictText = "Spy Escaped Detection Securely! The Spy Wins Solo! 🕵️‍♂️🔥";
+                winningGroupIdentifier = "Spy_Solo";
+            }
+
+            // Persistence disk arrays calculator records loops synchronization mapping metrics
             room.players.forEach(p => {
                 const dbUser = localUserDatabase[p.name.toString().trim().toLowerCase()];
                 if (dbUser) {
-                    if (winningRole === "Spy 🕵️‍♂️" && p.role.includes("Spy")) {
+                    if (winningGroupIdentifier === "Team_Group" && !p.role.includes("Spy")) {
                         dbUser.matchWins += 1;
-                    } else if (winningRole === "Detective / Team" && !p.role.includes("Spy")) {
+                    } else if (winningGroupIdentifier === "Spy_Solo" && p.role.includes("Spy")) {
                         dbUser.matchWins += 1;
                     }
                     p.currentWins = dbUser.matchWins;
@@ -214,37 +241,18 @@ io.on('connection', (socket) => {
             commitActiveMemoryChangesToDiskStorage();
             
             io.to(roomCode).emit('gameOver', { 
-                result: gameResult, 
-                spyName: spyObject ? spyObject.name : "Unknown", 
+                result: finalMatchVerdictText, 
+                spyName: spyObjectTargetProfileNode ? spyObjectTargetProfileNode.name : "Unknown", 
                 scores: room.players.map(p => ({ name: p.name, totalWins: p.currentWins || 0 })), 
                 adminId: room.adminId 
             });
         }
     });
 
-    // --- GAME 2 LOGIC ENGINE ---
-    socket.on('tp_createNewRoom', ({ roomCode, username }) => {
-        if (takkunuRooms[roomCode]) return socket.emit('tp_roomError', "Intha code-la munnadiye room iruku macha! ❌");
-        let pureFreshPool = [...connectWordsData.categories].sort(() => 0.5 - Math.random());
-        takkunuRooms[roomCode] = { players: [], currentRound: 0, maxRounds: 10, adminId: socket.id, buzzerLockedBy: null, currentWordPair: null, wordsPool: pureFreshPool.slice(0, 10), roundTimeout: null };
-        takkunuRooms[roomCode].players.push({ id: socket.id, name: username, score: 0 });
-        socket.join(roomCode); socket.emit('tp_roomSuccess');
-        io.to(roomCode).emit('tp_roomData', { players: takkunuRooms[roomCode].players, adminId: takkunuRooms[roomCode].adminId });
-    });
-    socket.on('tp_joinExistingRoom', ({ roomCode, username }) => {
-        const room = takkunuRooms[roomCode]; if (!room) return socket.emit('tp_roomError', "Apdi oru room-e illa macha! 🤯");
-        room.players.push({ id: socket.id, name: username, score: 0 });
-        socket.join(roomCode); socket.emit('tp_roomSuccess');
-        io.to(roomCode).emit('tp_roomData', { players: room.players, adminId: room.adminId });
-    });
-    function tp_startNextRoundEngine(roomCode) {
-        const room = takkunuRooms[roomCode]; if (!room) return;
-        room.buzzerLockedBy = null; room.currentRound += 1; if (room.roundTimeout) clearTimeout(room.roundTimeout);
-        if (room.currentRound > room.maxRounds) { io.to(roomCode).emit('tp_gameFinished', { leaderboard: [...room.players].sort((a,b) => b.score - a.score) }); return; }
-        room.currentWordPair = room.wordsPool[room.currentRound - 1];
-        io.to(roomCode).emit('tp_nextRoundStarted', { round: room.currentRound, clues: room.currentWordPair.clues, type: room.currentWordPair.type });
-        room.roundTimeout = setTimeout(() => { if (!room.buzzerLockedBy) { io.to(roomCode).emit('tp_roundTimeoutExpired', { actualAnswer: room.currentWordPair.answer, players: room.players }); setTimeout(() => { tp_startNextRoundEngine(roomCode); }, 4000); } }, 15000); 
-    }
+    // --- GAME 2 DRIVERS LOOP STACK ---
+    socket.on('tp_createNewRoom', ({ roomCode, username }) => { if (takkunuRooms[roomCode]) return socket.emit('tp_roomError', "Intha code-la munnadiye room iruku macha! ❌"); let pureFreshPool = [...connectWordsData.categories].sort(() => 0.5 - Math.random()); takkunuRooms[roomCode] = { players: [], currentRound: 0, maxRounds: 10, adminId: socket.id, buzzerLockedBy: null, currentWordPair: null, wordsPool: pureFreshPool.slice(0, 10), roundTimeout: null }; takkunuRooms[roomCode].players.push({ id: socket.id, name: username, score: 0 }); socket.join(roomCode); socket.emit('tp_roomSuccess'); io.to(roomCode).emit('tp_roomData', { players: takkunuRooms[roomCode].players, adminId: takkunuRooms[roomCode].adminId }); });
+    socket.on('tp_joinExistingRoom', ({ roomCode, username }) => { const room = takkunuRooms[roomCode]; if (!room) return socket.emit('tp_roomError', "Apdi oru room-e illa macha! 🤯"); room.players.push({ id: socket.id, name: username, score: 0 }); socket.join(roomCode); socket.emit('tp_roomSuccess'); io.to(roomCode).emit('tp_roomData', { players: room.players, adminId: room.adminId }); });
+    function tp_startNextRoundEngine(roomCode) { const room = takkunuRooms[roomCode]; if (!room) return; room.buzzerLockedBy = null; room.currentRound += 1; if (room.roundTimeout) clearTimeout(room.roundTimeout); if (room.currentRound > room.maxRounds) { io.to(roomCode).emit('tp_gameFinished', { leaderboard: [...room.players].sort((a,b) => b.score - a.score) }); return; } room.currentWordPair = room.wordsPool[room.currentRound - 1]; io.to(roomCode).emit('tp_nextRoundStarted', { round: room.currentRound, clues: room.currentWordPair.clues, type: room.currentWordPair.type }); room.roundTimeout = setTimeout(() => { if (!room.buzzerLockedBy) { io.to(roomCode).emit('tp_roundTimeoutExpired', { actualAnswer: room.currentWordPair.answer, players: room.players }); setTimeout(() => { tp_startNextRoundEngine(roomCode); }, 4000); } }, 15000); }
     socket.on('tp_startMatchTrigger', (roomCode) => { const room = takkunuRooms[roomCode]; if (!room || room.adminId !== socket.id) return; tp_startNextRoundEngine(roomCode); });
     socket.on('tp_buzzerPressed', (roomCode) => { const room = takkunuRooms[roomCode]; if (!room || room.buzzerLockedBy) return; if (room.roundTimeout) clearTimeout(room.roundTimeout); const player = room.players.find(p => p.id === socket.id); if (!player) return; room.buzzerLockedBy = socket.id; io.to(roomCode).emit('tp_buzzerLockedEvent', { winnerId: socket.id, winnerName: player.name }); });
     socket.on('tp_submitAnswer', ({ roomCode, submittedAnswer }) => { const room = takkunuRooms[roomCode]; if (!room || room.buzzerLockedBy !== socket.id) return; const player = room.players.find(p => p.id === socket.id); if (!player) return; let isCorrect = (submittedAnswer.toString().trim().toLowerCase() === room.currentWordPair.answer.toString().trim().toLowerCase()); if (isCorrect) player.score += 1; else player.score -= 1; io.to(roomCode).emit('tp_roundOutcome', { playerName: player.name, isCorrect, actualAnswer: room.currentWordPair.answer, players: room.players }); setTimeout(() => { tp_startNextRoundEngine(roomCode); }, 4000); });
