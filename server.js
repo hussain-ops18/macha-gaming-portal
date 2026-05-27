@@ -43,7 +43,7 @@ const connectWordsData = JSON.parse(fs.readFileSync('public/games/takkunu-paaru/
 let rooms = {}; 
 let takkunuRooms = {}; 
 
-// ================= AUTHENTICATION APIS (With Dynamic Persistent Map) =================
+// ================= AUTHENTICATION APIS =================
 app.post('/api/signup', async (req, res) => {
     try {
         const { username, password } = req.body;
@@ -51,15 +51,8 @@ app.post('/api/signup', async (req, res) => {
         if (localUserDatabase[normalizedUser]) return res.status(400).json({ error: "Intha peerla aal irukaanga macha!" });
         const hashedPassword = await bcrypt.hash(password, 10);
         
-        // Generates explicit persistent unique tracking tags securely on data models creation loops
         const generatedUid = "UID-" + Math.floor(1000 + Math.random() * 9000);
-        
-        localUserDatabase[normalizedUser] = { 
-            rawUsername: username.trim(), 
-            passwordHash: hashedPassword, 
-            matchWins: 0,
-            userUID: generatedUid
-        };
+        localUserDatabase[normalizedUser] = { rawUsername: username.trim(), passwordHash: hashedPassword, matchWins: 0, userUID: generatedUid };
         
         commitActiveMemoryChangesToDiskStorage();
         res.json({ success: true, username: localUserDatabase[normalizedUser].rawUsername, wins: 0, uid: generatedUid });
@@ -79,38 +72,65 @@ app.post('/api/login', async (req, res) => {
             userRecord.userUID = "UID-" + Math.floor(1000 + Math.random() * 9000);
             commitActiveMemoryChangesToDiskStorage();
         }
-        
         res.json({ success: true, username: userRecord.rawUsername, wins: userRecord.matchWins, uid: userRecord.userUID });
     } catch (err) { res.status(500).json({ error: "Login error!" }); }
 });
 
+function shuffleArray(arr) {
+    return arr.sort(() => 0.5 - Math.random());
+}
+
+// ================= 🔥 GAME 1: RE-ENGINEERED COMPREHENSIVE ROLE ALLOCATION ENGINE =================
+function executeGameLogicEngine(roomCode) {
+    const room = rooms[roomCode];
+    if (!room) return;
+    
+    room.gameStarted = true; 
+    room.drawings = {}; 
+    room.votes = {};
+
+    const randomCategory = wordsData.categories[Math.floor(Math.random() * wordsData.categories.length)];
+    const shuffledWords = shuffleArray([...randomCategory.words]);
+    
+    // Pure Fisher-Yates array randomizer loop for total absolute randomness
+    let playersArray = shuffleArray([...room.players]);
+    
+    // STRICT RATIO DISTRIBUTION MATRIX: 1 Spy, Rest are split correctly based on lobby counts
+    const spyPlayerId = playersArray[0].id;
+    
+    room.players.forEach((player) => {
+        if (player.id === spyPlayerId) {
+            player.role = "Spy 🕵️‍♂️";
+            player.word = shuffledWords[1]; // Spy receives fallback decoy word format
+        } else {
+            // All non-spy operational entities inside the crew are dynamically tagged as Detectives!
+            player.role = "Detective 🔍";
+            player.word = "Kandu Pidi Macha! 🧠"; // Real core tracking baseline
+        }
+        io.to(player.id).emit('assignRole', { role: player.role, word: player.word });
+    });
+}
+
 // ================= MULTIPLAYER SOCKET NETWORK LOGIC CONTROL CENTER =================
 io.on('connection', (socket) => {
 
-    // --- ⚡ HIGH PRECISION ULTRA VERIFICATION SEARCH ENGINE PARSING CODES TRIGGER ---
+    // --- HIGH PRECISION PROFILE SEARCH ENGINE ---
     socket.on('omnitrix_searchAndVerifyUserUid', (requestedUidKey) => {
         if (!requestedUidKey) return;
         const cleanTargetUid = requestedUidKey.toString().trim().toUpperCase();
         let foundRealUserMatch = null;
 
-        // Strict absolute data structure object parsing criteria evaluation parameters tracking loops
         const dbUserKeysCollection = Object.keys(localUserDatabase);
         for (let i = 0; i < dbUserKeysCollection.length; i++) {
             const structuralProfileRecordNode = localUserDatabase[dbUserKeysCollection[i]];
-            
             if (structuralProfileRecordNode && structuralProfileRecordNode.userUID) {
                 const checkedRecordUidString = structuralProfileRecordNode.userUID.toString().trim().toUpperCase();
-                
                 if (checkedRecordUidString === cleanTargetUid) {
-                    foundRealUserMatch = {
-                        name: structuralProfileRecordNode.rawUsername.toString().trim(),
-                        uid: checkedRecordUidString
-                    };
-                    break; // Instant connection matching break loop optimization
+                    foundRealUserMatch = { name: structuralProfileRecordNode.rawUsername.toString().trim(), uid: checkedRecordUidString };
+                    break;
                 }
             }
         }
-
         if (foundRealUserMatch && foundRealUserMatch.name) {
             socket.emit('omnitrix_searchUidResultSuccess', foundRealUserMatch);
         } else {
@@ -118,7 +138,7 @@ io.on('connection', (socket) => {
         }
     });
 
-    // --- GAME 1 NETWORKS LOGIC MATRIX ---
+    // --- GAME 1 NETWORDS LOGIC CORE MODIFICATION ---
     socket.on('createNewRoomAction', ({ roomCode, username }) => {
         if (rooms[roomCode]) return socket.emit('roomAccessError', "Room already exists!");
         rooms[roomCode] = { players: [], gameStarted: false, adminId: socket.id, drawings: {}, votes: {} };
@@ -126,51 +146,83 @@ io.on('connection', (socket) => {
         socket.join(roomCode); socket.emit('roomAccessSuccess');
         io.to(roomCode).emit('roomData', { players: rooms[roomCode].players, adminId: rooms[roomCode].adminId });
     });
+
     socket.on('joinExistingRoomAction', ({ roomCode, username }) => {
         const room = rooms[roomCode]; if (!room || room.gameStarted) return socket.emit('roomAccessError', "Error joining room!");
         room.players.push({ id: socket.id, name: username, role: '', word: '', currentWins: 0 });
         socket.join(roomCode); socket.emit('roomAccessSuccess');
         io.to(roomCode).emit('roomData', { players: room.players, adminId: room.adminId });
     });
+
     socket.on('startGame', (roomCode) => {
         const room = rooms[roomCode]; if (!room || room.adminId !== socket.id) return;
-        room.gameStarted = true; room.drawings = {}; room.votes = {};
-        const randomCategory = wordsData.categories[Math.floor(Math.random() * wordsData.categories.length)];
-        const shuffledWords = [...randomCategory.words].sort(() => 0.5 - Math.random());
-        let playersArray = [...room.players].sort(() => 0.5 - Math.random());
-        room.players.forEach(player => {
-            if (player.id === playersArray[0].id) { player.role = "Spy 🕵️‍♂️"; player.word = shuffledWords[1]; }
-            else if (player.id === (playersArray[1] || playersArray[0]).id) { player.role = "Detective 🔍"; player.word = "Kandu Pidi Macha!"; }
-            else { player.role = "Team Member 🎨"; player.word = shuffledWords[0]; }
-            io.to(player.id).emit('assignRole', { role: player.role, word: player.word });
-        });
+        executeGameLogicEngine(roomCode);
     });
+
     socket.on('triggerPlayAgainAction', (roomCode) => {
         const room = rooms[roomCode]; if (!room || room.adminId !== socket.id) return;
         room.gameStarted = false; io.to(roomCode).emit('reMatchInitiatedByAdmin');
+        executeGameLogicEngine(roomCode);
     });
+
     socket.on('submitDrawing', ({ roomCode, drawingData }) => {
         const room = rooms[roomCode]; if (!room) return;
         const player = room.players.find(p => p.id === socket.id);
         if (player) room.drawings[player.id] = { name: player.name, data: drawingData, role: player.role };
-        if (Object.keys(room.drawings).length >= room.players.filter(p => !p.role.includes("Detective")).length) io.to(roomCode).emit('startVotingPhase', { drawings: room.drawings });
+        
+        // Total drawers check filter logic bounds allocation
+        const totalDrawersCount = room.players.filter(p => !p.role.includes("Detective")).length;
+        if (Object.keys(room.drawings).length >= totalDrawersCount) {
+            io.to(roomCode).emit('startVotingPhase', { drawings: room.drawings });
+        }
     });
+
+    // ⚡ FIXED CORE CLOSURE: Dynamic vote limits matching TOTAL active users count to ensure seamless game loop exit!
     socket.on('castVote', ({ roomCode, targetPlayerId }) => {
         const room = rooms[roomCode]; if (!room) return;
+        
+        // Registers incoming socket votes targets
         room.votes[socket.id] = targetPlayerId;
-        if (Object.keys(room.votes).length >= room.players.filter(p => !p.role.includes("Detective")).length) {
-            let winRole = "Spy 🕵️‍♂️"; const spy = room.players.find(p => p.role.includes("Spy"));
-            if(spy && Object.values(room.votes).filter(id => id === spy.id).length >= Math.ceil(room.players.filter(p => p.role.includes("Detective")).length / 2)) winRole = "Detective / Team";
+        
+        // GAME END FILTER DISPATCH: Wait until ALL active players in the room lock their targets!
+        if (Object.keys(room.votes).length >= room.players.length) {
+            let gameResult = "Spy Escaped! Spy Wins! 🕵️‍♂️🔥"; 
+            let winningRole = "Spy 🕵️‍♂️";
+            
+            const spyObject = room.players.find(p => p.role.includes("Spy"));
+            const totalVotersCount = room.players.length;
+
+            if (spyObject) {
+                const spyVotesCount = Object.values(room.votes).filter(id => id === spyObject.id).length;
+                
+                // If majority of the total lobby identifies and blocks the rogue spy index
+                if (spyVotesCount >= Math.ceil(totalVotersCount / 2)) {
+                    gameResult = "Detectives Found the Spy! Team Wins! 🏆🎉"; 
+                    winningRole = "Detective / Team";
+                }
+            }
+
+            // Increments persistence records dynamically based on winning metrics loop mapping bounds
             room.players.forEach(p => {
                 const dbUser = localUserDatabase[p.name.toString().trim().toLowerCase()];
                 if (dbUser) {
-                    if (winRole === "Spy 🕵️‍♂️" && p.role.includes("Spy")) dbUser.matchWins += 1;
-                    else if (winRole === "Detective / Team" && !p.role.includes("Spy")) dbUser.matchWins += 1;
+                    if (winningRole === "Spy 🕵️‍♂️" && p.role.includes("Spy")) {
+                        dbUser.matchWins += 1;
+                    } else if (winningRole === "Detective / Team" && !p.role.includes("Spy")) {
+                        dbUser.matchWins += 1;
+                    }
                     p.currentWins = dbUser.matchWins;
                 }
             });
+            
             commitActiveMemoryChangesToDiskStorage();
-            io.to(roomCode).emit('gameOver', { result: winRole === "Spy 🕵️‍♂️" ? "Spy Wins! 🔥" : "Team Wins! 🏆", spyName: spy?spy.name:"Unknown", scores: room.players.map(p => ({ name: p.name, totalWins: p.currentWins || 0 })), adminId: room.adminId });
+            
+            io.to(roomCode).emit('gameOver', { 
+                result: gameResult, 
+                spyName: spyObject ? spyObject.name : "Unknown", 
+                scores: room.players.map(p => ({ name: p.name, totalWins: p.currentWins || 0 })), 
+                adminId: room.adminId 
+            });
         }
     });
 
