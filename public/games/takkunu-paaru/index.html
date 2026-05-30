@@ -3,87 +3,146 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Takkunu Paaru, Ushara Iru! ⚡👾</title>
+    <title>Takkunu Paaru - Tech Light Buzzer ⚡✨</title>
     <style>
-        body { font-family: 'Poppins', sans-serif; text-align: center; background: #050515; color: #fff; margin: 0; padding: 10px; min-height: 100vh; overflow-x: hidden; }
-        .cyber-panel { max-width: 650px; margin: 15px auto; padding: 25px; background: rgba(10, 10, 30, 0.85); border-radius: 20px; border: 3px solid #00f0ff; box-shadow: 0px 0px 25px rgba(0, 240, 255, 0.4); box-sizing: border-box; width: 100%; }
-        h1 { color: #ff007f; text-shadow: 0 0 15px #ff007f, 0 0 30px #ff007f; font-size: 2.2rem; text-transform: uppercase; letter-spacing: 2px; }
-        h2 { color: #00f0ff; text-shadow: 0 0 10px rgba(0,240,255,0.5); }
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap');
         
-        /* ⏳ HIGH-SPEED ARCADE RADIAL TIMER BADGE */
-        .arcade-timer { background: rgba(255, 0, 127, 0.15); border: 2px solid #ff007f; color: #ff007f; padding: 12px 28px; border-radius: 8px; display: inline-block; font-size: 1.4rem; font-weight: 900; box-shadow: 0 0 15px rgba(255,0,127,0.4); margin: 15px 0; font-family: monospace; }
-        
-        .clue-stripe-box { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin: 25px 0; align-items: center; }
-        .neon-clue { background: #111133; border: 2px solid #ff007f; padding: 15px 25px; font-size: 1.8rem; font-weight: bold; border-radius: 12px; box-shadow: 0 0 12px rgba(255, 0, 127, 0.2); text-shadow: 0 0 5px #fff; }
-        .pill-neon { background: #061e33; border: 1px solid #00f0ff; padding: 8px 16px; border-radius: 6px; font-size: 0.9rem; font-weight: bold; color: #00f0ff; display: inline-block; margin: 5px; }
-        
-        input.arcade-input { padding: 15px; margin: 15px 0; border: 2px solid #00f0ff; background: #000; color: #00f0ff; font-family: monospace; border-radius: 8px; width: 85%; font-size: 1.2rem; text-align: center; outline: none; box-shadow: inset 0 0 8px rgba(0,240,255,0.3); }
-        
-        .buzzer-arcade-button { width: 200px; height: 200px; border-radius: 50%; background: radial-gradient(circle, #ff0055 0%, #7a0026 100%); color: white; font-size: 1.8rem; font-weight: 900; border: 6px solid #fff; cursor: pointer; display: block; margin: 30px auto; box-shadow: 0 0 40px #ff0055, inset 0 0 20px rgba(255,255,255,0.5); transition: 0.05s; text-shadow: 0 2px 5px rgba(0,0,0,0.5); }
-        .buzzer-arcade-button:active { transform: scale(0.94); box-shadow: 0 0 15px #ff0055; }
-        .buzzer-arcade-button:disabled { background: #222 !important; border-color: #444 !important; box-shadow: none !important; color: #555 !important; }
+        :root {
+            --body-bg: radial-gradient(circle at top left, #f8fafc 0%, #f1f5f9 40%, #e2e8f0 100%);
+            --panel-bg: rgba(255, 255, 255, 0.9);
+            --text-main: #0f172a;
+            --text-muted: #475569;
+            --tech-blue: #0066ff;
+            --tech-blue-hover: #0052cc;
+            --glass-border: rgba(255, 255, 255, 0.6);
+            --card-shadow: 0 10px 30px -10px rgba(15, 23, 42, 0.08);
+        }
 
-        button.cyber-btn { background: linear-gradient(135deg, #00f0ff 0%, #0072ff 100%); color: black; border: none; padding: 14px 28px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 1rem; margin: 8px; text-transform: uppercase; box-shadow: 0 0 15px rgba(0,240,255,0.4); }
-        .btn-magenta { background: linear-gradient(135deg, #ff007f 0%, #b50058 100%); color: white; box-shadow: 0 0 15px rgba(255,0,127,0.4); }
-        .mic-arcade { background: #7a1f99; color: white; padding: 10px 20px; font-size: 0.9rem; margin-top: 10px; border: 1px solid #bd00ff; border-radius: 6px; cursor: pointer; }
+        body { font-family: 'Poppins', sans-serif; background: var(--body-bg); color: var(--text-main); margin: 0; padding: 12px; min-height: 100vh; display: flex; flex-direction: column; align-items: center; box-sizing: border-box; }
+        *, *::before, *::after { box-sizing: border-box; }
 
-        .scoreboard-arcade { width: 100%; max-width: 450px; margin: 15px auto; background: #000; border: 2px solid #ff007f; border-radius: 12px; padding: 15px; box-shadow: 0 0 15px rgba(255,0,127,0.2); }
-        #game-area, #buzzer-input-pad, #round-feedback-screen, #final-leaderboard-screen { display: none; }
-        #startBtn { display: none; }
+        .game-mainframe-card { width: 100%; max-width: 620px; background: var(--panel-bg); border: 1px solid var(--glass-border); border-radius: 20px; padding: 20px; box-shadow: var(--card-shadow); backdrop-filter: blur(20px); text-align: center; }
+        h1.game-title { font-family: 'Space Grotesk', sans-serif; font-size: 1.6rem; font-weight: 700; color: var(--text-main); margin: 0 0 4px 0; }
+        .timer-countdown-banner { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1rem; color: #ff3366; background: rgba(255, 51, 102, 0.05); border: 1px solid rgba(255, 51, 102, 0.12); padding: 5px 16px; border-radius: 8px; display: inline-block; margin-bottom: 8px; }
+
+        .clue-badge-box { background: #ffffff; border: 1px solid rgba(15, 23, 42, 0.05); padding: 10px 16px; border-radius: 12px; margin: 12px 0; box-shadow: var(--card-shadow); display: inline-block; width: 100%; max-width: 420px; }
+        .clue-text-element { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.25rem; color: var(--text-main); display: block; margin-top: 4px; }
+        
+        .premium-buzzer-circle-node {
+            width: 160px; height: 160px; border-radius: 50%; background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
+            border: 5px solid #e2e8f0; margin: 15px auto; display: flex; align-items: center; justify-content: center;
+            font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.1rem; color: var(--text-muted);
+            cursor: pointer; box-shadow: 0 12px 30px -10px rgba(15,23,42,0.1); transition: all 0.2s; -webkit-tap-highlight-color: transparent;
+        }
+        .premium-buzzer-circle-node.buzzer-unlocked-state { border-color: var(--tech-blue); color: var(--tech-blue); }
+        .premium-buzzer-circle-node.buzzer-locked-out { border-color: #ff3366; color: #ff3366; background: #fff5f7; }
+
+        .answer-input-field { width: 100%; max-width: 340px; padding: 11px; background: #ffffff; border: 1px solid rgba(15, 23, 42, 0.1); border-radius: 8px; text-align: center; font-family: monospace; font-size: 0.95rem; outline: none; margin-bottom: 8px; }
+        button.action-tech-btn { background: var(--text-main); color: #ffffff; border: none; padding: 11px 22px; border-radius: 8px; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 0.88rem; cursor: pointer; width: 100%; max-width: 340px; }
+
+        .leaderboard-dock-card { background: #ffffff; border: 1px solid rgba(15, 23, 42, 0.05); border-radius: 14px; padding: 12px; box-shadow: var(--card-shadow); margin-top: 20px; text-align: left; }
+        .leaderboard-row-node { display: flex; justify-content: space-between; font-size: 0.82rem; padding: 5px 0; border-bottom: 1px solid rgba(15, 23, 42, 0.02); }
+        button.nav-back-hub-btn { background: transparent; color: var(--text-muted); border: 1px solid rgba(15, 23, 42, 0.1); padding: 6px 14px; border-radius: 6px; font-size: 0.75rem; margin-bottom: 12px; }
+
+        /* 📱 GAME 2 RESPONSIVE BREAKPOINT FILTERS OVERRIDES */
+        @media (max-width: 480px) {
+            .game-mainframe-card { padding: 15px 12px; border-radius: 16px; }
+            h1.game-title { font-size: 1.3rem; }
+            .timer-countdown-banner { font-size: 0.85rem; padding: 4px 12px; }
+            .clue-badge-box { padding: 8px 12px; margin: 10px 0; }
+            .clue-text-element { font-size: 1.05rem; }
+            #tp-category-type-label { font-size: 0.68rem; }
+            .premium-buzzer-circle-node { width: 130px; height: 130px; font-size: 0.92rem; margin: 12px auto; border-width: 4px; }
+            .answer-input-field { max-width: 280px; padding: 9px; font-size: 0.85rem; }
+            button.action-tech-btn { max-width: 280px; padding: 10px; font-size: 0.82rem; }
+            .leaderboard-dock-card { padding: 10px; border-radius: 12px; margin-top: 15px; }
+            .leaderboard-dock-card h4 { font-size: 0.8rem; margin-bottom: 6px; }
+            .leaderboard-row-node { font-size: 0.78rem; padding: 4px 0; }
+        }
     </style>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;900&display=swap" rel="stylesheet">
 </head>
 <body>
+    <button onclick="window.location.replace('/hub.html');" class="nav-back-hub-btn">⬅ BACK TO LOBBY</button>
+    <div class="game-mainframe-card">
+        <h1 class="game-title">TAKKUNU PAARU USHARA IRU</h1>
+        <div style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;" id="tp-room-code-label">ROOM CODE: LOADING...</div>
+        <div id="tpVisualTimerBanner" class="timer-countdown-banner" style="display:none;">⏱️ BUZZER TIME: 15s</div>
 
-    <div id="lobby-box" class="cyber-panel">
-        <h1>Takkunu Paaru ⚡<br><span style="color:#00f0ff;">Ushara Iru</span></h1>
-        <p id="welcome-label" style="color: #888;">Neon Retro Buzzer Connect Showdown</p>
-        <hr style="border: 1px solid rgba(0, 240, 255, 0.2); margin: 20px 0;">
-        <input type="text" id="roomCode" class="arcade-input" placeholder="LOBBY KEY (E.g. rcbvibe)"><br>
-        <button id="createBtn" class="cyber-btn">Create Hub 🛠️</button>
-        <button id="joinBtn" class="cyber-btn btn-magenta">Join Arena 🚀</button>
-    </div>
-
-    <div id="game-area" class="cyber-panel">
-        <h2 id="round-title-pill">ROUND MATRIX 🎮</h2>
-        <div class="pill-neon">Category: <span id="category-display" style="color:#fff;">???</span></div>
-        <div class="pill-neon">Crew: <span id="players-list-display" style="color:#fff;">None</span></div>
-        <br><br>
-        <button id="startBtn" class="cyber-btn btn-magenta" style="font-size: 1.2rem;">Launch Round Fire 🔥</button>
-
-        <div id="active-round-box" style="margin-top: 10px;">
-            <div class="arcade-timer">⏳ TIMER: <span id="timer-display">15</span>s</div><br>
-            <div id="clues-container-layout" class="clue-stripe-box"></div>
-            <button id="buzzerTriggerBtn" class="buzzer-btn buzzer-arcade-button">BUZZ 🚨</button>
+        <div class="clue-badge-box">
+            <span style="font-size:0.7rem; text-transform:uppercase; color:var(--text-muted); font-weight:700; letter-spacing:0.5px;" id="tp-category-type-label">CATEGORY INDICATORS</span>
+            <span class="clue-text-element" id="tp-active-clues-display-node">WAITING TO IGNITE DATASTREAM...</span>
         </div>
 
-        <div id="buzzer-input-pad" style="background: #000; padding: 20px; border-radius: 12px; margin-top:15px; border: 2px solid #ff007f;">
-            <h3 style="margin-top:0; color:#ff007f;"><span id="lock-winner-label">You</span> Locked the Channel!</h3>
-            <input type="text" id="textAnswerField" class="arcade-input" placeholder="Type Answer Here..."><br>
-            <button id="submitTypedAnswerBtn" class="cyber-btn btn-magenta">Submit Code 👍</button>
-            <button id="micCaptureBtn" class="mic-arcade">🎤 SPEAK ANSWER (Tamil/Eng)</button>
+        <div onclick="executeBuzzerStrikeAction();" id="tpBuzzerNode" class="premium-buzzer-circle-node buzzer-unlocked-state">STRIKE BUZZER ⚡</div>
+
+        <div id="inputCaptureInterfaceBlock" style="display: none; margin: 10px auto;">
+            <input type="text" id="submittedAnswerInputField" class="answer-input-field" placeholder="Type Answer Here..."><br>
+            <button onclick="executeAnswerSubmissionAction();" class="action-tech-btn">SUBMIT TO DATABASE ARRAY 🚀</button>
         </div>
-    </div>
 
-    <div id="live-running-scoreboard" class="scoreboard-arcade">
-        <h3 style="margin:0 0 10px 0; font-size:1rem; color:#00f0ff; text-transform:uppercase; letter-spacing:1px;">Lobby Standings 📊</h3>
-        <div id="scorecard-elements-list" style="font-weight:bold; font-family:monospace; line-height:1.6;"></div>
-    </div>
+        <button onclick="triggerAdminGameStartIgnition();" id="tpAdminStartBtn" class="action-tech-btn" style="display:none; background:var(--tech-blue); font-size:0.88rem; padding:12px;">IGNITE ROUND (ADMIN) 🚀</button>
+        <button onclick="triggerAdminRematchReset();" id="tpAdminRematchBtn" class="action-tech-btn" style="display:none; background:#ffaa00;">PLAY AGAIN 🔄</button>
 
-    <div id="round-feedback-screen" class="cyber-panel" style="border-color:#ff007f; background:#10000a;">
-        <h1 id="round-outcome-header">RESULT MATRIX</h1>
-        <p style="font-size:1.2rem; color:#888;">Target Answer: <b id="reveal-correct-word-label" style="color:#00f0ff;">???</b></p>
-    </div>
-
-    <div id="final-leaderboard-screen" class="cyber-panel" style="border-color:#ff007f;">
-        <h1>🏆 GAME OVER STATUS 🏆</h1>
-        <hr style="border-color:#ff007f; margin:15px 0;">
-        <div id="final-podium-list" style="font-family:monospace; font-size:1.3rem; text-align:left; line-height:2;"></div>
-        <button id="playAgainMasterBtn" class="cyber-btn btn-magenta" style="display:none;">Rematch Round 🔄🔥</button>
-        <button onclick="window.location.href='/index.html';" class="cyber-btn" style="background:#222; color:#fff; box-shadow:none;">Exit Hub 🔄</button>
+        <div class="leaderboard-dock-card">
+            <h4 style="margin:0 0 8px 0; font-family:'Space Grotesk'; color:var(--text-main); border-bottom:1px solid rgba(0,0,0,0.05); padding-bottom:4px; font-size:0.85rem;">LOBBY LEADERBOARD ARRAY</h4>
+            <div id="tpLeaderboardRenderPad"></div>
+        </div>
     </div>
 
     <script src="/socket.io/socket.io.js"></script>
-    <script src="app.js"></script>
+    <script>
+        const socket = io(); const urlParams = new URLSearchParams(window.location.search);
+        const username = urlParams.get('user') || "Macha_Buzzer"; let targetRoomCodeKey = urlParams.get('room') || "DEFAULT";
+        let actionIntent = urlParams.get('action') || "join"; let isLobbyAdmin = false; let tpCountdownTimerObject = null;
+
+        if (actionIntent === "create") { socket.emit('tp_createNewRoom', { roomCode: targetRoomCodeKey, username }); } 
+        else { socket.emit('tp_joinExistingRoom', { roomCode: targetRoomCodeKey, username }); }
+        document.getElementById('tp-room-code-label').innerText = `LOBBY MATRIX ROOM CODE: ${targetRoomCodeKey}`;
+
+        socket.on('tp_roomSuccess', () => console.log("Buzzer portal mapped successfully."));
+        socket.on('tp_roomError', (msg) => { alert(msg); window.location.replace('/hub.html'); });
+
+        socket.on('tp_roomData', ({ players, adminId }) => {
+            isLobbyAdmin = (socket.id === adminId); const pad = document.getElementById('tpLeaderboardRenderPad');
+            pad.innerHTML = players.map(p => `<div class="leaderboard-row-node"><span style="font-weight:500;">👤 ${p.name.toUpperCase()}</span><span style="font-weight:700; color:var(--tech-blue);">${p.score} PTS</span></div>`).join('');
+            if (isLobbyAdmin && document.getElementById('tp-active-clues-display-node').innerText.includes("WAITING")) {
+                document.getElementById('tpAdminStartBtn').style.display = "inline-block";
+            }
+        });
+
+        function triggerAdminGameStartIgnition() { document.getElementById('tpAdminStartBtn').style.display = "none"; socket.emit('tp_startMatchTrigger', targetRoomCodeKey); }
+
+        socket.on('tp_nextRoundStarted', ({ round, clues, type }) => {
+            document.getElementById('tp-category-type-label').innerText = `ROUND ${round} / 10 | ${type.toUpperCase()}`;
+            document.getElementById('tp-active-clues-display-node').innerText = clues.join(' ➡️ ');
+            const b = document.getElementById('tpBuzzerNode'); b.className = "premium-buzzer-circle-node buzzer-unlocked-state"; b.innerText = "STRIKE BUZZER ⚡";
+            document.getElementById('inputCaptureInterfaceBlock').style.display = "none"; document.getElementById('submittedAnswerInputField').value = "";
+
+            clearInterval(tpCountdownTimerObject); const timerBanner = document.getElementById('tpVisualTimerBanner'); timerBanner.style.display = "inline-block";
+            let secondsLeft = 15; timerBanner.innerText = `⏱️ BUZZER: ${secondsLeft}s`;
+            tpCountdownTimerObject = setInterval(() => { secondsLeft--; timerBanner.innerText = `⏱️ BUZZER: ${secondsLeft}s`; if (secondsLeft <= 0) { clearInterval(tpCountdownTimerObject); timerBanner.style.display = "none"; } }, 1000);
+        });
+
+        function executeBuzzerStrikeAction() { const b = document.getElementById('tpBuzzerNode'); if(b.classList.contains('buzzer-locked-out')) return; socket.emit('tp_buzzerPressed', targetRoomCodeKey); }
+
+        socket.on('tp_buzzerLockedEvent', ({ winnerId, winnerName }) => {
+            clearInterval(tpCountdownTimerObject); document.getElementById('tpVisualTimerBanner').style.display = "none";
+            const b = document.getElementById('tpBuzzerNode'); b.className = "premium-buzzer-circle-node buzzer-locked-out"; b.innerText = `LOCKED: ${winnerName.toUpperCase()} 🔒`;
+            if (socket.id === winnerId) { document.getElementById('inputCaptureInterfaceBlock').style.display = "block"; document.getElementById('submittedAnswerInputField').focus(); }
+        });
+
+        function executeAnswerSubmissionAction() { const val = document.getElementById('submittedAnswerInputField').value.trim(); if(!val) return alert("Type answer value!"); socket.emit('tp_submitAnswer', { roomCode: targetRoomCodeKey, submittedAnswer: val }); document.getElementById('inputCaptureInterfaceBlock').style.display = "none"; }
+
+        socket.on('tp_roundOutcome', ({ playerName, isCorrect, actualAnswer, players }) => {
+            clearInterval(tpCountdownTimerObject); document.getElementById('tpVisualTimerBanner').style.display = "none";
+            document.getElementById('tp-active-clues-display-node').innerText = `ANSWER: ${actualAnswer.toUpperCase()}`;
+            document.getElementById('tpBuzzerNode').innerText = `${playerName.toUpperCase()} ${isCorrect ? 'RIGHT! ✅' : 'WRONG! ❌'}`;
+            const pad = document.getElementById('tpLeaderboardRenderPad'); pad.innerHTML = players.map(p => `<div class="leaderboard-row-node"><span style="font-weight:500;">👤 ${p.name.toUpperCase()}</span><span style="font-weight:700; color:var(--tech-blue);">${p.score} PTS</span></div>`).join('');
+        });
+
+        socket.on('tp_roundTimeoutExpired', ({ actualAnswer, players }) => { clearInterval(tpCountdownTimerObject); document.getElementById('tpVisualTimerBanner').style.display = "none"; document.getElementById('tp-active-clues-display-node').innerText = `TIMEOUT! ANSWER: ${actualAnswer.toUpperCase()}`; document.getElementById('tpBuzzerNode').innerText = "EXPIRED ⏳"; });
+        socket.on('tp_gameFinished', ({ leaderboard }) => { clearInterval(tpCountdownTimerObject); document.getElementById('tpVisualTimerBanner').style.display = "none"; document.getElementById('tp-category-type-label').innerText = "MATCH SUMMARY"; document.getElementById('tp-active-clues-display-node').innerText = `WINNER: ${leaderboard[0].name.toUpperCase()} 👑`; document.getElementById('tpBuzzerNode').innerText = "GAME OVER 🏁"; if (isLobbyAdmin) document.getElementById('tpAdminRematchBtn').style.display = "inline-block"; });
+        function triggerAdminRematchReset() { document.getElementById('tpAdminRematchBtn').style.display = "none"; socket.emit('tp_playAgainAction', targetRoomCodeKey); }
+    </script>
 </body>
 </html>

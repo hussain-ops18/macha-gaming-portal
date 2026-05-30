@@ -2,7 +2,7 @@
   "khadhar": {
     "rawUsername": "khadhar",
     "passwordHash": "$2b$10$UBgaEwj.NY0ITJ1RtpRc7u8dF.xW/udPwk/DGWvFBbZNRwPu/3Ol.",
-    "matchWins": 0,
+    "matchWins": 1,
     "userUID": "UID-3442"
   },
   "dino": {
@@ -10,5 +10,11 @@
     "passwordHash": "$2b$10$Rnzt2kbotEhTMyUH5Yu.b.KV6y3k4DR.sSZKecsU6JXwxD72kC36e",
     "matchWins": 0,
     "userUID": "UID-1493"
+  },
+  "kelly": {
+    "rawUsername": "kelly",
+    "passwordHash": "$2b$10$sQ1z4xTkZc8VeiJ6SVfuW.IYVBVmEsy96qlrnBkAgPhaig74t4Gb.",
+    "matchWins": 0,
+    "userUID": "UID-4375"
   }
 }

@@ -3,79 +3,319 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Vaanga Kandu Pidikkalaam! 🕵️‍♂️🎨</title>
+    <title>Vaanga Kandu Pidikkalaam - Premium Responsive Glass 🕵️‍♂️✨</title>
     <style>
-        body { font-family: 'Poppins', sans-serif; text-align: center; background: radial-gradient(circle, #1a1a3a 0%, #0d0d22 100%); color: #fff; margin: 0; padding: 10px; min-height: 100vh; overflow-x: hidden; }
-        .game-card-box { max-width: 650px; margin: 10px auto; padding: 20px; background: rgba(22, 36, 71, 0.7); backdrop-filter: blur(10px); border-radius: 24px; border: 2px solid rgba(0, 255, 245, 0.2); box-shadow: 0px 15px 35px rgba(0, 0, 0, 0.6); box-sizing: border-box; width: 100%; }
-        h1, h2 { color: #00fff5; text-shadow: 0 0 10px rgba(0, 255, 245, 0.4); margin-top: 0; font-size: 1.8rem; }
-        .timer-badge { background: rgba(228, 63, 90, 0.2); border: 2px solid #e43f5a; color: #ff4a68; padding: 10px 20px; border-radius: 50px; display: inline-block; font-size: 1.2rem; font-weight: bold; margin: 10px 0; }
-        .status-pill { background: #1f4068; padding: 8px 16px; border-radius: 12px; font-size: 0.9rem; font-weight: 600; display: inline-block; margin: 5px; border: 1px solid rgba(255,255,255,0.1); }
-        input.room-field { padding: 14px; margin: 15px 0; border: 2px solid #1f4068; background: #162447; color: #fff; border-radius: 12px; width: 85%; font-size: 1.1rem; text-align: center; outline: none; box-sizing: border-box; }
-        input.room-field:focus { border-color: #00fff5; }
-        button { background: linear-gradient(135deg, #e43f5a 0%, #ff4a68 100%); color: white; border: none; padding: 14px 24px; border-radius: 12px; cursor: pointer; font-weight: bold; font-size: 1rem; margin: 8px; transition: 0.3s; touch-action: manipulation; }
-        button:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(228, 63, 90, 0.6); }
-        .btn-success { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); box-shadow: 0 5px 15px rgba(56, 239, 125, 0.4); }
-        .btn-danger { background: linear-gradient(135deg, #cb2d3e 0%, #ef473a 100%); }
-        .btn-blue { background: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%); box-shadow: 0 5px 15px rgba(0, 114, 255, 0.4); }
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght=400;500;600;700;800&family=Space+Grotesk:wght=500;700&display=swap');
         
-        #canvas-container { position: relative; width: 100%; max-width: 500px; margin: 20px auto; box-sizing: border-box; }
-        canvas { display: block; border: 4px solid #1f4068; background: #ffffff; border-radius: 18px; cursor: crosshair; box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.5); width: 100%; height: auto; aspect-ratio: 5 / 4; box-sizing: border-box; touch-action: none; }
+        :root {
+            --body-bg: radial-gradient(circle at top left, #f3f7fa 0%, #eef2f7 40%, #e2e8f0 100%);
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --tech-blue: #0066ff;
+            --tech-blue-hover: #0052cc;
+            
+            /* 💎 PREMIUM PURE GLASSMORPHISM MATRIX SPEC */
+            --glass-surface: rgba(255, 255, 255, 0.6);
+            --glass-border: rgba(255, 255, 255, 0.7);
+            --glass-reflection: inset 0 1px 1px rgba(255, 255, 255, 0.8);
+            
+            --thin-border: rgba(15, 23, 42, 0.05);
+            --card-shadow: 0 10px 30px -10px rgba(15, 23, 42, 0.06);
+        }
+
+        body { 
+            font-family: 'Poppins', sans-serif; background: var(--body-bg); color: var(--text-main); 
+            margin: 0; padding: 15px; min-height: 100vh; display: flex; flex-direction: column; align-items: center;
+            box-sizing: border-box; overflow-x: hidden;
+        }
+        *, *::before, *::after { box-sizing: border-box; }
+
+        button.nav-back-hub-btn { 
+            background: var(--glass-surface); color: var(--text-muted); border: 1px solid var(--glass-border); 
+            padding: 8px 16px; border-radius: 10px; font-size: 0.78rem; font-weight: 600; margin-bottom: 15px; 
+            cursor: pointer; transition: all 0.2s; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            box-shadow: var(--card-shadow), var(--glass-reflection);
+        }
+        button.nav-back-hub-btn:hover { background: #ffffff; color: var(--text-main); }
+
+        /* ✨ EXCLUSIVE RE-ALIGNED GLASSMORPHIC GAME MAIN CARD */
+        .game-mainframe-card {
+            width: 100%; max-width: 520px; background: var(--glass-surface); border: 1px solid var(--glass-border);
+            border-radius: 24px; padding: 25px; box-shadow: var(--card-shadow), var(--glass-reflection); 
+            backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); text-align: center;
+        }
+
+        h1.game-title { font-family: 'Space Grotesk', sans-serif; font-size: 1.5rem; font-weight: 700; color: var(--text-main); margin: 0 0 4px 0; letter-spacing: -0.3px; }
         
-        .grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-top: 25px; }
-        .grid-item { border: 2px solid rgba(0, 255, 245, 0.1); padding: 12px; background: #162447; border-radius: 16px; box-sizing: border-box; }
-        .grid-item img { width: 100%; border-radius: 10px; background: white; margin-bottom: 10px; height: auto; }
-        #game-area, #voting-area, #result-area { display: none; width: 100%; }
-        #startBtn, #playAgainBtn { display: none; } 
+        .timer-countdown-banner {
+            font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 0.95rem;
+            color: #ff3366; background: rgba(255, 51, 102, 0.05); border: 1px solid rgba(255, 51, 102, 0.12);
+            padding: 5px 14px; border-radius: 8px; display: inline-block; margin-bottom: 8px;
+        }
+
+        .role-badge-glow { display: inline-block; background: rgba(255,255,255,0.7); color: var(--tech-blue); border: 1px solid var(--glass-border); padding: 10px 14px; border-radius: 12px; font-family: 'Space Grotesk', sans-serif; font-weight: 700; margin: 8px auto; font-size: 0.9rem; width: 100%; box-shadow: var(--card-shadow); }
+
+        /* 🎨 CANVAS SHIELD VIEWPORT WITH ABSOLUTE PACK RESIZING */
+        .canvas-container-shield {
+            width: 100%; max-width: 100%; aspect-ratio: 1; margin: 12px auto; background: #ffffff;
+            border: 1px solid rgba(15, 23, 42, 0.08); border-radius: 18px; box-shadow: inset 0 2px 8px rgba(15,23,42,0.02);
+            overflow: hidden; position: relative; display: flex; align-items: center; justify-content: center;
+        }
+        canvas.drawing-matrix-board { width: 100%; height: 100%; background: transparent; cursor: crosshair; touch-action: none; }
+
+        /* 🧽 PERFECTLY INTEGRATED SLICK TOOLBAR TOOL DECK */
+        .canvas-toolbar-palette {
+            display: flex; justify-content: center; gap: 8px; margin: 0 auto 12px auto; width: 100%;
+        }
+        .tool-btn {
+            flex: 1; padding: 10px; border: 1px solid rgba(15, 23, 42, 0.08); background: rgba(255,255,255,0.8);
+            color: var(--text-main); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 0.8rem;
+            border-radius: 10px; cursor: pointer; transition: all 0.2s ease;
+        }
+        .tool-btn.tool-active { background: #0f172a; color: #ffffff; border-color: #0f172a; }
+        .btn-clear-canvas { background: rgba(255, 51, 102, 0.05); color: #ff3366; border-color: rgba(255, 51, 102, 0.1); }
+        .btn-clear-canvas:hover { background: #ff3366; color: #fff; }
+
+        /* ⚡ 100% SYMMETRICAL ALIGNED ACTION TECH BUTTONS RAIL */
+        button.action-tech-btn {
+            background: var(--tech-blue); color: #ffffff; border: none; padding: 13px 24px;
+            border-radius: 12px; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 0.9rem;
+            cursor: pointer; transition: all 0.2s ease; width: 100%; margin-top: 4px;
+            box-shadow: 0 4px 12px rgba(0, 102, 255, 0.15); display: block;
+        }
+        button.action-tech-btn:hover { background: var(--tech-blue-hover); transform: translateY(-1px); }
+        
+        .lobby-players-grid-wrapper { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-top: 15px; }
+        .player-badge-node { background: rgba(15, 23, 42, 0.03); border: 1px solid rgba(15, 23, 42, 0.04); padding: 6px 12px; border-radius: 6px; font-size: 0.78rem; font-weight: 500; color: var(--text-muted); }
+        .player-badge-node.is-active-admin { border-color: rgba(0,102,255,0.15); background: #ffffff; color: var(--tech-blue); font-weight: bold; }
+        
+        /* 🗳️ VOTING INTERFACE GRID TILES OVERLAY */
+        .voting-interface-grid-layout { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; margin-top: 15px; width: 100%; }
+        .canvas-preview-glass-tile { background: #ffffff; border: 1px solid rgba(15, 23, 42, 0.06); border-radius: 14px; padding: 10px; box-shadow: var(--card-shadow); text-align: center; }
+        .preview-thumbnail-frame { width: 100%; aspect-ratio: 1; background: #fafafa; border-radius: 8px; border: 1px solid rgba(0,0,0,0.01); }
+        .action-icon-btn { background: var(--tech-blue); color: white; border: none; padding: 8px; border-radius: 6px; font-family: 'Space Grotesk', sans-serif; font-weight: bold; font-size: 0.78rem; width: 100%; cursor: pointer; margin-top: 6px; }
+
+        /* 📱 RESPONSIVE BREAKPOINT SCALES */
+        @media (max-width: 480px) {
+            .game-mainframe-card { padding: 18px 14px; border-radius: 20px; }
+            h1.game-title { font-size: 1.25rem; }
+            .timer-countdown-banner { font-size: 0.82rem; padding: 4px 10px; }
+            .role-badge-glow { font-size: 0.8rem; padding: 8px 10px; border-radius: 10px; }
+            .tool-btn { padding: 8px 4px; font-size: 0.72rem; border-radius: 8px; }
+            button.action-tech-btn { padding: 11px 20px; font-size: 0.82rem; border-radius: 10px; }
+            .voting-interface-grid-layout { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+            .canvas-preview-glass-tile { padding: 8px; border-radius: 10px; }
+            .player-badge-node { font-size: 0.72rem; padding: 4px 8px; }
+        }
     </style>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <div id="lobby-box" class="game-card-box">
-        <h1>Vaanga Kandu Pidikkalaam! 🕵️‍♂️🎨</h1>
-        <p style="color: #b5b5b5; font-size: 0.9rem;">Welcome to the arena macha!</p>
-        <hr style="border: 1px solid rgba(0, 255, 245, 0.2); margin: 20px 0;">
-        <input type="text" id="roomCode" class="room-field" placeholder="Enter Secret Room Code (Eg: rcb123)"><br>
-        <button id="createBtn" class="btn-blue">Create New Room 🛠️</button>
-        <button id="joinBtn" class="btn-success">Join Existing Room 🚀</button>
-    </div>
+    <button onclick="window.location.replace('/hub.html');" class="nav-back-hub-btn">⬅ BACK TO LOBBY</button>
 
-    <div id="game-area" class="game-card-box">
-        <h2>Game Room Dashboard 🎮</h2>
-        <div class="status-pill">👥 Crew: <span id="player-list" style="color:#00fff5;">None</span></div>
-        <br>
-        <button id="startBtn" class="btn-success">Start Match 🔥</button>
-        <hr style="border: 1px solid rgba(0, 255, 245, 0.1); margin: 15px 0;">
-        <div class="timer-badge">⏱️ Time: <span id="timer-display">60</span>s</div><br>
-        <div class="status-pill">Role: <span id="my-role" style="color:#e67e22;">Waiting...</span></div>
-        <div class="status-pill">Secret: <span id="my-word" style="color:#38ef7d;">???</span></div>
+    <div class="game-mainframe-card">
+        <h1 class="game-title">VAANGA KANDU PIDIKKALAAM</h1>
+        <div style="font-size:0.8rem; color:var(--text-muted); font-weight:500;" id="room-code-display-label">ROOM CODE: SECURING...</div>
         
-        <div id="canvas-container">
-            <canvas id="sketchPad" width="500" height="400"></canvas>
-            <br>
-            <button id="clearBtn" class="btn-danger">Reset Canvas 🧹</button>
+        <div id="gameTimerBanner" class="timer-countdown-banner" style="display:none;">⏱️ REMAINING TIME: 60s</div>
+        
+        <div id="role-badge-container-node" class="role-badge-glow">WAITING FOR ADMIN TO START ROUND...</div>
+        
+        <div id="canvasDrawingToolbar" class="canvas-toolbar-palette" style="display:none;">
+            <button onclick="selectDrawingTool('pencil');" id="toolBtnPencil" class="tool-btn tool-active">✏️ DRAWING</button>
+            <button onclick="selectDrawingTool('eraser');" id="toolBtnEraser" class="tool-btn">🧽 ERASER</button>
+            <button onclick="clearCanvasContextOnCommand();" class="tool-btn btn-clear-canvas">🗑️ CLEAR BOARD</button>
         </div>
-    </div>
 
-    <div id="voting-area" class="game-card-box" style="max-width: 850px;">
-        <h2>Showdown Phase 🔍</h2>
-        <p id="voting-instruction" style="color: #b5b5b5;">Inspect the structural design boards carefully.</p>
-        <hr style="border: 1px solid rgba(0, 255, 245, 0.2);">
-        <div id="drawings-grid" class="grid-container"></div>
-    </div>
-
-    <div id="result-area" class="game-card-box">
-        <h2>Match Verdict Summary 🏁</h2>
-        <h1 id="game-outcome" style="color: #38ef7d; font-size: 1.8rem;">Result Loading...</h1>
-        <div class="status-pill" style="font-size: 1rem; padding: 12px 24px; border-color: #e43f5a;">
-            🕵️‍♂️ The Hidden Spy was: <span id="reveal-spy-name" style="color:#ff4a68;">???</span>
+        <div class="canvas-container-shield" id="canvasFrameContainer">
+            <canvas id="drawingMatrixBoard" class="drawing-matrix-board"></canvas>
+            <div id="canvas-lock-overlay-mask" style="display:none; position:absolute; width:100%; height:100%; background:rgba(255,255,255,0.85); font-weight:700; color:var(--text-muted); font-size:0.82rem; align-items:center; justify-content:center; z-index:10; padding:15px;">LOCKED 🔒</div>
         </div>
-        <br><br>
-        <button id="playAgainBtn" class="btn-success">Play Again 🔄🔥</button>
-        <button onclick="window.location.href='/index.html';" style="background: #1f4068; box-shadow: none;">Back to Hub Portal 🔄</button>
+
+        <button onclick="executeCanvasSubmissionAction();" id="submitCanvasActionBtn" class="action-tech-btn" style="display:none;">SUBMIT DRAWING CANVAS ⚡</button>
+        <button onclick="triggerAdminRematchIgnition();" id="adminPlayAgainBtn" class="action-tech-btn" style="display:none; background:#0f172a;">PLAY AGAIN (ADMIN ONLY) 🔄</button>
+
+        <h3 style="font-family:'Space Grotesk'; font-size:0.85rem; margin-top:15px; margin-bottom:8px; color:var(--text-main);">LOBBY SECURITY MATRIX</h3>
+        <div id="lobbyPlayersDockGrid" class="lobby-players-grid-wrapper"></div>
+        
+        <div id="votingInterfaceArena" class="voting-interface-grid-layout" style="display:none;"></div>
     </div>
 
     <script src="/socket.io/socket.io.js"></script>
-    <script src="app.js"></script>
+    <script>
+        const socket = io();
+        const urlParams = new URLSearchParams(window.location.search);
+        const username = urlParams.get('user') || "Macha_Player";
+        let targetRoomCodeKey = urlParams.get('room') || "DEFAULT";
+        let actionIntent = urlParams.get('action') || "join"; 
+        let isLobbyAdmin = false;
+        let myCurrentRole = "";
+        let countdownTimerObject = null;
+
+        const canvas = document.getElementById('drawingMatrixBoard');
+        const ctx = canvas.getContext('2d');
+        let drawingModeActive = false;
+        let selectedActiveTool = "pencil";
+
+        function resizeCanvasToContainer() {
+            canvas.width = canvas.parentElement.clientWidth;
+            canvas.height = canvas.parentElement.clientHeight;
+            resetDrawingStrokeStyles();
+        }
+        window.addEventListener('load', resizeCanvasToContainer);
+        window.addEventListener('resize', resizeCanvasToContainer);
+
+        function resetDrawingStrokeStyles() {
+            ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+            if (selectedActiveTool === "pencil") { ctx.lineWidth = 3; ctx.strokeStyle = '#0f172a'; } 
+            else { ctx.lineWidth = 18; ctx.strokeStyle = '#ffffff'; }
+        }
+
+        function selectDrawingTool(toolType) {
+            selectedActiveTool = toolType;
+            document.getElementById('toolBtnPencil').classList.toggle('tool-active', toolType === 'pencil');
+            document.getElementById('toolBtnEraser').classList.toggle('tool-active', toolType === 'eraser');
+            resetDrawingStrokeStyles();
+        }
+
+        function clearCanvasContextOnCommand() {
+            if(myCurrentRole === "Detective 🔍") return;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        canvas.addEventListener('mousedown', (e) => { drawingModeActive = true; drawStrokeAction(e); });
+        canvas.addEventListener('mouseup', () => { drawingModeActive = false; ctx.beginPath(); });
+        canvas.addEventListener('mousemove', drawStrokeAction);
+        canvas.addEventListener('touchstart', (e) => { drawingModeActive = true; drawStrokeAction(e.touches[0]); e.preventDefault(); });
+        canvas.addEventListener('touchend', () => { drawingModeActive = false; ctx.beginPath(); });
+        canvas.addEventListener('touchmove', (e) => { drawStrokeAction(e.touches[0]); e.preventDefault(); });
+
+        function drawStrokeAction(e) {
+            if (!drawingModeActive || myCurrentRole === "Detective 🔍") return;
+            const rect = canvas.getBoundingClientRect();
+            ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+            ctx.stroke(); ctx.beginPath(); ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+        }
+
+        if (actionIntent === "create") {
+            socket.emit('createNewRoomAction', { roomCode: targetRoomCodeKey, username });
+        } else {
+            socket.emit('joinExistingRoomAction', { roomCode: targetRoomCodeKey, username });
+        }
+        document.getElementById('room-code-display-label').innerText = `LOBBY MATRIX ROOM CODE: ${targetRoomCodeKey}`;
+
+        socket.on('roomAccessError', (msg) => { alert(msg); window.location.replace('/hub.html'); });
+
+        socket.on('roomData', ({ players, adminId }) => {
+            isLobbyAdmin = (socket.id === adminId);
+            const dock = document.getElementById('lobbyPlayersDockGrid');
+            dock.innerHTML = players.map(p => `<div class="player-badge-node ${p.id === adminId ? 'is-active-admin':''}">${p.name.toUpperCase()}</div>`).join('');
+            
+            if (isLobbyAdmin && document.getElementById('role-badge-container-node').innerText.includes("WAITING")) {
+                document.getElementById('submitCanvasActionBtn').style.display = "block";
+                document.getElementById('submitCanvasActionBtn').innerText = "IGNITE MATCH ROUND (ADMIN) 🚀";
+                document.getElementById('submitCanvasActionBtn').onclick = triggerGameStartIgnition;
+            }
+        });
+
+        function triggerGameStartIgnition() { socket.emit('startGame', targetRoomCodeKey); }
+
+        socket.on('assignRole', ({ role, word }) => {
+            myCurrentRole = role;
+            document.getElementById('role-badge-container-node').innerText = `ROLE: ${role.toUpperCase()} | TARGET VALUE: ${word}`;
+            document.getElementById('votingInterfaceArena').style.display = "none";
+            document.getElementById('canvas-lock-overlay-mask').style.display = "none";
+            document.getElementById('adminPlayAgainBtn').style.display = "none";
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            selectDrawingTool('pencil');
+
+            clearInterval(countdownTimerObject);
+            const timerBanner = document.getElementById('gameTimerBanner');
+            timerBanner.style.display = "inline-block";
+            let secondsRemaining = 60;
+            timerBanner.innerText = `⏱️ REMAINING TIME: ${secondsRemaining}s`;
+
+            countdownTimerObject = setInterval(() => {
+                secondsRemaining--;
+                timerBanner.innerText = `⏱️ REMAINING TIME: ${secondsRemaining}s`;
+                if(secondsRemaining <= 0) {
+                    clearInterval(countdownTimerObject);
+                    if(myCurrentRole !== "Detective 🔍") executeCanvasSubmissionAction();
+                }
+            }, 1000);
+
+            if (role === "Detective 🔍") {
+                document.getElementById('canvasDrawingToolbar').style.display = "none";
+                document.getElementById('canvas-lock-overlay-mask').style.display = "flex";
+                document.getElementById('canvas-lock-overlay-mask').innerText = "DETECTIVE VIEW: MONITOR DRAWING STROKES GRID ANIMATIONS! 👁️✨";
+                document.getElementById('submitCanvasActionBtn').style.display = "none";
+            } else {
+                document.getElementById('canvasDrawingToolbar').style.display = "flex";
+                document.getElementById('submitCanvasActionBtn').style.display = "block";
+                document.getElementById('submitCanvasActionBtn').innerText = "SUBMIT DRAWING CANVAS ⚡";
+                document.getElementById('submitCanvasActionBtn').onclick = executeCanvasSubmissionAction;
+            }
+        });
+
+        function executeCanvasSubmissionAction() {
+            clearInterval(countdownTimerObject);
+            document.getElementById('gameTimerBanner').style.display = "none";
+            const dataUrlString = canvas.toDataURL();
+            socket.emit('submitDrawing', { roomCode: targetRoomCodeKey, drawingData: dataUrlString });
+            document.getElementById('canvasDrawingToolbar').style.display = "none";
+            document.getElementById('canvas-lock-overlay-mask').style.display = "flex";
+            document.getElementById('canvas-lock-overlay-mask').innerText = "DRAWING LOCKED IN DATABASE ARRAY CIRCUITS! 🔒";
+            document.getElementById('submitCanvasActionBtn').style.display = "none";
+        }
+
+        socket.on('startVotingPhase', ({ drawings }) => {
+            clearInterval(countdownTimerObject);
+            document.getElementById('gameTimerBanner').style.display = "none";
+            document.getElementById('canvas-lock-overlay-mask').style.display = "none";
+            const arena = document.getElementById('votingInterfaceArena');
+            arena.style.display = "grid"; arena.innerHTML = "";
+
+            Object.keys(drawings).forEach(playerId => {
+                const node = drawings[playerId];
+                const tile = document.createElement('div');
+                tile.className = "canvas-preview-glass-tile";
+                tile.innerHTML = `
+                    <img src="${node.data}" class="preview-thumbnail-frame" alt="Lobby structural frame">
+                    <div style="font-weight:700; font-size:0.75rem; color:var(--text-main); margin-top:5px;">${node.name.toUpperCase()}</div>
+                    ${myCurrentRole === "Detective 🔍" ? `<button onclick="submitTargetVoteAction('${playerId}');" class="action-icon-btn">REPORT SUSPECT 🗳️</button>` : `<span style="font-size:0.7rem; color:var(--text-muted); font-weight:700; display:block; margin-top:5px;">TEAM SKETCH</span>`}
+                `;
+                arena.appendChild(tile);
+            });
+        });
+
+        function submitTargetVoteAction(targetId) {
+            socket.emit('castVote', { roomCode: targetRoomCodeKey, targetPlayerId: targetId });
+            document.getElementById('votingInterfaceArena').innerHTML = `<div style="grid-column:1/-1; padding:30px; font-weight:700; color:var(--tech-blue); text-align:center; font-size:0.85rem;">VOTE CASTED SECURELY! Syncing with live server... 🗳️🦅</div>`;
+        }
+
+        socket.on('gameOver', ({ result, spyName, scores, adminId }) => {
+            clearInterval(countdownTimerObject);
+            document.getElementById('gameTimerBanner').style.display = "none";
+            document.getElementById('role-badge-container-node').innerText = `ROUND GAME OVER!`;
+            const arena = document.getElementById('votingInterfaceArena');
+            arena.style.display = "block";
+            arena.innerHTML = `
+                <div style="background:#ffffff; border:1px solid rgba(15,23,42,0.08); padding:18px; border-radius:16px; box-shadow:var(--card-shadow); text-align:left;">
+                    <h2 style="font-family:'Space Grotesk'; color:var(--tech-blue); margin-top:0; font-size:1.15rem;">${result}</h2>
+                    <p style="font-size:0.82rem; color:var(--text-muted); font-weight:600;">The Invisible Spy Character Profile was: <span style="color:#ff3366; font-weight:800;">${spyName.toUpperCase()}</span></p>
+                    <hr style="border-color:rgba(0,0,0,0.02); margin:15px 0;">
+                    ${scores.map(s => `<div style="display:flex; justify-content:space-between; font-size:0.78rem; padding:5px 0; border-bottom:1px solid rgba(0,0,0,0.01);"><span style="font-weight:500;">👤 ${s.name.toUpperCase()}</span><span style="font-weight:700; color:var(--tech-blue);">${s.totalWins} WINS</span></div>`).join('')}
+                </div>
+            `;
+            if (socket.id === adminId) {
+                document.getElementById('adminPlayAgainBtn').style.display = "block";
+            }
+        });
+
+        function triggerAdminRematchIgnition() {
+            document.getElementById('adminPlayAgainBtn').style.display = "none";
+            socket.emit('triggerPlayAgainAction', targetRoomCodeKey);
+        }
+    </script>
 </body>
 </html>

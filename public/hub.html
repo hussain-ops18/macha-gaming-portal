@@ -3,202 +3,224 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Macha Gaming Portal - Professional Tech Hub Console 🎮💎</title>
+    <title>Macha Gaming Portal - Responsive Glass Center 🎮💎</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Poppins:wght@400;600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap');
         
-        :root[data-theme="dark"] {
-            --bg-gradient: radial-gradient(circle at center, #020b14 0%, #000205 100%);
-            --sidebar-bg: #030d1a;
-            --panel-bg: #051326;
-            --card-bg: rgba(2, 12, 24, 0.95);
-            --text-main: #ffffff;
-            --text-muted: #708fa8;
-            --border-glow: #00f0ff;
-            --btn-border: #0055b3;
-        }
-        :root[data-theme="light"] {
-            --bg-gradient: radial-gradient(circle at center, #f4f7fa 0%, #e2e8f0 100%);
-            --sidebar-bg: #e2e8f0;
-            --panel-bg: #ffffff;
-            --card-bg: rgba(255, 255, 255, 0.95);
+        :root {
+            --body-bg: radial-gradient(circle at top left, #f3f7fa 0%, #eef2f7 40%, #e2e8f0 100%);
+            --panel-bg: rgba(255, 255, 255, 0.85);
             --text-main: #0f172a;
-            --text-muted: #475569;
-            --border-glow: #3b82f6;
-            --btn-border: #93c5fd;
+            --text-muted: #64748b;
+            --tech-blue: #0066ff;
+            --tech-blue-hover: #0052cc;
+            --glass-surface: rgba(255, 255, 255, 0.6);
+            --glass-border: rgba(255, 255, 255, 0.7);
+            --glass-reflection: inset 0 1px 1px rgba(255, 255, 255, 0.8);
+            --thin-border: rgba(15, 23, 42, 0.05);
+            --premium-shadow: 0 10px 30px -10px rgba(15, 23, 42, 0.06);
         }
 
         body { 
-            font-family: 'Poppins', sans-serif; 
-            background: var(--bg-gradient); 
+            font-family: 'Poppins', sans-serif; background: var(--body-bg); 
             color: var(--text-main); margin: 0; padding: 0; min-height: 100vh; 
-            display: flex; flex-direction: row; overflow-x: hidden;
-            box-sizing: border-box; transition: background 0.3s, color 0.3s;
+            display: flex; flex-direction: column; overflow-x: hidden;
+            box-sizing: border-box; padding-bottom: 90px;
         }
 
         *, *::before, *::after { box-sizing: border-box; }
 
-        .vscode-vertical-sidebar {
-            width: 65px; min-width: 65px; height: 100vh; background: var(--sidebar-bg);
-            border-right: 2px solid var(--border-glow); display: flex; flex-direction: column;
-            justify-content: space-between; align-items: center; padding: 20px 0; z-index: 100;
-            box-shadow: 5px 0 15px rgba(0,0,0,0.3); position: fixed; left: 0; top: 0;
-            transition: background 0.3s, border-color 0.3s;
+        /* WHATSAPP-STYLE GLASS BOTTOM NAVIGATION DOCK (RESPONSIVE SCALED VALUE BOUNDS) */
+        .macha-whatsapp-bottom-dock {
+            position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%);
+            width: calc(100% - 32px); max-width: 440px; height: 62px;
+            background: var(--glass-surface); border: 1px solid var(--glass-border); border-radius: 18px;
+            display: flex; flex-direction: row; justify-content: space-around; align-items: center;
+            z-index: 900; backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+            box-shadow: 0 12px 35px -10px rgba(15, 23, 42, 0.12), var(--glass-reflection);
+            padding: 0 8px;
         }
 
-        .sidebar-top-cluster, .sidebar-bottom-cluster { display: flex; flex-direction: column; gap: 20px; width: 100%; align-items: center; }
-
-        .sidebar-action-icon-node {
-            width: 45px; height: 45px; border-radius: 10px; display: flex;
-            align-items: center; justify-content: center; font-size: 1.3rem;
-            cursor: pointer; transition: 0.2s ease; border: 1px solid transparent;
-            color: var(--text-main); -webkit-tap-highlight-color: transparent;
+        .dock-action-tab-node {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            gap: 1px; width: 60px; height: 48px; border-radius: 10px; border: 1px solid transparent;
+            cursor: pointer; transition: all 0.2s ease; color: var(--text-muted);
+            -webkit-tap-highlight-color: transparent; user-select: none;
         }
-        .sidebar-action-icon-node:hover, .sidebar-action-icon-node.active-panel-toggle {
-            background: rgba(0, 240, 255, 0.1); border-color: var(--border-glow);
-            color: var(--border-glow); box-shadow: 0 0 10px rgba(0,240,255,0.2);
-        }
+        .dock-action-icon { font-size: 1.2rem; }
+        .dock-action-label { font-size: 0.65rem; font-weight: 600; font-family: 'Space Grotesk', sans-serif; }
+        .dock-action-tab-node:hover { color: var(--text-main); background: rgba(255,255,255,0.4); }
+        .dock-action-tab-node.active-dock-tab-glow { color: var(--tech-blue); background: rgba(255,255,255,0.8); border-color: var(--glass-border); }
 
+        /* SLIDING DRAWER SYSTEM INTERFACES MAPPED PROPORTIONALLY */
         .vscode-expanded-sliding-panel {
-            position: fixed; left: -320px; top: 0; width: 300px; height: 100vh;
-            background: var(--panel-bg); border-right: 2px solid var(--border-glow); padding: 25px 20px;
-            z-index: 90; display: flex; flex-direction: column; gap: 18px;
-            box-shadow: 10px 0 25px rgba(0,0,0,0.4); transition: 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
-            text-align: left; overflow-y: auto; padding-top: 35px;
+            position: fixed; left: 50%; transform: translateX(-50%) translateY(120%); bottom: 90px;
+            width: calc(100% - 32px); max-width: 440px; height: 55vh; max-height: 420px;
+            background: var(--panel-bg); border: 1px solid var(--glass-border); border-radius: 22px; padding: 20px;
+            z-index: 850; display: flex; flex-direction: column; gap: 15px;
+            box-shadow: 0 -15px 40px rgba(15, 23, 42, 0.05), var(--glass-reflection); 
+            transition: transform 0.25s cubic-bezier(0.165, 0.84, 0.44, 1);
+            backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
+            text-align: left; overflow-y: auto;
         }
-        .vscode-expanded-sliding-panel.active-panel-slide { left: 65px; }
+        .vscode-expanded-sliding-panel.active-panel-slide { transform: translateX(-50%) translateY(0); }
 
-        .panel-block-heading { font-family: 'Orbitron', sans-serif; font-size: 1rem; color: var(--border-glow); border-bottom: 2px solid rgba(0,240,255,0.15); padding-bottom: 8px; font-weight: 700; letter-spacing: 1px; margin-top: 0; text-transform: uppercase; }
-        
-        .profile-avatar-row { display: flex; align-items: center; gap: 15px; margin-bottom: 5px; }
-        .profile-avatar-circle { width: 45px; height: 45px; border-radius: 50%; background: var(--border-glow); color: #000; font-family: 'Orbitron', sans-serif; font-weight: 900; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; box-shadow: 0 0 8px var(--border-glow); }
-        
-        .stat-grid-row { display: flex; justify-content: space-between; padding: 8px 0; font-size: 0.82rem; border-bottom: 1px solid rgba(255,255,255,0.03); }
-        .stat-label-title { color: var(--text-muted); font-weight: 600; }
-        .stat-value-indicator { font-family: 'Orbitron', sans-serif; color: var(--border-glow); font-weight: 700; }
+        .panel-block-heading { font-family: 'Space Grotesk', sans-serif; font-size: 0.95rem; color: var(--text-main); border-bottom: 1px solid var(--thin-border); padding-bottom: 8px; font-weight: 700; margin-top: 0; }
+        .profile-avatar-row { display: flex; align-items: center; gap: 12px; }
+        .profile-avatar-circle { width: 42px; height: 42px; border-radius: 10px; background: var(--tech-blue); color: #fff; font-family: 'Space Grotesk', sans-serif; font-weight: 700; display: flex; align-items: center; justify-content: center; font-size: 1.05rem; }
+        .stat-grid-row { display: flex; justify-content: space-between; padding: 8px 0; font-size: 0.82rem; border-bottom: 1px solid rgba(15, 23, 42, 0.02); }
+        .document-text-container-block { font-size: 0.78rem; line-height: 1.5; color: var(--text-muted); background: rgba(255, 255, 255, 0.4); padding: 10px; border-radius: 8px; border: 1px solid var(--glass-border); border-left: 3px solid var(--tech-blue); text-align: justify; }
 
-        .theme-selector-combo-box { width: 100%; padding: 10px; background: #000; color: #00f0ff; border: 1px solid var(--border-glow); border-radius: 6px; font-family: monospace; outline: none; font-size: 0.85rem; cursor: pointer; }
-        .document-text-container-block { font-size: 0.78rem; line-height: 1.5; color: var(--text-muted); background: rgba(0,0,0,0.2); padding: 10px; border-radius: 6px; border-left: 3px solid var(--border-glow); margin-bottom: 10px; text-align: justify; }
+        /* CORE VIEWPORT GRAPHICS DISPLAY ENGINE CONTAINER */
+        .macha-mainframe-wrapper { width: 100%; max-width: 760px; padding: 30px 20px; margin: 0 auto; text-align: center; display: flex; flex-direction: column; justify-content: flex-start; }
+        h1.portal-main-heading { font-family: 'Space Grotesk', sans-serif; color: var(--text-main); font-size: 2.1rem; letter-spacing: -0.5px; margin: 0 0 4px 0; font-weight: 700; text-align: left; }
+        div.portal-sub-caption { font-family: 'Poppins', sans-serif; font-weight: 500; font-size: 0.9rem; color: var(--text-muted); margin-bottom: 30px; text-align: left; }
 
-        .macha-mainframe-wrapper { 
-            flex-grow: 1; margin-left: 65px; width: calc(100% - 65px); 
-            max-width: 850px; padding: 20px 15px; text-align: center;
-            display: flex; flex-direction: column; justify-content: center; min-height: 100vh;
+        .premium-deck-stripes-container { display: flex; flex-direction: column; gap: 14px; width: 100%; text-align: left; margin-bottom: 25px; }
+
+        /* PREMIUM DOCK STRIPES CARDS CONFIG (COMPACT BY FLEXIBLE LAYOUT MATRIX CONFIGS) */
+        .sleek-horizontal-ribbon-card {
+            width: 100%; background: var(--glass-surface); border: 1px solid var(--glass-border); border-radius: 18px;
+            padding: 20px 22px; display: flex; flex-direction: row; justify-content: space-between; align-items: center; gap: 20px;
+            transition: all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1); box-shadow: var(--premium-shadow), var(--glass-reflection);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
         }
+        .ribbon-meta-info-block { flex-grow: 1; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+        h2.ribbon-game-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; margin: 0; font-size: 1.1rem; color: var(--text-main); display: flex; align-items: center; gap: 8px; }
+        p.ribbon-game-desc { color: var(--text-muted); font-size: 0.82rem; line-height: 1.4; margin: 0; }
 
-        h1.portal-main-heading { font-family: 'Orbitron', sans-serif; color: var(--text-main); font-size: 2rem; letter-spacing: 2px; margin: 0 0 5px 0; font-weight: 900; text-shadow: 0 0 10px rgba(0,240,255,0.1); }
-        div.portal-sub-caption { font-family: 'Poppins', sans-serif; font-weight: 600; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .omnitrix-ignition-btn { min-width: 120px; border: none; background: #0f172a; color: #ffffff; padding: 11px 18px; border-radius: 10px; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 0.82rem; cursor: pointer; text-transform: uppercase; transition: all 0.2s ease; text-align: center; }
+        .sleek-horizontal-ribbon-card:hover .omnitrix-ignition-btn { background: var(--tech-blue); box-shadow: 0 4px 10px rgba(0, 102, 255, 0.15); }
 
-        .omnitrix-watch-dial-viewport {
-            position: relative; width: 100%; max-width: 460px; height: 320px; margin: 10px auto;
-            border: 6px solid var(--sidebar-bg); border-radius: 32px; background: radial-gradient(circle, rgba(10,25,47,0.3) 0%, #000 100%);
-            box-shadow: 0 0 25px rgba(0, 240, 255, 0.1), inset 0 0 20px rgba(0, 240, 255, 0.05);
-            overflow: hidden; display: flex; align-items: center; justify-content: center;
+        .recent-crew-sub-panel { background: var(--glass-surface); border: 1px solid var(--glass-border); border-radius: 20px; padding: 16px 20px; box-shadow: var(--premium-shadow), var(--glass-reflection); width: 100%; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); text-align: left; }
+        .recent-crew-sub-panel h3 { font-family: 'Space Grotesk', sans-serif; margin: 0 0 10px 0; font-size: 0.9rem; color: var(--text-main); border-bottom: 1px solid var(--thin-border); padding-bottom: 6px; font-weight: 700; }
+        
+        .social-list-container { max-height: 120px; overflow-y: auto; line-height: 1.5; min-height: 45px; }
+        .social-row-node { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid rgba(15, 23, 42, 0.01); font-size: 0.85rem; }
+        .node-uid-label { font-family: monospace; color: var(--text-muted); font-size: 0.72rem; margin-left: 4px; font-weight: bold; background: rgba(15,23,42,0.03); padding: 2px 4px; border-radius: 4px; }
+        
+        .search-trigger-badge-btn { background: var(--text-main); color: #fff; border: none; padding: 10px 14px; border-radius: 8px; font-size: 0.8rem; cursor: pointer; font-family: 'Space Grotesk', sans-serif; font-weight: 700; width: 100%; margin-top: 8px; }
+        .add-friend-field { width: 100%; background: rgba(15, 23, 42, 0.02); border: 1px solid rgba(15, 23, 42, 0.06); padding: 10px; color: var(--text-main); border-radius: 8px; font-family: monospace; font-size: 0.85rem; outline: none; text-align: center; }
+        .action-icon-btn { background: rgba(0, 102, 255, 0.04); border: 1px solid rgba(0, 102, 255, 0.1); color: var(--tech-blue); padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; cursor: pointer; font-family: 'Space Grotesk', sans-serif; font-weight: 700; }
+
+        .room-manager-overlay-pane { display: none; position: fixed; width: 100%; height: 100%; top: 0; left: 0; background: rgba(15, 23, 42, 0.08); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); z-index: 999; align-items: center; justify-content: center; }
+        .room-modal-box { background: rgba(255, 255, 255, 0.85); border: 1px solid var(--glass-border); border-radius: 22px; padding: 25px; width: 92%; max-width: 380px; box-shadow: 0 30px 60px -12px rgba(15, 23, 42, 0.15), var(--glass-reflection); text-align: center; }
+        .modal-btn { width: 100%; padding: 11px; margin: 4px 0; border: none; border-radius: 8px; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 0.85rem; cursor: pointer; }
+        .btn-create { background: var(--tech-blue); color: #fff; }
+        .btn-join { background: #0f172a; color: #fff; }
+        .btn-close { background: rgba(15, 23, 42, 0.04); color: var(--text-muted); margin-top: 8px; }
+
+        /* 📱 MOBILE MEDIA QUERIES BREAKPOINTS SYSTEM (FIXES OVERSIZED ELEMENT COMPONENT ANOMALIES) */
+        @media (max-width: 480px) {
+            .macha-mainframe-wrapper { padding: 20px 14px; }
+            h1.portal-main-heading { font-size: 1.6rem; letter-spacing: -0.4px; }
+            div.portal-sub-caption { font-size: 0.8rem; margin-bottom: 20px; }
+            
+            .sleek-horizontal-ribbon-card { flex-direction: column; align-items: stretch; gap: 12px; padding: 16px 18px; border-radius: 16px; }
+            p.ribbon-game-desc { -webkit-line-clamp: 3; font-size: 0.78rem; line-height: 1.35; }
+            h2.ribbon-game-title { font-size: 0.98rem; }
+            .omnitrix-ignition-btn { width: 100%; padding: 10px; font-size: 0.8rem; }
+            
+            .room-modal-box { padding: 20px 16px; border-radius: 18px; }
+            .room-modal-box p { font-size: 0.78rem; margin-bottom: 12px; }
+            .add-friend-field { padding: 9px; font-size: 0.8rem; }
+            .modal-btn { padding: 10px; font-size: 0.8rem; }
+            
+            .recent-crew-sub-panel { padding: 12px 15px; border-radius: 16px; }
+            .recent-crew-sub-panel h3 { font-size: 0.8rem; margin-bottom: 8px; }
+            .social-row-node { font-size: 0.78rem; padding: 5px 0; }
+            .action-icon-btn { padding: 3px 8px; font-size: 0.7rem; }
         }
-        
-        .dial-arrow { position: absolute; font-size: 1.5rem; color: var(--border-glow); z-index: 10; cursor: pointer; text-shadow: 0 0 8px var(--border-glow); transition: 0.2s; user-select: none; }
-        .arrow-up { top: 10px; transform: rotate(90deg); }
-        .arrow-down { bottom: 10px; transform: rotate(90deg); }
-
-        .watch-carousel-scroller-track { display: flex; flex-direction: column; width: 100%; height: 100%; overflow-y: scroll; scroll-snap-type: y mandatory; padding: 40px 0; scroll-behavior: smooth; }
-        .watch-carousel-scroller-track::-webkit-scrollbar { display: none; }
-
-        .omnitrix-alien-card { min-height: 220px; height: 220px; margin: 10px auto; width: 90%; background: var(--card-bg); border: 2.5px solid var(--btn-border); border-radius: 20px; padding: 15px 20px; scroll-snap-align: center; display: flex; flex-direction: column; justify-content: space-between; text-align: left; position: relative; transition: 0.25s ease; transform: scale(0.94); opacity: 0.55; }
-        .omnitrix-alien-card.focused-dial-element { transform: scale(1); opacity: 1; border-color: var(--border-glow); box-shadow: 0 0 20px rgba(0, 240, 255, 0.25); }
-
-        h2.alien-title { font-family: 'Orbitron', sans-serif; font-weight: 900; margin: 0; font-size: 1.1rem; color: var(--text-main); }
-        .focused-dial-element h2.alien-title { color: var(--border-glow); text-shadow: 0 0 8px rgba(0,240,255,0.2); }
-        p.alien-desc { color: var(--text-muted); font-size: 0.78rem; line-height: 1.4; margin: 5px 0; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
-        
-        .omnitrix-ignition-btn { width: 100%; border: 2px solid var(--btn-border); background: rgba(0,0,0,0.4); color: var(--border-glow); padding: 10px; border-radius: 8px; font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 0.8rem; cursor: pointer; text-transform: uppercase; transition: 0.2s; }
-        .focused-dial-element .omnitrix-ignition-btn { background: linear-gradient(135deg, #00f0ff 0%, #0072ff 100%); color: #000; font-weight: 900; border-color: #fff; box-shadow: 0 0 10px rgba(0, 240, 255, 0.2); }
-
-        .recent-crew-sub-panel { background: var(--card-bg); border: 1px solid var(--btn-border); border-radius: 14px; padding: 12px 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.3); text-align: left; max-width: 460px; width: 100%; margin: 20px auto 0 auto; }
-        .recent-crew-sub-panel h3 { font-family: 'Orbitron', sans-serif; margin: 0 0 8px 0; font-size: 0.85rem; color: var(--border-glow); border-bottom: 1px solid var(--btn-border); padding-bottom: 4px; letter-spacing: 0.5px; }
-        
-        .social-list-container { max-height: 110px; overflow-y: auto; line-height: 1.5; min-height: 40px; }
-        .social-list-container::-webkit-scrollbar { width: 3px; }
-        .social-list-container::-webkit-scrollbar-thumb { background: var(--border-glow); border-radius: 2px; }
-        
-        .social-row-node { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.03); font-size: 0.8rem; }
-        .search-trigger-badge-btn { background: linear-gradient(135deg, #0072ff 0%, #00c6ff 100%); color: white; border: none; padding: 8px 14px; border-radius: 6px; font-size: 0.75rem; cursor: pointer; font-family: 'Orbitron', sans-serif; font-weight: bold; width: 100%; margin-top: 8px; transition: 0.2s; }
-        .add-friend-field { width: 100%; background: #000; border: 1px solid var(--btn-border); padding: 10px; color: #00f0ff; border-radius: 6px; font-family: monospace; font-size: 0.85rem; outline: none; text-align: center; }
-        .empty-log-text { color: var(--text-muted); font-style: italic; font-size: 0.75rem; padding: 8px 0; text-align: center; width: 100%; }
-        .action-icon-btn { background: #04381c; border: 1px solid #00ff66; color: #00ff66; padding: 4px 8px; border-radius: 5px; font-size: 0.7rem; cursor: pointer; font-family: 'Orbitron', sans-serif; font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <div class="vscode-vertical-sidebar">
-        <div class="sidebar-top-cluster">
-            <div class="sidebar-action-icon-node" onclick="toggleVsCodeSlidingPanel('profile');" id="toggle-btn-profile">👤</div>
-            <div class="sidebar-action-icon-node" onclick="toggleVsCodeSlidingPanel('search');" id="toggle-btn-search">🔍</div>
+    <div class="macha-whatsapp-bottom-dock">
+        <div class="dock-action-tab-node" onclick="executeTabSwitchOverlayToggle('profile');" id="dock-tab-profile">
+            <span class="dock-action-icon">👤</span><span class="dock-action-label">Profile</span>
         </div>
-        <div class="sidebar-bottom-cluster">
-            <div class="sidebar-action-icon-node" onclick="toggleVsCodeSlidingPanel('settings');" id="toggle-btn-settings">⚙️</div>
-            <div class="sidebar-action-icon-node" onclick="triggerSystemCoreEject();" style="color:#ff3366;">🔌</div>
+        <div class="dock-action-tab-node" onclick="executeTabSwitchOverlayToggle('search');" id="dock-tab-search">
+            <span class="dock-action-icon">🔍</span><span class="dock-action-label">Network</span>
+        </div>
+        <div class="dock-action-tab-node" onclick="executeTabSwitchOverlayToggle('settings');" id="dock-tab-settings">
+            <span class="dock-action-icon">⚙️</span><span class="dock-action-label">Settings</span>
+        </div>
+        <div class="dock-action-tab-node" onclick="triggerSystemCoreEject();" style="color:#ff3366;">
+            <span class="dock-action-icon">🔌</span><span class="dock-action-label">Logout</span>
         </div>
     </div>
 
     <div id="slidingPanelProfile" class="vscode-expanded-sliding-panel">
-        <h3 class="panel-block-heading">👤 Core Biometrics</h3>
+        <h3 class="panel-block-heading">👤 Core Profile</h3>
         <div class="profile-avatar-row">
             <div class="profile-avatar-circle" id="avatar-initials-label">M</div>
             <div>
-                <span style="font-family:'Orbitron'; font-weight:900; font-size:1.05rem;" id="hud-username-display">LOADING...</span>
-                <div style="font-size:0.75rem; color:var(--border-glow); font-weight:bold; font-family:monospace;" id="hud-uid-display">UID: FETCHING</div>
+                <span style="font-family:'Space Grotesk'; font-weight:700; font-size:1rem; color:var(--text-main);" id="hud-username-display">LOADING...</span>
+                <div style="font-size:0.75rem; color:var(--tech-blue); font-weight:bold; font-family:monospace;" id="hud-uid-display">UID: FETCHING</div>
             </div>
         </div>
-        <hr style="border-color:rgba(0, 240, 255, 0.1); margin:5px 0;">
-        <div class="stat-grid-row"><span class="stat-label-title">🏆 TOTAL MATCH WINS</span><span class="stat-value-indicator" id="hud-wins-counter">0</span></div>
+        <div class="stat-grid-row"><span class="stat-label-title">🏆 TOTAL WINS</span><span class="stat-value-indicator" id="hud-wins-counter">0</span></div>
         <div class="stat-grid-row"><span class="stat-label-title">🔥 WINNING STREAK</span><span class="stat-value-indicator" id="hud-streak-counter" style="color:#ffaa00;">0 RNDS</span></div>
     </div>
 
     <div id="slidingPanelSearch" class="vscode-expanded-sliding-panel">
-        <h3 class="panel-block-heading">📡 Terminal Search</h3>
+        <h3 class="panel-block-heading">📡 Network Search</h3>
         <div style="width: 100%;">
             <input type="text" id="friendUidInput" class="add-friend-field" placeholder="Enter Friend UID Key">
-            <button onclick="executeSearchAndLinkUidAction();" class="search-trigger-badge-btn">SEARCH & LINK CREW 🔍</button>
+            <button onclick="executeSearchAndLinkUidAction();" class="search-trigger-badge-btn">LINK CREW PROFILE 🔍</button>
         </div>
-        <h3 class="panel-block-heading" style="margin-top: 25px; font-size:0.85rem;">💚 Connected Network</h3>
+        <h3 class="panel-block-heading" style="margin-top: 20px; font-size:0.85rem;">💚 Connected Friends</h3>
         <div class="social-list-container" id="friends-list-render-pad"></div>
     </div>
 
     <div id="slidingPanelSettings" class="vscode-expanded-sliding-panel">
-        <h3 class="panel-block-heading">⚙️ Preferences</h3>
-        <label style="font-size:0.8rem; font-weight:bold; color:var(--text-main); display:block; margin-bottom:5px;">CONSOLE THEME PRESET</label>
-        <select id="themeCoreSelector" class="theme-selector-combo-box" onchange="applyConsoleThemeAction(this.value);">
-            <option value="dark">Stellar Shadow (Dark) 🌌</option>
-            <option value="light">Cyber Canvas (Light) 🪞</option>
-            <option value="system">Match Device Engine (System) 🤖</option>
-        </select>
-        <h3 class="panel-block-heading" style="margin-top:20px; font-size:0.85rem;">🛡️ Legal & Privacy</h3>
-        <div class="document-text-container-block"><b>Privacy Policy:</b> Enforced retention loops are active securely.</div>
+        <h3 class="panel-block-heading">⚙️ Portal Information</h3>
+        <div class="document-text-container-block">All systems active and sandboxed securely inside cloud frameworks.</div>
+        <h3 class="panel-block-heading" style="font-size:0.8rem; border:none; padding:0;">👑 Core Architect</h3>
+        <div class="document-text-container-block" style="border-color:#0066ff; font-weight:bold; text-align:center;">
+            Systems Engineered By:<br><span style="color:var(--text-main); font-family:'Space Grotesk'; font-size:0.85rem;">Khadhar Hussain A. 👑</span>
+        </div>
+    </div>
+
+    <div id="roomManagerOverlay" class="room-manager-overlay-pane">
+        <div class="room-modal-box">
+            <h3 style="font-family:'Space Grotesk'; margin-top:0; font-size:1rem;" id="modalGameTitleLabel">LAUNCH ROOM MODULE</h3>
+            <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:15px;">கிரியேட் பண்ண போறியா இல்ல ஜாயின் பண்ண போறியா மச்சா?</p>
+            
+            <div style="margin: 8px 0; border-bottom: 1px solid rgba(15,23,42,0.05); padding-bottom: 12px;">
+                <input type="text" id="adminCustomRoomCodeField" class="add-friend-field" placeholder="Create Room Code (Eg: SAKTHI100)" style="margin-bottom:6px;">
+                <button onclick="triggerRoomCreationRoute();" class="modal-btn btn-create">CREATE CUSTOM LOBBY 🚀</button>
+            </div>
+            
+            <div style="margin: 12px 0;">
+                <input type="text" id="customRoomCodeInputField" class="add-friend-field" placeholder="Enter Friend's Room Code" style="margin-bottom:6px;">
+                <button onclick="triggerRoomJoinRoute();" class="modal-btn btn-join">JOIN MATCH LOBBY 🔑</button>
+            </div>
+            
+            <button onclick="closeRoomManagerModal();" class="modal-btn btn-close">CANCEL ❌</button>
+        </div>
     </div>
 
     <div class="macha-mainframe-wrapper">
-        <h1 class="portal-main-heading">MACHA GAMING PORTAL 🕹️⚡</h1>
-        <div class="portal-sub-caption">Scroll watch wheel dial configuration to access modules</div>
+        <h1 class="portal-main-heading">MACHA GAMING PORTAL</h1>
+        <div class="portal-sub-caption">Select any horizontal module ribbon to open matchmaking consoles</div>
 
-        <div class="omnitrix-watch-dial-viewport">
-            <span class="dial-arrow arrow-up" id="scroll-up-trigger">◀</span>
-            <div class="watch-carousel-scroller-track" id="watch-scroller-track-node">
-                <div class="omnitrix-alien-card focused-dial-element" id="card-alien-g1">
-                    <div>
-                        <h2 class="alien-title">VAANGA KANDU PIDIKKALAAM 🕵️‍♂️</h2>
-                        <p class="alien-desc">Detect hidden user signatures inside multi-agent socket networks.</p>
-                    </div>
-                    <button onclick="igniteModuleOneRoute();" class="omnitrix-ignition-btn">Launch Operational Code ⚡</button>
+        <div class="premium-deck-stripes-container">
+            <div class="sleek-horizontal-ribbon-card" onclick="openRoomManagerModal('g1');" style="cursor:pointer;">
+                <div class="ribbon-meta-info-block">
+                    <h2 class="ribbon-game-title"><span>🕵️‍♂️</span> VAANGA KANDU PIDIKKALAAM</h2>
+                    <p class="ribbon-game-desc">Identify the unique odd-word selector profile inside multi-agent coordinate canvas networks. Fully non-repeating anti-prediction array pools matrix.</p>
                 </div>
-                <div class="omnitrix-alien-card" id="card-alien-g2">
-                    <div>
-                        <h2 class="alien-title">TAKKUNU PAARU USHARA IRU ⚡</h2>
-                        <p class="alien-desc">Fast regional Tamil connection flash-round buzzer battle.</p>
-                    </div>
-                    <button onclick="igniteModuleTwoRoute();" class="omnitrix-ignition-btn">Activate Pulse Buzzer 🔥</button>
-                </div>
+                <button class="omnitrix-ignition-btn">LAUNCH ⚡</button>
             </div>
-            <span class="dial-arrow arrow-down" id="scroll-down-trigger">▶</span>
+
+            <div class="sleek-horizontal-ribbon-card" onclick="openRoomManagerModal('g2');" style="cursor:pointer;">
+                <div class="ribbon-meta-info-block">
+                    <h2 class="ribbon-game-title"><span>⚡</span> TAKKUNU PAARU USHARA IRU</h2>
+                    <p class="ribbon-game-desc">Fast-action regional Tamil connection flash buzzer battles. Integrated 15s decay timeout automatic penalties loops criteria.</p>
+                </div>
+                <button class="omnitrix-ignition-btn">STRIKE 🔥</button>
+            </div>
         </div>
 
         <div class="recent-crew-sub-panel">
@@ -210,15 +232,11 @@
     <script src="/socket.io/socket.io.js"></script>
     <script>
         const socket = io();
-
-        // ⚡ SESSION FIREWALL PARSING: 
-        // Strict verification loop to retain session parameters! Never fall back to index if valid data keys exist!
         const activeUserSessionName = localStorage.getItem('machaUsername');
         let userProfileUniqueIdKey = localStorage.getItem('machaUserUID');
 
         if (!activeUserSessionName || activeUserSessionName === "undefined" || !userProfileUniqueIdKey || userProfileUniqueIdKey === "undefined") {
-            console.log("⚠️ Invalid Active Cache Data Detected. Forcing Portal Realignment.");
-            window.location.replace("./index.html"); // Force exit ONLY on true empty cache configurations loop!
+            window.location.replace("./index.html");
         }
 
         const activeUserSessionWins = localStorage.getItem('machaWins') || "0";
@@ -230,62 +248,63 @@
         document.getElementById('hud-streak-counter').innerText = `${userProfileActiveStreak} RNDS`;
         document.getElementById('avatar-initials-label').innerText = activeUserSessionName.charAt(0).toUpperCase();
 
-        function applyConsoleThemeAction(selectedThemeMode) {
-            localStorage.setItem('machaLayoutThemeSelection', selectedThemeMode);
-            if (selectedThemeMode === 'system') {
-                const systemPrefersDarkCheck = window.matchMedia('(prefers-color-scheme: dark)').matches;
-                document.documentElement.setAttribute('data-theme', systemPrefersDarkCheck ? 'dark' : 'light');
-            } else {
-                document.documentElement.setAttribute('data-theme', selectedThemeMode);
-            }
-        }
-        const runtimeSavedTheme = localStorage.getItem('machaLayoutThemeSelection') || 'dark';
-        document.getElementById('themeCoreSelector').value = runtimeSavedTheme;
-        applyConsoleThemeAction(runtimeSavedTheme);
-
         let activeOpenPanelType = null;
-        function toggleVsCodeSlidingPanel(panelType) {
+        function executeTabSwitchOverlayToggle(panelType) {
             const pProfile = document.getElementById('slidingPanelProfile');
             const pSearch = document.getElementById('slidingPanelSearch');
             const pSettings = document.getElementById('slidingPanelSettings');
-            const tBtnProfile = document.getElementById('toggle-btn-profile');
-            const tBtnSearch = document.getElementById('toggle-btn-search');
-            const tBtnSettings = document.getElementById('toggle-btn-settings');
+            const tBtnProfile = document.getElementById('dock-tab-profile');
+            const tBtnSearch = document.getElementById('dock-tab-search');
+            const tBtnSettings = document.getElementById('dock-tab-settings');
 
             if (activeOpenPanelType === panelType) {
                 pProfile.classList.remove('active-panel-slide'); pSearch.classList.remove('active-panel-slide'); pSettings.classList.remove('active-panel-slide');
-                tBtnProfile.classList.remove('active-panel-toggle'); tBtnSearch.classList.remove('active-panel-toggle'); tBtnSettings.classList.remove('active-panel-toggle');
+                tBtnProfile.classList.remove('active-dock-tab-glow'); tBtnSearch.classList.remove('active-dock-tab-glow'); tBtnSettings.classList.remove('active-dock-tab-glow');
                 activeOpenPanelType = null;
             } else {
                 pProfile.classList.remove('active-panel-slide'); pSearch.classList.remove('active-panel-slide'); pSettings.classList.remove('active-panel-slide');
-                tBtnProfile.classList.remove('active-panel-toggle'); tBtnSearch.classList.remove('active-panel-toggle'); tBtnSettings.classList.remove('active-panel-toggle');
-                if (panelType === 'profile') { pProfile.classList.add('active-panel-slide'); tBtnProfile.classList.add('active-panel-toggle'); } 
-                else if (panelType === 'search') { pSearch.classList.add('active-panel-slide'); tBtnSearch.classList.add('active-panel-toggle'); } 
-                else if (panelType === 'settings') { pSettings.classList.add('active-panel-slide'); tBtnSettings.classList.add('active-panel-toggle'); }
+                tBtnProfile.classList.remove('active-dock-tab-glow'); tBtnSearch.classList.remove('active-dock-tab-glow'); tBtnSettings.classList.remove('active-dock-tab-glow');
+                if (panelType === 'profile') { pProfile.classList.add('active-panel-slide'); tBtnProfile.classList.add('active-dock-tab-glow'); } 
+                else if (panelType === 'search') { pSearch.classList.add('active-panel-slide'); tBtnSearch.classList.add('active-dock-tab-glow'); } 
+                else if (panelType === 'settings') { pSettings.classList.add('active-panel-slide'); tBtnSettings.classList.add('active-dock-tab-glow'); }
                 activeOpenPanelType = panelType;
             }
         }
 
-        function igniteModuleOneRoute() { window.location.href = "./games/vaanga-kandu-pidikkalaam/index.html?user=" + encodeURIComponent(activeUserSessionName); }
-        function igniteModuleTwoRoute() { window.location.href = "./games/takkunu-paaru/index.html?user=" + encodeURIComponent(activeUserSessionName); }
+        let selectedActiveGameTarget = ""; 
+        function openRoomManagerModal(gameId) {
+            selectedActiveGameTarget = gameId;
+            document.getElementById('modalGameTitleLabel').innerText = gameId === 'g1' ? "MODULE: VAANGA KANDU PIDIKKALAAM" : "MODULE: TAKKUNU PAARU";
+            document.getElementById('roomManagerOverlay').style.display = "flex";
+        }
+        function closeRoomManagerModal() {
+            document.getElementById('roomManagerOverlay').style.display = "none";
+            document.getElementById('customRoomCodeInputField').value = "";
+            document.getElementById('adminCustomRoomCodeField').value = "";
+        }
+
+        function triggerRoomCreationRoute() {
+            const adminCodeBox = document.getElementById('adminCustomRoomCodeField');
+            const adminCreatedCode = adminCodeBox.value.trim().toUpperCase();
+            if (!adminCreatedCode) return alert("ரூம் கோடை டைப் பண்ணுங்கடா மச்சா! 🛑");
+            closeRoomManagerModal();
+            window.location.href = selectedActiveGameTarget === 'g1' ? `./games/vaanga-kandu-pidikkalaam/index.html?user=${encodeURIComponent(activeUserSessionName)}&room=${adminCreatedCode}&action=create` : `./games/takkunu-paaru/index.html?user=${encodeURIComponent(activeUserSessionName)}&room=${adminCreatedCode}&action=create`;
+        }
+
+        function triggerRoomJoinRoute() {
+            const codeBox = document.getElementById('customRoomCodeInputField');
+            const targetCode = codeBox.value.trim().toUpperCase();
+            if (!targetCode) return alert("ரூம் கோடை டைப் பண்ணுடா மச்சா! 🛑");
+            closeRoomManagerModal();
+            window.location.href = selectedActiveGameTarget === 'g1' ? `./games/vaanga-kandu-pidikkalaam/index.html?user=${encodeURIComponent(activeUserSessionName)}&room=${targetCode}&action=join` : `./games/takkunu-paaru/index.html?user=${encodeURIComponent(activeUserSessionName)}&room=${targetCode}&action=join`;
+        }
+
         function triggerSystemCoreEject() { localStorage.clear(); window.location.replace("./index.html"); }
-
-        const scrollerTrack = document.getElementById('watch-scroller-track-node');
-        const alienCardG1 = document.getElementById('card-alien-g1');
-        const alienCardG2 = document.getElementById('card-alien-g2');
-        scrollerTrack.addEventListener('scroll', () => {
-            let pos = scrollerTrack.scrollTop;
-            if (pos < 110) { alienCardG1.classList.add('focused-dial-element'); alienCardG2.classList.remove('focused-dial-element'); } 
-            else { alienCardG2.classList.add('focused-dial-element'); alienCardG1.classList.remove('focused-dial-element'); }
-        });
-        document.getElementById('scroll-up-trigger').addEventListener('click', () => { scrollerTrack.scrollTop -= 180; });
-        document.getElementById('scroll-down-trigger').addEventListener('click', () => { scrollerTrack.scrollTop += 180; });
-
         function renderFriendsPad() {
             let cache = localStorage.getItem('machaStoredFriendsList') || "[]";
             let parsed = JSON.parse(cache); const targetPad = document.getElementById('friends-list-render-pad');
             if (parsed.length === 0) { targetPad.innerHTML = `<div class="empty-log-text">No friends linked yet.</div>`; return; }
-            targetPad.innerHTML = parsed.map(f => `<div class="social-row-node"><div>🔵 <span>${f.name.toUpperCase()}</span><span class="node-uid-label">${f.uid}</span></div><span style="color:var(--border-glow); font-size:0.7rem; font-weight:bold; font-family:'Orbitron';">LINKED</span></div>`).join('');
+            targetPad.innerHTML = parsed.map(f => `<div class="social-row-node"><div>🔷 <span>${f.name.toUpperCase()}</span><span class="node-uid-label">${f.uid}</span></div><span style="color:var(--tech-blue); font-size:0.68rem; font-weight:bold;">LINKED</span></div>`).join('');
         }
         function renderRecentPad() {
             let cache = localStorage.getItem('machaStoredRecentPlayers') || "[]";
@@ -304,7 +323,7 @@
         }
         socket.on('omnitrix_searchUidResultSuccess', (matchedUserNode) => {
             let currentFriendsList = JSON.parse(localStorage.getItem('machaStoredFriendsList') || "[]"); currentFriendsList.push(matchedUserNode);
-            localStorage.setItem('machaStoredFriendsList', JSON.stringify(currentFriendsList)); alert(`💎 Success macha! Linked: ${matchedUserNode.name.toUpperCase()}`); renderFriendsPad();
+            localStorage.setItem('machaStoredFriendsList', JSON.stringify(currentFriendsList)); alert(`💎 Linked: ${matchedUserNode.name.toUpperCase()}`); renderFriendsPad();
         });
         socket.on('omnitrix_searchUidResultFailure', (errorMsg) => { alert(errorMsg); });
         renderFriendsPad(); renderRecentPad();
