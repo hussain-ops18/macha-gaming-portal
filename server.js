@@ -4,7 +4,7 @@ const { Server } = require('socket.io');
 const fs = require('fs');
 const bcrypt = require('bcryptjs');
 
-const app = reportExpress = express();
+const app = express();
 const server = http.createServer(app);
 
 const io = new Server(server, {
@@ -74,8 +74,14 @@ app.post('/api/login', async (req, res) => {
     } catch (err) { res.status(500).json({ error: "Login error!" }); }
 });
 
+// High-Performance array random shuffle utility
 function shuffleArray(arr) {
-    return arr.sort(() => 0.5 - Math.random());
+    let cloned = [...arr];
+    for (let i = cloned.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [cloned[i], cloned[j]] = [cloned[j], cloned[i]];
+    }
+    return cloned;
 }
 
 function executeGameLogicEngine(roomCode) {
@@ -103,17 +109,21 @@ function executeGameLogicEngine(roomCode) {
     room.usedWordsHistoryList.push(ultimateTeamTargetMainWord);
     room.usedWordsHistoryList.push(ultimateSpyContextDecoyWord);
 
+    // ⚡ ROLE ROTATION ALLOCATION LOCK FIXED:
+    // Shuffles player array list randomly before assign logic executes to ensure absolute variation every single round!
     let masterPoolOfPlayers = room.players.filter(p => p.isActive !== false);
-    const totalLobbySizeCount = masterPoolOfPlayers.length;
+    let randomizedPlayersArrayMatrix = shuffleArray(masterPoolOfPlayers);
+    const totalLobbySizeCount = randomizedPlayersArrayMatrix.length;
 
     let assignedDetectivesCount = 2;
     if (totalLobbySizeCount <= 4) assignedDetectivesCount = 1; 
 
     const globalDetectivesIdsArray = [];
     for (let d = 0; d < assignedDetectivesCount; d++) {
-        if(masterPoolOfPlayers[d]) globalDetectivesIdsArray.push(masterPoolOfPlayers[d].id);
+        if(randomizedPlayersArrayMatrix[d]) globalDetectivesIdsArray.push(randomizedPlayersArrayMatrix[d].id);
     }
-    const spyTargetObject = masterPoolOfPlayers[assignedDetectivesCount] || masterPoolOfPlayers[0];
+    
+    const spyTargetObject = randomizedPlayersArrayMatrix[assignedDetectivesCount] || randomizedPlayersArrayMatrix[0];
     const globalSpyImpostorPlayerId = spyTargetObject.id;
 
     room.players.forEach((player) => {
@@ -221,12 +231,20 @@ io.on('connection', (socket) => {
             let finalMatchVerdictText = isSpyIdentifiedAndBlocked ? "Detectives Guess is Correct! Team Wins! 🏆🎉" : "Spy Escaped Detection Securely! The Spy Wins Solo! 🕵️‍♂️🔥";
             let winningGroupIdentifier = isSpyIdentifiedAndBlocked ? "Team_Group" : "Spy_Solo";
 
+            // ⚡ WINNING COUNT PERSISTENCE STORAGE MATRIX FIXED:
+            // Force normalizes dynamic casing values string parsing identifiers to update memory records accurately!
             room.players.forEach(p => {
-                const dbUser = localUserDatabase[p.name.toString().trim().toLowerCase()];
+                const searchStringKey = p.name.toString().trim().toLowerCase();
+                const dbUser = localUserDatabase[searchStringKey];
                 if (dbUser) {
-                    if (winningGroupIdentifier === "Team_Group" && !p.role.includes("Spy")) dbUser.matchWins += 1;
-                    else if (winningGroupIdentifier === "Spy_Solo" && p.role.includes("Spy")) dbUser.matchWins += 1;
+                    if (winningGroupIdentifier === "Team_Group" && !p.role.includes("Spy")) {
+                        dbUser.matchWins = (dbUser.matchWins || 0) + 1;
+                    } else if (winningGroupIdentifier === "Spy_Solo" && p.role.includes("Spy")) {
+                        dbUser.matchWins = (dbUser.matchWins || 0) + 1;
+                    }
                     p.currentWins = dbUser.matchWins;
+                } else {
+                    p.currentWins = 0;
                 }
             });
             
@@ -274,7 +292,6 @@ io.on('connection', (socket) => {
     socket.on('tp_submitAnswer', ({ roomCode, submittedAnswer }) => { const room = takkunuRooms[roomCode]; if (!room || room.buzzerLockedBy !== socket.id) return; const player = room.players.find(p => p.id === socket.id); if (!player) return; let isCorrect = (submittedAnswer.toString().trim().toLowerCase() === room.currentWordPair.answer.toString().trim().toLowerCase()); if (isCorrect) player.score += 1; else player.score -= 1; io.to(roomCode).emit('tp_roundOutcome', { playerName: player.name, isCorrect, actualAnswer: room.currentWordPair.answer, players: room.players }); setTimeout(() => { tp_startNextRoundEngine(roomCode); }, 4000); });
     socket.on('tp_playAgainAction', (roomCode) => { const room = takkunuRooms[roomCode]; if (!room) return; room.currentRound = 0; let pureFreshPool = [...connectWordsData.categories].sort(() => 0.5 - Math.random()); room.wordsPool = pureFreshPool.slice(0, 10); room.players.forEach(p => p.score = 0); io.to(roomCode).emit('tp_roomData', { players: room.players, adminId: room.adminId }); tp_startNextRoundEngine(roomCode); });
 
-    // ⚡ IRONCLAD ZERO-CANCELLATION DISCONNECT ENGINE: Fixed completely to prevent any hidden runtime crashes!
     socket.on('disconnect', () => {
         Object.keys(rooms).forEach(c => {
             const r = rooms[c];
@@ -288,7 +305,7 @@ io.on('connection', (socket) => {
                             if (freshCheckPlayer && freshCheckPlayer.isActive === false) {
                                 rooms[c].players = rooms[c].players.filter(pl => pl.id !== socket.id);
                                 if (rooms[c].players.length === 0) delete rooms[c];
-                                else io.to(c).emit('roomData', { players: rooms[c].players, adminId: rooms[c].adminId });
+                                else io.to(c).emit('roomData', { players: r.players, adminId: r.adminId });
                             }
                         }
                     }, 15000);
