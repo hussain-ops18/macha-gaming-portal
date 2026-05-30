@@ -4,7 +4,7 @@ const { Server } = require('socket.io');
 const fs = require('fs');
 const bcrypt = require('bcryptjs');
 
-const app = express();
+const app = reportExpress = express();
 const server = http.createServer(app);
 
 const io = new Server(server, {
@@ -152,8 +152,6 @@ io.on('connection', (socket) => {
 
     // --- GAME 1 HIGH RESILIENCE PORTS ---
     socket.on('createNewRoomAction', ({ roomCode, username }) => {
-        // ⚡ TYPO CONFIGURATION FIREWALL FIXED: 
-        // Securely checks if the room and player array exist before calling length to prevent server crashes!
         if (rooms && rooms[roomCode] && rooms[roomCode].players && rooms[roomCode].players.length > 0) {
             return socket.emit('roomAccessError', `டேய் மச்சா, இந்த ரூம் கோடு [${roomCode}] ஏற்கனவே ஆன்லைன்ல லைவா ஓடிக்கிட்டு இருக்குடா! வேற கஸ்டம் நம்பர் போடு! ❌`);
         }
@@ -239,7 +237,6 @@ io.on('connection', (socket) => {
 
     // --- GAME 2 RESILIENT LOGIC PORTS ---
     socket.on('tp_createNewRoom', ({ roomCode, username }) => {
-        // ⚡ GAME 2 TYPO PROTECTION LOCK FIXED SECURELY
         if (takkunuRooms && takkunuRooms[roomCode] && takkunuRooms[roomCode].players && takkunuRooms[roomCode].players.length > 0) {
             return socket.emit('tp_roomError', `டேய் மச்சா, இந்த பஸ்ஸர் ரூம் கோடு [${roomCode}] ஏற்கனவே ஆன்லைன்ல லைவா ஓடுதுடா! வேற நம்பர் போடு! ❌`);
         }
@@ -277,26 +274,35 @@ io.on('connection', (socket) => {
     socket.on('tp_submitAnswer', ({ roomCode, submittedAnswer }) => { const room = takkunuRooms[roomCode]; if (!room || room.buzzerLockedBy !== socket.id) return; const player = room.players.find(p => p.id === socket.id); if (!player) return; let isCorrect = (submittedAnswer.toString().trim().toLowerCase() === room.currentWordPair.answer.toString().trim().toLowerCase()); if (isCorrect) player.score += 1; else player.score -= 1; io.to(roomCode).emit('tp_roundOutcome', { playerName: player.name, isCorrect, actualAnswer: room.currentWordPair.answer, players: room.players }); setTimeout(() => { tp_startNextRoundEngine(roomCode); }, 4000); });
     socket.on('tp_playAgainAction', (roomCode) => { const room = takkunuRooms[roomCode]; if (!room) return; room.currentRound = 0; let pureFreshPool = [...connectWordsData.categories].sort(() => 0.5 - Math.random()); room.wordsPool = pureFreshPool.slice(0, 10); room.players.forEach(p => p.score = 0); io.to(roomCode).emit('tp_roomData', { players: room.players, adminId: room.adminId }); tp_startNextRoundEngine(roomCode); });
 
+    // ⚡ IRONCLAD ZERO-CANCELLATION DISCONNECT ENGINE: Fixed completely to prevent any hidden runtime crashes!
     socket.on('disconnect', () => {
         Object.keys(rooms).forEach(c => {
             const r = rooms[c];
-            let p = r.players.find(pl => pl.id === socket.id);
-            if(p) {
-                p.isActive = false; 
-                setTimeout(() => { 
-                    if(r && pPl && p.isActive === false) {
-                        r.players = r.players.filter(pl => pl.id !== socket.id);
-                        if (r.players.length === 0) delete rooms[c];
-                        else io.to(c).emit('roomData', { players: r.players, adminId: r.adminId });
-                    }
-                }, 15000);
+            if (r && r.players) {
+                let p = r.players.find(pl => pl.id === socket.id);
+                if (p) {
+                    p.isActive = false; 
+                    setTimeout(() => { 
+                        if (rooms && rooms[c] && rooms[c].players) {
+                            let freshCheckPlayer = rooms[c].players.find(pl => pl.id === socket.id);
+                            if (freshCheckPlayer && freshCheckPlayer.isActive === false) {
+                                rooms[c].players = rooms[c].players.filter(pl => pl.id !== socket.id);
+                                if (rooms[c].players.length === 0) delete rooms[c];
+                                else io.to(c).emit('roomData', { players: rooms[c].players, adminId: rooms[c].adminId });
+                            }
+                        }
+                    }, 15000);
+                }
             }
         });
+        
         Object.keys(takkunuRooms).forEach(code => {
             const r = takkunuRooms[code];
-            r.players = r.players.filter(p => p.id !== socket.id);
-            if (r.players.length === 0) { if (r.roundTimeout) clearTimeout(r.roundTimeout); delete takkunuRooms[code]; } 
-            else { if (r.adminId === socket.id) r.adminId = r.players[0].id; io.to(code).emit('tp_roomData', { players: r.players, adminId: r.adminId }); }
+            if (r && r.players) {
+                r.players = r.players.filter(p => p.id !== socket.id);
+                if (r.players.length === 0) { if (r.roundTimeout) clearTimeout(r.roundTimeout); delete takkunuRooms[code]; } 
+                else { if (r.adminId === socket.id) r.adminId = r.players[0].id; io.to(code).emit('tp_roomData', { players: r.players, adminId: r.adminId }); }
+            }
         });
     });
 });
